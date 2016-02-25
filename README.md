@@ -3,7 +3,7 @@ Main Game Project
 
 Contributers:
 -Stasha Blank
--Ian Moon
+-Ian Moon - Reporting for Duty, Sir!
 -Conrad Cao
 -Julian Januszka
 
