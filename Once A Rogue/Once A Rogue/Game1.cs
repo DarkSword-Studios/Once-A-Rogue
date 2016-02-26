@@ -68,13 +68,13 @@ namespace Once_A_Rogue
             graphics.ApplyChanges();
 
             //Run Level Builder! Generate the first level
-            gridSystem = new string[ROWS, COLUMNS];
+            gridSystem = new string[COLUMNS, ROWS];
 
             builderAlpha = new LevelBuilder();
 
-            numRooms = 30;
+            numRooms = 10;
 
-            gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
+            gridSystem = builderAlpha.BuildLevel(gridSystem, numRooms);
 
             buildLevel = true;           
 
@@ -133,7 +133,7 @@ namespace Once_A_Rogue
 
             // TODO: Add your update logic here 
 
-            //Camera //Modular Testing Tool * Remove in Final Cut
+            //Camera / Modular Testing Tool * Remove in Final Cut
         
             KeyboardState state = Keyboard.GetState();
 
@@ -154,8 +154,11 @@ namespace Once_A_Rogue
                 yMod += 10;
             }
 
+            //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
+
             if (state.IsKeyDown(Keys.R))
             {
+                gridSystem = new string[COLUMNS,ROWS];
                 gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
             }
 
@@ -175,21 +178,25 @@ namespace Once_A_Rogue
 
             spriteBatch.Begin();
 
-            //If a new level has been generated update and redraw frame
+            //If we want to display the build map
             if (buildLevel)
             {
                 //Reset build call
                 //buildLevel = false;
 
+                //Start at the beginning of the grid
                 int rowIndex = 0;
                 int columnIndex = 0;
 
+                //Work across and then down
                 while (rowIndex < ROWS)
                 {
                     while (columnIndex < COLUMNS)
                     {
+                        //If the grid node is NOT EMPTY it MUST BE FULFILLED
                         if (gridSystem[columnIndex, rowIndex] != null)
                         {
+                            //Build coordinates based on camera mods and grid placement
                             int xCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) + xMod);
                             int yCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) + yMod);
 
@@ -198,92 +205,95 @@ namespace Once_A_Rogue
 
                             Texture2D room;
 
-                            switch(gridSystem[columnIndex,rowIndex])
+                            //Based on the node's structure, use the appropriate texture
+                            switch(gridSystem[columnIndex,rowIndex].ToUpper())
                             {
-                                case ("allDirections"):
+                                case ("ALLDIRECTIONS"):
 
                                     room = allDirections;
                                     break;
 
-                                case ("left"):
+                                case ("LEFT"):
 
                                     room = left;
                                     break;
 
-                                case ("up"):
+                                case ("UP"):
 
                                     room = up;
                                     break;
 
-                                case ("right"):
+                                case ("RIGHT"):
 
                                     room = right;
                                     break;
 
-                                case ("down"):
+                                case ("DOWN"):
 
                                     room = down;
                                     break;
 
-                                case ("leftDown"):
+                                case ("LEFTDOWN"):
 
                                     room = leftDown;
                                     break;
 
-                                case ("leftRight"):
+                                case ("LEFTRIGHT"):
 
                                     room = leftRight;
                                     break;
 
-                                case ("leftUp"):
+                                case ("LEFTUP"):
 
                                     room = leftUp;
                                     break;
 
-                                case ("upRight"):
+                                case ("UPRIGHT"):
 
                                     room = upRight;
                                     break;
 
-                                case ("upDown"):
+                                case ("UPDOWN"):
 
                                     room = upDown;
                                     break;
 
-                                case ("rightDown"):
+                                case ("RIGHTDOWN"):
 
                                     room = rightDown;
                                     break;
 
-                                case ("leftUpRight"):
+                                case ("LEFTUPRIGHT"):
 
                                     room = leftUpRight;
                                     break;
 
-                                case ("leftUpDown"):
+                                case ("LEFTUPDOWN"):
 
                                     room = leftUpDown;
                                     break;
 
-                                case ("leftRightDown"):
+                                case ("LEFTRIGHTDOWN"):
 
                                     room = leftRightDown;
                                     break;
 
-                                case ("upRightDown"):
+                                case ("UPRIGHTDOWN"):
 
                                     room = upRightDown;
                                     break;
 
                                 default:
-                                    room = allDirections;
+                                    room = up;
                                     break;
                             }
 
+                            //Draw the node
                             spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
                         }
                         columnIndex++;
                     }
+                    //Reset column index after running through each column
                     columnIndex = 0;
                     rowIndex++;
                 }

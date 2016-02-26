@@ -20,17 +20,30 @@ namespace Once_A_Rogue
 
         public string[,] BuildLevel(string[,] grid, int numRooms)
         {
+            //Monitors room usage to avoid overwrites + to aid garbage collection
             Dictionary<string, Boolean> roomUsed = new Dictionary<string, bool>();
 
+            //Center of grid
+            int centerX = (int)grid.GetLength(0) / 2;
+            int centerY = (int)grid.GetLength(1) / 2;
+
             //Populate the center of the grid with a four way room
-            grid[4, 4] = "allDirections";
+            grid[centerX, centerY] = "allDirections";
 
-            roomUsed["44"] = true;
+            //Convert starting coords to string
+            string starterRoom = centerX.ToString();
+            starterRoom += centerY;
 
+            //Add first room to complete dictionary
+            roomUsed[starterRoom] = true;
+
+            //Keeps track of how many "important" (algorithmically) rooms have been generated
             int roomCount = 1;
 
+            //Random object to handle arbitrary pulls
             Random random = new Random(); 
 
+            //Arrays of assortments of rooms for each situation (multi w/ guranteed direction : single direction)
             string[] possibleRoomsMultiLeft = new string[] {"allDirections", "leftDown", "leftRight", "leftUp",
             "leftUpRight", "leftUpDown", "leftRightDown"};
 
@@ -45,27 +58,52 @@ namespace Once_A_Rogue
 
             string[] possibleRoomsSingle = new string[] {"left", "up", "right", "down"};
 
+            //Grand master queue, praise this mighty control structure (Holds and dispenses unfulfilled nodes)
             Queue<string> nodeQueue = new Queue<string>();
 
-            //Prepopulate Queue with correct nodes
+            //MANUALLY Prepopulate Queue with correct nodes
 
-            //1st digit: 1 = left connector, 2 = up connector, 3 = right connector, 4 = down connector
+            //1st digit: (MUST HAVE CONNECTOR OF TYPE;) 1 = left connector, 2 = up connector, 3 = right connector, 4 = down connector
             //2nd digit: x coord
             //3rd digit: y coord
 
-            nodeQueue.Enqueue("245");
-            nodeQueue.Enqueue("443");
-            nodeQueue.Enqueue("154");
-            nodeQueue.Enqueue("334");
+            string temp = "2";
+            temp += centerX;
+            temp += centerY + 1;
 
+            nodeQueue.Enqueue(temp);
+
+            temp = "4";
+            temp += centerX;
+            temp += centerY - 1;
+
+            nodeQueue.Enqueue(temp);
+
+            temp = "1";
+            temp += centerX + 1;
+            temp += centerY;
+
+            nodeQueue.Enqueue(temp);
+
+            temp = "3";
+            temp += centerX - 1;
+            temp += centerY;
+
+            nodeQueue.Enqueue(temp);
+
+            //RUN UNTIL NODE QUEUE IS EMPTY OR THERE WILL BE SEVERE CONSEQUENCES
             while(nodeQueue.Count != 0)
             {
+                //Ask the queue for a node
                 string node = nodeQueue.Dequeue();
 
+                //Start the room as unknown
                 string selectedRoom = "";
 
+                //This condition runs true if the room builder hasn't met the quota, and the current node has not been fulfilled
                 if(roomCount <= numRooms && !roomUsed.ContainsKey(node.Substring(1)))
                 {
+                    //Examine the first digit to see which connection is a must-have, and select a room from the proper array
                     switch (node[0])
                     {
                         case ('1'):
@@ -85,59 +123,92 @@ namespace Once_A_Rogue
                             break;
                     }
 
+                    //Convert digits 2 and 3 into x and y coordinates
                     int xCoord = int.Parse(node[1].ToString());
                     int yCoord = int.Parse(node[2].ToString());
 
-                    //BAD CODE
-                    if(xCoord == 9 || yCoord == 9)
-                    {
-                        xCoord = 8;
-                        yCoord = 8;
-                    }
-
+                    //give the correct node the selected room
                     grid[xCoord, yCoord] = selectedRoom;
 
+                    //Build room num
                     string roomNum = xCoord.ToString();
                     roomNum += yCoord.ToString();
 
+                    //Mark the node as fulfilled
                     roomUsed[roomNum] = true;
 
+                    //Convert room to upper (avoid case detection errors)
                     selectedRoom = selectedRoom.ToUpper();
 
+                    //We have a new room! Keep track of it
                     roomCount += 1;
 
+                    //If the selected room contains a XXXX connection, Mark the node it points to
                     if (selectedRoom.Contains("LEFT") || selectedRoom == "ALLDIRECTIONS")
                     {
-                        roomNum = "3";
-                        roomNum += (xCoord - 1).ToString();
-                        roomNum += yCoord.ToString();
-                        nodeQueue.Enqueue(roomNum);
+                        //Watch out for grid bounds!
+                        if (xCoord != 1)
+                        {
+                            //Supply adjacent node with a marker to be handled by queue
+                            roomNum = "3";
+                            roomNum += (xCoord - 1).ToString();
+                            roomNum += yCoord.ToString();
+                            nodeQueue.Enqueue(roomNum);
+                        }
+                        //Grid bounds have been reached, cut off branch but placing end node
+                        else
+                        {
+                            grid[0, yCoord] = "right";
+                        }
                     }
                     if (selectedRoom.Contains("UP") || selectedRoom == "ALLDIRECTIONS")
                     {
-                        roomNum = "4";
-                        roomNum += xCoord.ToString();
-                        roomNum += (yCoord - 1).ToString();
-                        nodeQueue.Enqueue(roomNum);
+                        if (yCoord != 1)
+                        {
+                            roomNum = "4";
+                            roomNum += xCoord.ToString();
+                            roomNum += (yCoord - 1).ToString();
+                            nodeQueue.Enqueue(roomNum);
+                        }
+                        else
+                        {
+                            grid[xCoord, 0] = "down";
+                        }
                     }
                     if (selectedRoom.Contains("RIGHT") || selectedRoom == "ALLDIRECTIONS")
                     {
-                        roomNum = "1";
-                        roomNum += (xCoord + 1).ToString();
-                        roomNum += yCoord.ToString();
-                        nodeQueue.Enqueue(roomNum);
+                        if(xCoord < grid.GetLength(0) - 2)
+                        {
+                            roomNum = "1";
+                            roomNum += (xCoord + 1).ToString();
+                            roomNum += yCoord.ToString();
+                            nodeQueue.Enqueue(roomNum);
+                        }
+                        else
+                        {
+                            grid[grid.GetLength(0) - 1, yCoord] = "left";
+                        }
+                        
                     }
                     if (selectedRoom.Contains("DOWN") || selectedRoom == "ALLDIRECTIONS")
                     {
-                        roomNum = "2";
-                        roomNum += xCoord.ToString();
-                        roomNum += (yCoord + 1).ToString();
-                        nodeQueue.Enqueue(roomNum);
+                        if (yCoord < grid.GetLength(1) - 2)
+                        {
+                            roomNum = "2";
+                            roomNum += xCoord.ToString();
+                            roomNum += (yCoord + 1).ToString();
+                            nodeQueue.Enqueue(roomNum);
+                        }
+                        else
+                        {
+                            grid[xCoord, grid.GetLength(1) - 1] = "up";
+                        }
                     }
                 }
-
+                //This condition runs true if the quota of rooms HAS been met and the node is unfulfilled
                 else if(roomCount > numRooms && !roomUsed.ContainsKey(node.Substring(1)))
                 {
+                    //Once we've reached the room quota, it's time to end all open brances with end nodes
                     switch (node[0])
                     {
                         case ('1'):
@@ -157,15 +228,9 @@ namespace Once_A_Rogue
                             break;
                     }
 
+                    //Record the node, and mark it as fulfilled
                     int xCoord = int.Parse(node[1].ToString());
                     int yCoord = int.Parse(node[2].ToString());
-
-                    //BAD CODE
-                    if (xCoord == 9 || yCoord == 9)
-                    {
-                        xCoord = 8;
-                        yCoord = 8;
-                    }
 
                     grid[xCoord, yCoord] = selectedRoom;
 
@@ -177,28 +242,112 @@ namespace Once_A_Rogue
                     roomCount += 1;
                 }
 
-                //Garbage collection
+                //Garbage collection (how to deal with conflicting nodes / queue mistakes!!!! IMPORTANT***)
+                //This condition runs true if the current node HAS BEEN FULFILLED
+                //Unfortunately if this is the case we have TWO OR MORE ASKING NODES, which results in a broken connection 50% of the time
                 else if (roomUsed.ContainsKey(node.Substring(1)))
-                {
+                {              
+                    int xCoord = int.Parse(node[1].ToString());
+                    int yCoord = int.Parse(node[2].ToString());
+
+                    //Format the all directions room for direction splicing
+                    if (grid[xCoord, yCoord] == "allDirections")
+                    {
+                        grid[xCoord, yCoord] = "leftUpRightDown";
+                    }
+
+                    //Examine the asking node's origin (first come first served, second asking node is out of luck)
                     switch (node[0])
                     {
                         case ('1'):
                             //selectedRoom = "left";
+                            //If the current node contains XXXX direction
+                            if (!grid[xCoord, yCoord].ToUpper().Contains("LEFT"))
+                            {
+                                //Examine the asking node to see if it's null
+                                string room = grid[xCoord - 1, yCoord];
+                                if(room != null)
+                                {
+                                    //Format the all directions room for direction splicing
+                                    if (grid[xCoord - 1, yCoord] == "allDirections")
+                                    {
+                                        grid[xCoord - 1, yCoord] = "leftUpRightDown";
+                                    }
+                                    //Connector Failure; Connection Denied (Remove asking node's -X-X-X-X vector)
+                                    grid[xCoord - 1, yCoord] = grid[xCoord - 1, yCoord].Replace("right", "");
+                                    grid[xCoord - 1, yCoord] = grid[xCoord - 1, yCoord].Replace("Right", "");
+                                }
+                                
+                            }
+                            //Else - Connection approved; discrepency cleared
                             break;
 
                         case ('2'):
                             //selectedRoom = "up";
+                            if (!grid[xCoord, yCoord].ToUpper().Contains("UP"))
+                            {
+                                string room = grid[xCoord, yCoord - 1];
+                                if(room != null)
+                                {
+                                    if (grid[xCoord, yCoord - 1] == "allDirections")
+                                    {
+                                        grid[xCoord, yCoord - 1] = "leftUpRightDown";
+                                    }
+                                    //Connector Failure; Connection Denied (Remove asking node's vector)
+                                    grid[xCoord, yCoord - 1] = grid[xCoord, yCoord - 1].Replace("down", "");
+                                    grid[xCoord, yCoord - 1] = grid[xCoord, yCoord - 1].Replace("Down", "");
+                                }
+                                
+                            }
+                            //Else - Connection approved ; node removed
                             break;
 
                         case ('3'):
                             //selectedRoom = "right";
+                            if (!grid[xCoord, yCoord].ToUpper().Contains("RIGHT"))
+                            {
+                                string room = grid[xCoord + 1, yCoord];
+                                if(room != null)
+                                {
+                                    if (grid[xCoord + 1, yCoord] == "allDirections")
+                                    {
+                                        grid[xCoord + 1, yCoord] = "leftUpRightDown";
+                                    }
+                                    //Connector Failure; Connection Denied (Remove asking node's vector)
+                                    grid[xCoord + 1, yCoord] = grid[xCoord + 1, yCoord].Replace("left", "");
+                                    grid[xCoord + 1, yCoord] = grid[xCoord + 1, yCoord].Replace("Left", "");
+                                }
+                                
+                            }
+                            //Else - Connection approved ; node removed
                             break;
 
                         case ('4'):
                             //selectedRoom = "down";
+                            if (!grid[xCoord, yCoord].ToUpper().Contains("DOWN"))
+                            {
+                                string room = grid[xCoord, yCoord + 1];
+                                if(room != null)
+                                {
+                                    if (grid[xCoord, yCoord + 1] == "allDirections")
+                                    {
+                                        grid[xCoord, yCoord + 1] = "leftUpRightDown";
+                                    }
+                                    //Connector Failure; Connection Denied (Remove asking node's vector)
+                                    grid[xCoord, yCoord + 1] = grid[xCoord, yCoord + 1].Replace("up", "");
+                                    grid[xCoord, yCoord + 1] = grid[xCoord, yCoord + 1].Replace("Up", "");
+                                }
+                                
+                            }
+                            //Else - Connection approved ; node removed
                             break;
                     }
+                    if (grid[xCoord, yCoord] == "leftUpRightDown")
+                    {
+                        grid[xCoord, yCoord] = "allDirections";
+                    }
                 }
+                
             }
 
             return grid;
