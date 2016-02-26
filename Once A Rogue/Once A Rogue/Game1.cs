@@ -16,6 +16,7 @@ namespace Once_A_Rogue
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            
         }
 
         /// <summary>
@@ -27,6 +28,10 @@ namespace Once_A_Rogue
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            graphics.IsFullScreen = true;
+
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -73,7 +78,7 @@ namespace Once_A_Rogue
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
