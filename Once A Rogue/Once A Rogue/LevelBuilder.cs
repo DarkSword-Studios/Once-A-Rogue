@@ -53,8 +53,8 @@ namespace Once_A_Rogue
             //2nd digit: x coord
             //3rd digit: y coord
 
-            nodeQueue.Enqueue("445");
-            nodeQueue.Enqueue("243");
+            nodeQueue.Enqueue("245");
+            nodeQueue.Enqueue("443");
             nodeQueue.Enqueue("154");
             nodeQueue.Enqueue("334");
 
@@ -68,19 +68,19 @@ namespace Once_A_Rogue
                 {
                     switch (node[0])
                     {
-                        case ('3'):
+                        case ('1'):
                             selectedRoom = possibleRoomsMultiLeft[random.Next(0, possibleRoomsMultiLeft.Length)];
                             break;
 
-                        case ('4'):
+                        case ('2'):
                             selectedRoom = possibleRoomsMultiUp[random.Next(0, possibleRoomsMultiUp.Length)];
                             break;
 
-                        case ('1'):
+                        case ('3'):
                             selectedRoom = possibleRoomsMultiRight[random.Next(0, possibleRoomsMultiRight.Length)];
                             break;
 
-                        case ('2'):
+                        case ('4'):
                             selectedRoom = possibleRoomsMultiDown[random.Next(0, possibleRoomsMultiDown.Length)];
                             break;
                     }
@@ -106,28 +106,28 @@ namespace Once_A_Rogue
 
                     roomCount += 1;
 
-                    if (selectedRoom.Contains("LEFT"))
+                    if (selectedRoom.Contains("LEFT") || selectedRoom == "ALLDIRECTIONS")
                     {
                         roomNum = "3";
                         roomNum += (xCoord - 1).ToString();
                         roomNum += yCoord.ToString();
                         nodeQueue.Enqueue(roomNum);
                     }
-                    if (selectedRoom.Contains("UP"))
+                    if (selectedRoom.Contains("UP") || selectedRoom == "ALLDIRECTIONS")
                     {
                         roomNum = "4";
                         roomNum += xCoord.ToString();
                         roomNum += (yCoord - 1).ToString();
                         nodeQueue.Enqueue(roomNum);
                     }
-                    if (selectedRoom.Contains("RIGHT"))
+                    if (selectedRoom.Contains("RIGHT") || selectedRoom == "ALLDIRECTIONS")
                     {
                         roomNum = "1";
                         roomNum += (xCoord + 1).ToString();
                         roomNum += yCoord.ToString();
                         nodeQueue.Enqueue(roomNum);
                     }
-                    if (selectedRoom.Contains("DOWN"))
+                    if (selectedRoom.Contains("DOWN") || selectedRoom == "ALLDIRECTIONS")
                     {
                         roomNum = "2";
                         roomNum += xCoord.ToString();
@@ -140,19 +140,19 @@ namespace Once_A_Rogue
                 {
                     switch (node[0])
                     {
-                        case ('3'):
+                        case ('1'):
                             selectedRoom = "left";
                             break;
 
-                        case ('4'):
+                        case ('2'):
                             selectedRoom = "up";
                             break;
 
-                        case ('1'):
+                        case ('3'):
                             selectedRoom = "right";
                             break;
 
-                        case ('2'):
+                        case ('4'):
                             selectedRoom = "down";
                             break;
                     }
@@ -175,6 +175,29 @@ namespace Once_A_Rogue
                     roomUsed[roomNum] = true;
 
                     roomCount += 1;
+                }
+
+                //Garbage collection
+                else if (roomUsed.ContainsKey(node.Substring(1)))
+                {
+                    switch (node[0])
+                    {
+                        case ('1'):
+                            //selectedRoom = "left";
+                            break;
+
+                        case ('2'):
+                            //selectedRoom = "up";
+                            break;
+
+                        case ('3'):
+                            //selectedRoom = "right";
+                            break;
+
+                        case ('4'):
+                            //selectedRoom = "down";
+                            break;
+                    }
                 }
             }
 

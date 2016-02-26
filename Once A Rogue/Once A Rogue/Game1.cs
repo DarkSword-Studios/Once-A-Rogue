@@ -41,7 +41,7 @@ namespace Once_A_Rogue
         Texture2D leftRightDown;
         Texture2D upRightDown;
 
-
+        LevelBuilder builderAlpha;
 
 
         bool buildLevel;
@@ -70,7 +70,7 @@ namespace Once_A_Rogue
             //Run Level Builder! Generate the first level
             gridSystem = new string[ROWS, COLUMNS];
 
-            LevelBuilder builderAlpha = new LevelBuilder();
+            builderAlpha = new LevelBuilder();
 
             numRooms = 30;
 
@@ -99,7 +99,7 @@ namespace Once_A_Rogue
             up = Content.Load<Texture2D>("Up-RoomCode.png");
             right = Content.Load<Texture2D>("Right-RoomCode.png");
             down = Content.Load<Texture2D>("Down-RoomCode.png");
-            leftDown = Content.Load<Texture2D>("Up-RoomCode.png");
+            leftDown = Content.Load<Texture2D>("LeftDown-RoomCode.png");
             leftRight = Content.Load<Texture2D>("LeftRight-RoomCode.png");
             leftUp = Content.Load<Texture2D>("LeftUp-RoomCode.png");
             upRight = Content.Load<Texture2D>("UpRight-RoomCode.png");
@@ -154,6 +154,12 @@ namespace Once_A_Rogue
                 yMod += 10;
             }
 
+            if (state.IsKeyDown(Keys.R))
+            {
+                gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
+            }
+
+
             base.Update(gameTime);
         }
 
@@ -182,7 +188,7 @@ namespace Once_A_Rogue
                 {
                     while (columnIndex < COLUMNS)
                     {
-                        if (gridSystem[rowIndex, columnIndex] != null)
+                        if (gridSystem[columnIndex, rowIndex] != null)
                         {
                             int xCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) + xMod);
                             int yCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) + yMod);
@@ -192,7 +198,7 @@ namespace Once_A_Rogue
 
                             Texture2D room;
 
-                            switch(gridSystem[rowIndex,columnIndex])
+                            switch(gridSystem[columnIndex,rowIndex])
                             {
                                 case ("allDirections"):
 
