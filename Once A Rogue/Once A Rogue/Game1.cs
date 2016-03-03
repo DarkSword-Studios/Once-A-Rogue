@@ -25,6 +25,7 @@ namespace Once_A_Rogue
         int yMod = 0;
 
         //Declare Room Textures
+        /*
         Texture2D allDirections;
         Texture2D left;
         Texture2D up;
@@ -40,6 +41,8 @@ namespace Once_A_Rogue
         Texture2D leftUpDown;
         Texture2D leftRightDown;
         Texture2D upRightDown;
+        */
+        Texture2D tilemap;
 
         LevelBuilder builderAlpha;
 
@@ -93,7 +96,7 @@ namespace Once_A_Rogue
             // TODO: use this.Content to load your game content here
 
             //Initialize all room textures
-
+            /*
             allDirections = Content.Load<Texture2D>("AllDirections-RoomCode.png");
             left = Content.Load<Texture2D>("Left-RoomCode.png");
             up = Content.Load<Texture2D>("Up-RoomCode.png");
@@ -109,6 +112,8 @@ namespace Once_A_Rogue
             leftUpDown = Content.Load<Texture2D>("LeftUpDown-RoomCode.png");
             leftRightDown = Content.Load<Texture2D>("LeftRightDown-RoomCode.png");
             upRightDown = Content.Load<Texture2D>("UpRightDown-RoomCode.png");
+            */
+            tilemap = Content.Load<Texture2D>("tilemap.png");
 
         }
 
@@ -200,12 +205,13 @@ namespace Once_A_Rogue
                             int xCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) + xMod);
                             int yCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) + yMod);
 
-                            xCoord += ((columnIndex - 4) * 640);
-                            yCoord += ((rowIndex - 4) * 400);
+                            xCoord += ((columnIndex - 4) * 1920);
+                            yCoord += ((rowIndex - 4) * 1080);
 
-                            Texture2D room;
+                            //Texture2D room;
 
                             //Based on the node's structure, use the appropriate texture
+                            /*
                             switch(gridSystem[columnIndex,rowIndex].ToUpper())
                             {
                                 case ("ALLDIRECTIONS"):
@@ -287,9 +293,12 @@ namespace Once_A_Rogue
                                     room = up;
                                     break;
                             }
+                            */
 
                             //Draw the node
-                            spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
+                            //spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
+                            Room room = new Room("Test.txt");
+                            room.DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
                         }
                         columnIndex++;
                     }
