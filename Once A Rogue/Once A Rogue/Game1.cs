@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Reflection; //Needed for string to variable calls
+using System.IO; //Needed for finding rooms
 
 namespace Once_A_Rogue
 {
@@ -297,7 +298,11 @@ namespace Once_A_Rogue
 
                             //Draw the node
                             //spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
-                            Room room = new Room("Test.txt");
+
+                            string path = @"..\..\..\Content\Rooms\Test.txt";
+                            //path += @"\Rooms\Test.txt";
+
+                            Room room = new Room(path);
                             room.DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
                         }
                         columnIndex++;

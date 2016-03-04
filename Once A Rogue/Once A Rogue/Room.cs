@@ -50,7 +50,6 @@ namespace Once_A_Rogue
                 row++;
             }
         }
-
         //This method draws a room, given the sprite batch, the tilemap, and an x / y coordinate
         public void DrawRoom(SpriteBatch spriteBatch, Texture2D tilemap, int xCoord, int yCoord)
         {
