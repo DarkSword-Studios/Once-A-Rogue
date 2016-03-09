@@ -24,8 +24,10 @@ namespace Once_A_Rogue
         int numRooms;
 
         //Camera Mods
-        int xMod = 0;
-        int yMod = 0;
+        //int xMod = 0;
+        //int yMod = 0;
+
+        Camera camera;
 
         //Declare Room Textures
         /*
@@ -82,7 +84,10 @@ namespace Once_A_Rogue
 
             gridSystem = builderAlpha.BuildLevel(gridSystem, numRooms);
 
-            buildLevel = true;           
+            buildLevel = true;
+
+
+            camera = new Camera(960, 540);
 
             base.Initialize();
         }
@@ -142,24 +147,30 @@ namespace Once_A_Rogue
             // TODO: Add your update logic here 
 
             //Camera / Modular Testing Tool * Remove in Final Cut
-        
+
             KeyboardState state = Keyboard.GetState();
 
             if (state.IsKeyDown(Keys.Right))
             {
-                xMod += 10;
+                //xMod += 10;
             }
             if (state.IsKeyDown(Keys.Left))
             {
-                xMod -= 10;
+                //xMod -= 10;
             }
             if (state.IsKeyDown(Keys.Up))
             {
-                yMod -= 10;
+                //yMod -= 10;
+                camera.Move("up");
             }
             if (state.IsKeyDown(Keys.Down))
             {
-                yMod += 10;
+                //yMod += 10;
+            }
+
+            if (camera.isMoving)
+            {
+                camera.Update();
             }
 
             //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
@@ -205,8 +216,8 @@ namespace Once_A_Rogue
                         if (gridSystem[columnIndex, rowIndex] != null)
                         {
                             //Build coordinates based on camera mods and grid placement
-                            int xCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) + xMod);
-                            int yCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) + yMod);
+                            int xCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) + camera.xMod);
+                            int yCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) + camera.yMod);
 
                             xCoord += ((columnIndex - 4) * 1920);
                             yCoord += ((rowIndex - 4) * 1080);
