@@ -21,6 +21,9 @@ namespace Once_A_Rogue
         const int ROWS = 9;
         const int COLUMNS = 9;
 
+        const int SCREEN_WIDTH = 1920;
+        const int SCREEN_HEIGHT = 1080;
+
         int numRooms;
 
         //Camera Mods
@@ -86,8 +89,8 @@ namespace Once_A_Rogue
 
             buildLevel = true;
 
-
-            camera = new Camera(960, 540);
+            //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
+            camera = new Camera(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             base.Initialize();
         }
@@ -150,22 +153,39 @@ namespace Once_A_Rogue
 
             KeyboardState state = Keyboard.GetState();
 
+            //If the camer is not currently running a motion, a call can be made to adjust it up down left or right
             if (state.IsKeyDown(Keys.Right))
             {
                 //xMod += 10;
+                if (!camera.isMoving)
+                {
+                    camera.Move("right");
+                }
             }
             if (state.IsKeyDown(Keys.Left))
             {
                 //xMod -= 10;
+                if (!camera.isMoving)
+                {
+                    camera.Move("left");
+                }
             }
             if (state.IsKeyDown(Keys.Up))
             {
                 //yMod -= 10;
-                camera.Move("up");
+                if (!camera.isMoving)
+                {
+                    camera.Move("up");
+                }
+                
             }
             if (state.IsKeyDown(Keys.Down))
             {
                 //yMod += 10;
+                if (!camera.isMoving)
+                {
+                    camera.Move("down");
+                }
             }
 
             if (camera.isMoving)
@@ -216,8 +236,8 @@ namespace Once_A_Rogue
                         if (gridSystem[columnIndex, rowIndex] != null)
                         {
                             //Build coordinates based on camera mods and grid placement
-                            int xCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) + camera.xMod);
-                            int yCoord = ((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) + camera.yMod);
+                            int xCoord = ((SCREEN_WIDTH / 2) + camera.xMod);
+                            int yCoord = ((SCREEN_HEIGHT / 2) + camera.yMod);
 
                             xCoord += ((columnIndex - 4) * 1920);
                             yCoord += ((rowIndex - 4) * 1080);
