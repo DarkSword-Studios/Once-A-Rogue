@@ -15,6 +15,7 @@ namespace Once_A_Rogue
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Player player;
 
         //Declare a grid to keep track of level space
         string [,] gridSystem;
@@ -89,8 +90,12 @@ namespace Once_A_Rogue
 
             buildLevel = true;
 
+
+            //Initializing the player
+            player = new Player((int)gridSystem.GetLength(0), (int)gridSystem.GetLength(1), 400, 400);
+
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
-            camera = new Camera(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
+            camera = new Camera(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             base.Initialize();
         }
@@ -106,6 +111,7 @@ namespace Once_A_Rogue
 
             // TODO: use this.Content to load your game content here
 
+            player.Texture = Content.Load<Texture2D>("Player");
             //Initialize all room textures
             /*
             allDirections = Content.Load<Texture2D>("AllDirections-RoomCode.png");
@@ -201,6 +207,8 @@ namespace Once_A_Rogue
                 gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
             }
 
+            //Updating the player position
+            player.Update(camera.screenWidth, camera.screenHeight);
 
             base.Update(gameTime);
         }
@@ -345,6 +353,9 @@ namespace Once_A_Rogue
                     rowIndex++;
                 }
             }
+
+            //Drawing the player
+            player.Draw(spriteBatch);
 
             spriteBatch.End();
 

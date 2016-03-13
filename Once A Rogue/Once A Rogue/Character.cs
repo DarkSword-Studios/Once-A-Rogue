@@ -41,13 +41,13 @@ namespace Once_A_Rogue
         }
 
         //Properties for easy access to the characters X and Y values
-        public int X
+        public int PosX
         {
             get { return posRect.X; }
             set { posRect.X = value; }
         }
 
-        public int Y
+        public int PosY
         {
             get { return posRect.Y; }
             set { posRect.Y = value; }
@@ -140,6 +140,11 @@ namespace Once_A_Rogue
                 {
                     moveSpeed = moveSpeedTotal;
                 }
+                
+                else
+                {
+                    moveSpeed = value;
+                }
 
                 if((moveSpeed < moveSpeedTotal) && (moveSpeed != 0))
                 {
@@ -153,12 +158,12 @@ namespace Once_A_Rogue
 
         //Bools to test if the character is afflicted by a status effect
 
-        private bool IsStunned;
-        private bool IsRooted;
-        private bool IsSnared;
-        private bool IsOnFire;
-        private bool IsPoisoned;
-        private bool IsExplosive;
+        protected bool IsStunned;
+        protected bool IsRooted;
+        protected bool IsSnared;
+        protected bool IsOnFire;
+        protected bool IsPoisoned;
+        protected bool IsExplosive;
 
         //Variables of the status effects
         private int stunDur;

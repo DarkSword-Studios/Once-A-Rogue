@@ -100,6 +100,9 @@
     <Content Include="Content\LeftUpRight-RoomCode.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Right-RoomCode.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
