@@ -85,11 +85,65 @@ namespace Once_A_Rogue
             base.Update();
         }
 
-        public void Update(int roomWidth, int roomHeight)
+        public void Update(int roomWidth, int roomHeight, Camera cam)
         {
             base.Update();
             
-            ProcessInput(roomWidth, roomHeight);
+            if(!cam.isMoving)
+            {
+                ProcessInput(roomWidth, roomHeight);
+            }
+
+            else if(cam.isMoving)
+            {
+                switch(cam.direction)
+                {
+                    case "right":
+                        if(cam.progress <= (1080/2))
+                        {
+                            PosX -= 2;
+                        }
+
+                        if (cam.progress > (1080 / 2))
+                        {
+                            PosX -= 5;
+                        }
+                        break;
+                    case "left":
+                        if (cam.progress <= (1080 / 2))
+                        {
+                            PosX += 2;
+                        }
+
+                        if (cam.progress > (1080 / 2))
+                        {
+                            PosX += 5;
+                        }
+                        break;
+                    case "down":
+                        if (cam.progress <= (1920 / 2))
+                        {
+                            PosY -= 3;
+                        }
+
+                        if (cam.progress > (1920 / 2))
+                        {
+                            PosY -= 5;
+                        }
+                        break;
+                    case "up":
+                        if (cam.progress <= (1920 / 2))
+                        {
+                            PosY += 3;
+                        }
+
+                        if (cam.progress > (1920 / 2))
+                        {
+                            PosY += 5;
+                        }
+                        break;
+                }
+            }
         }
     }
 }

@@ -104,7 +104,7 @@ namespace Once_A_Rogue
 
 
             //Initializing the player
-            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 400, 400);
+            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 100, 200);
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
             camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -244,7 +244,7 @@ namespace Once_A_Rogue
             }
 
             //Updating the player position
-            player.Update(camera.screenWidth, camera.screenHeight);
+            player.Update(camera.screenWidth, camera.screenHeight, camera);
 
             base.Update(gameTime);
         }
