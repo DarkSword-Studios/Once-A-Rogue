@@ -36,6 +36,13 @@ namespace Once_A_Rogue
 
         Camera camera;
 
+        //Manage room activity to minimize impact on CPU
+        bool shifting;
+        int oldRow = -1;
+        int oldCol = -1;
+        string playerMove = "none";
+            
+
         //Declare Room Textures
         /*
         Texture2D allDirections;
@@ -97,10 +104,10 @@ namespace Once_A_Rogue
 
 
             //Initializing the player
-            player = new Player((int)gridSystem.GetLength(0), (int)gridSystem.GetLength(1), 400, 400);
+            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 400, 400);
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
-            camera = new Camera(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT);
+            camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             base.Initialize();
         }
@@ -199,9 +206,33 @@ namespace Once_A_Rogue
                 }
             }
 
+            if (state.IsKeyDown(Keys.A))
+            {
+                playerMove = "left";
+            }
+
+            if (state.IsKeyDown(Keys.D))
+            {
+                playerMove = "right";
+            }
+
+            if (state.IsKeyDown(Keys.S))
+            {
+                playerMove = "down";
+            }
+
+            if (state.IsKeyDown(Keys.W))
+            {
+                playerMove = "up";
+            }
+
             if (camera.isMoving)
             {
                 camera.Update();
+            }
+            else
+            {
+                shifting = false;
             }
 
             //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
@@ -350,11 +381,68 @@ namespace Once_A_Rogue
 
                             if(levelAnnex[columnIndex, rowIndex] == null)
                             {
-                                Room room = new Room(path);
+                                Room room = new Room(path, false, gridSystem[columnIndex, rowIndex]);
+                                room.BuildRoom(xCoord, yCoord);
                                 levelAnnex[columnIndex, rowIndex] = room;
+
+                                //If the generated room is the starting room, it should be initially active
+                                if(columnIndex == ((int)levelAnnex.GetLength(0)/2) && rowIndex == ((int)levelAnnex.GetLength(1)/2))
+                                {
+                                    levelAnnex[columnIndex, rowIndex].Active = true;
+                                }
                             }
-                            
-                            levelAnnex[columnIndex,rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
+
+                            if (!shifting && oldRow != -1)
+                            {
+                                levelAnnex[oldCol, oldRow].Active = false;
+                                oldRow = -1;
+                                oldCol = -1;
+                            }
+
+                            if (levelAnnex[columnIndex, rowIndex].Active)
+                            {
+                                //Two birds with one stone; update collisions check and adjust active rooms if necessary
+                                if (!shifting)
+                                {
+
+                                    switch (levelAnnex[columnIndex, rowIndex].CheckChangeRoom(player, camera, playerMove))
+                                    {
+                                        case ("right"):
+
+                                            levelAnnex[columnIndex + 1, rowIndex].Active = true;
+                                            shifting = true;
+                                            oldRow = rowIndex;
+                                            oldCol = columnIndex;
+                                            break;
+
+                                        case ("left"):
+
+                                            levelAnnex[columnIndex - 1, rowIndex].Active = true;
+                                            shifting = true;
+                                            oldRow = rowIndex;
+                                            oldCol = columnIndex;
+                                            break;
+
+                                        case ("up"):
+
+                                            levelAnnex[columnIndex, rowIndex - 1].Active = true;
+                                            shifting = true;
+                                            oldRow = rowIndex;
+                                            oldCol = columnIndex;
+                                            break;
+
+                                        case ("down"):
+
+                                            levelAnnex[columnIndex, rowIndex + 1].Active = true;
+                                            shifting = true;
+                                            oldRow = rowIndex;
+                                            oldCol = columnIndex;
+                                            break;
+                                    }                             
+                                }                                                                                                
+
+                            levelAnnex[columnIndex, rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
+                            }                            
                         }
                         columnIndex++;
                     }

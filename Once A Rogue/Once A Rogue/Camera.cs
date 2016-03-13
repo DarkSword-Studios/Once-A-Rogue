@@ -39,6 +39,11 @@ namespace Once_A_Rogue
         //This should only be called once per camera move
         public void Move(string dir)
         {
+            if (isMoving)
+            {
+                return;
+            }
+
             direction = dir;
             isMoving = true;
             progress = 0;
@@ -46,7 +51,7 @@ namespace Once_A_Rogue
 
         //When called to update, the camera will adjust its current position. NEVER CALL UPDATE BEFORE INITIALIZING A CAMERA MOVE WITH Move()
         public void Update()
-        {
+        {         
             switch (direction)
             {
                 case "up":

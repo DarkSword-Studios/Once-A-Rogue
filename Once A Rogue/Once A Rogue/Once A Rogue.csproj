@@ -57,6 +57,7 @@
     <Compile Include="SkillTree.Designer.cs">
       <DependentUpon>SkillTree.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tile.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
   <ItemGroup>
