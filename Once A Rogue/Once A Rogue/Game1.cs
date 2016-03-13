@@ -18,7 +18,7 @@ namespace Once_A_Rogue
         Player player;
 
         //Declare a grid to keep track of level space
-        string [,] gridSystem;
+        string [,] gridSystem;       
         const int ROWS = 9;
         const int COLUMNS = 9;
 
@@ -26,6 +26,9 @@ namespace Once_A_Rogue
         const int SCREEN_HEIGHT = 1080;
 
         int numRooms;
+
+        //Track room structure via the grid system
+        Room[,] levelAnnex;
 
         //Camera Mods
         //int xMod = 0;
@@ -81,6 +84,8 @@ namespace Once_A_Rogue
 
             //Run Level Builder! Generate the first level
             gridSystem = new string[COLUMNS, ROWS];
+
+            levelAnnex = new Room[COLUMNS, ROWS];
 
             builderAlpha = new LevelBuilder();
 
@@ -343,8 +348,13 @@ namespace Once_A_Rogue
                             string path = @"..\..\..\Content\Rooms\Test.txt";
                             //path += @"\Rooms\Test.txt";
 
-                            Room room = new Room(path);
-                            room.DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
+                            if(levelAnnex[columnIndex, rowIndex] == null)
+                            {
+                                Room room = new Room(path);
+                                levelAnnex[columnIndex, rowIndex] = room;
+                            }
+                            
+                            levelAnnex[columnIndex,rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
                         }
                         columnIndex++;
                     }

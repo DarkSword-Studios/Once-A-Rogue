@@ -67,7 +67,7 @@ namespace Once_A_Rogue
 
                     //Locate the specified tile, and give it a new location within the room
                     Rectangle tile = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
-                    Vector2 location = new Vector2(xCoord + (120 * col), yCoord + (120 * row));
+                    Vector2 location = new Vector2(xCoord + (TILESIZE * col), yCoord + (TILESIZE * row));
 
                     //Draw the tile
                     spriteBatch.Draw(tilemap, location, tile, Color.White);

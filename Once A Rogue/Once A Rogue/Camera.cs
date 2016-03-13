@@ -57,7 +57,6 @@ namespace Once_A_Rogue
                     if (progress >= screenHeight)
                     {
                         isMoving = false;
-
                     }
 
                     break;
@@ -70,7 +69,6 @@ namespace Once_A_Rogue
                     if (progress >= screenHeight)
                     {
                         isMoving = false;
-
                     }
 
                     break;
@@ -83,7 +81,6 @@ namespace Once_A_Rogue
                     if (progress >= screenWidth)
                     {
                         isMoving = false;
-
                     }
 
                     break;
@@ -96,7 +93,6 @@ namespace Once_A_Rogue
                     if (progress >= screenWidth)
                     {
                         isMoving = false;
-
                     }
 
                     break;
