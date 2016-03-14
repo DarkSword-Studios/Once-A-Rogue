@@ -173,13 +173,16 @@ namespace Once_A_Rogue
         {
             base.Update();
             
+            //If the camera is not moving, process the player input
             if(!cam.isMoving)
             {
                 ProcessInput(roomWidth, roomHeight);
             }
 
+            //If the camera is moving, player input is not processed
             else if(cam.isMoving)
             {
+                //Adjusting the player motion based on the camera movement direction
                 switch(cam.direction)
                 {
                     case "right":
@@ -193,6 +196,7 @@ namespace Once_A_Rogue
                             PosX -= 5;
                         }
                         break;
+
                     case "left":
                         if (cam.progress <= (1080 / 2))
                         {
@@ -204,6 +208,7 @@ namespace Once_A_Rogue
                             PosX += 5;
                         }
                         break;
+
                     case "down":
                         if (cam.progress <= (1920 / 2))
                         {
@@ -215,6 +220,7 @@ namespace Once_A_Rogue
                             PosY -= 5;
                         }
                         break;
+
                     case "up":
                         if (cam.progress <= (1920 / 2))
                         {
