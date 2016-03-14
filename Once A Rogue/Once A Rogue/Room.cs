@@ -162,8 +162,8 @@ namespace Once_A_Rogue
 
         public void TagTiles(Point origin, int posXTiles, int negXTiles, int posYTiles, int negYTiles)
         {
-            int tileX = origin.X / 16;
-            int tileY = origin.Y / 9;
+            int tileX = origin.X / 120;
+            int tileY = origin.Y / 120;
 
             int maxX = tileX + posXTiles;
             int maxY = tileY + posYTiles;
@@ -175,11 +175,11 @@ namespace Once_A_Rogue
             {
                 for(int x = tileX; x < maxX; x++)
                 {
-                    if (x > 0 && x < 16 && y > 0 && y < 9)
+                    if (x > 0 && x < 15 && y > 0 && y < 8)
                     {
                         finalRoomAnnex[y, x].ValidTag = true;
                     }
-                    else if (y == 0 && y == 16 && y == 0 && y == 9)
+                    else if ((x == 0 || x == 15 || y == 0 || y == 8) && y > -1 && x > -1 && y < 9 && x < 16)
                     {
                         finalRoomAnnex[y, x].InvalidTag = true;
                     }

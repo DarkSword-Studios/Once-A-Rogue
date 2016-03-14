@@ -18,6 +18,8 @@ namespace Once_A_Rogue
         
         public void Update(Room room)
         {
+
+            room.TagTiles(msState.Position, 1, 1, 1, 1);
             msState = Mouse.GetState();
 
             if (msState.LeftButton == ButtonState.Pressed && prevMsState.LeftButton == ButtonState.Released)
