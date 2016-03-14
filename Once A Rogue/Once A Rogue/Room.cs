@@ -119,7 +119,9 @@ namespace Once_A_Rogue
                     finalRoomAnnex[row, col].RelativeLocation = new Rectangle(xCoord + (TILESIZE * col), yCoord + (TILESIZE * row), TILESIZE, TILESIZE);
 
                     //Draw the tile
-                    spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].RelativeImageLocal, Color.White);
+                    spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
+                    finalRoomAnnex[row, col].InvalidTag = false;
+                    finalRoomAnnex[row, col].ValidTag = false;
                     col++;
                 }
                 col = 0;
@@ -129,8 +131,6 @@ namespace Once_A_Rogue
 
         public String UpdateEvents(Player player, Camera camera, String playerMove)
         {
-            //int row = 0;
-            //int col = 0;
 
             if(player.PosX == 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
             {
@@ -154,77 +154,29 @@ namespace Once_A_Rogue
             {
                 camera.Move("down");
                 return "down";
-            }
-
-            //while (row < unformattedRoomAnnex.GetLength(0))
-            //{
-                //while (col < unformattedRoomAnnex.GetLength(1))
-                //{
-                    //if (unformattedRoomAnnex[row, col] != 0 && player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation))
-                    //{
-                        //if (player.PosX <= 120)
-                        //{
-                            //player.PosX = 120;
-                        //}
-                    //}
-                    
-
-                    //Check for changing rooms
-                    //if (unformattedRoomAnnex[row, col] == 79 && playerMove == "right")
-                    //{
-                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation))
-                    //    {
-                    //        if (doorLocals.Contains("RIGHT"))
-                    //        {
-                    //            camera.Move("right");
-                    //            return "right";
-                    //        }
-                    //    }
-                    //}
-
-                    //if (unformattedRoomAnnex[row, col] == 64)
-                    //{
-                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "left")
-                    //    {
-                    //        if (doorLocals.Contains("LEFT"))
-                    //        {
-                    //            camera.Move("left");
-                    //            return "left";
-                    //        }
-                    //    }
-                    //}
-
-                    //if (unformattedRoomAnnex[row, col] == 8)
-                    //{
-                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "up")
-                    //    {
-                    //        if (doorLocals.Contains("UP"))
-                    //        {
-                    //            camera.Move("up");
-                    //            return "up";
-                    //        }
-                    //    }
-                    //}
-
-                    //if (unformattedRoomAnnex[row, col] == 136)
-                    //{
-                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "down")
-                    //    {
-                    //        if (doorLocals.Contains("DOWN"))
-                    //        {
-                    //            camera.Move("down");
-                    //            return "down";
-                    //        }
-                    //    }
-                    //}
-                    //col++;
-                //}
-                //col = 0;
-                //row++;
-
-            //}
+            }        
 
             return "NONE";
+
+        }
+
+        public void TagTiles(Point origin, int posXTiles, int negXTiles, int posYTiles, int negYTiles)
+        {
+            int tileX = origin.X / 16;
+            int tileY = origin.Y / 9;
+
+            if(tileX > 0 && tileX < 16 && tileY > 0 && tileY < 9)
+            {
+                finalRoomAnnex[tileY, tileX].ValidTag = true;
+            }
+            else
+            {
+                finalRoomAnnex[tileY, tileX].InvalidTag = true;
+            }
+        }
+
+        public void TagTiles(Point origin, int posXTiles, int negXTiles, int posYTiles, int negYTiles, Boolean playerBound, int rangeX, int rangeY)
+        {
 
         }
 

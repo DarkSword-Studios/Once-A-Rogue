@@ -9,8 +9,37 @@ namespace Once_A_Rogue
 {
     class Tile
     {
+        private Boolean invalidTag = false;
+        private Boolean validTag = false;
+
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
+
+        public Boolean InvalidTag
+        {
+            get
+            {
+                return invalidTag;
+            }
+
+            set
+            {
+                invalidTag = value;
+            }
+        }
+
+        public Boolean ValidTag
+        {
+            get
+            {
+                return validTag;
+            }
+
+            set
+            {
+                validTag = value;
+            }
+        }
 
         public Rectangle RelativeImageLocal
         {
@@ -42,6 +71,22 @@ namespace Once_A_Rogue
         {
             relativeImageLocal = imageLocal;
             relativeLocation = spacialLocation;
+        }
+
+        public Color DetermineTileColor()
+        {
+            if (validTag)
+            {
+                return Color.Green;
+            }
+            else if (invalidTag)
+            {
+                return Color.Red;
+            }
+            else
+            {
+                return Color.White;
+            }
         }
     }
 }
