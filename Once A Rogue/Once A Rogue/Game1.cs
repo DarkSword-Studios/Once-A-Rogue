@@ -394,10 +394,20 @@ namespace Once_A_Rogue
                                 {
                                     char[] letterArray = new char[file.Length];
                                     List<int> numberArray = new List<int>();
+                                    List<int> roomCodeList = new List<int>();
 
                                     for(int x = 0; x < file.Length; x++)
                                     {
                                         letterArray[x] = file[x];
+                                    }
+
+                                    for (int x = 0; x < roomCodeStr.Length; x++)
+                                    {
+                                        int roomCodeDigit;
+
+                                        int.TryParse(roomCodeStr[x].ToString(), out roomCodeDigit);
+
+                                        roomCodeList.Add(roomCodeDigit);
                                     }
 
                                     int fileNumber;
@@ -411,14 +421,14 @@ namespace Once_A_Rogue
                                         }
                                     }
 
-                                    if(numberArray.Count == roomCodeStr.Length)
+                                    if(numberArray.Count == roomCodeList.Count)
                                     {
                                         int truthCount = 0;
                                         for(int x = 0; x < numberArray.Count; x++)
                                         {
-                                            if(numberArray[x] == roomCodeStr[x])
+                                            if(numberArray[x] == roomCodeList[x])
                                             {
-                                                truthCount++;
+                                                truthCount += 1;
                                             }
                                         }
 
@@ -433,6 +443,7 @@ namespace Once_A_Rogue
                             Random random = new Random();
 
                             string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
+                            
 
                             //Draw the node
                             //spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
