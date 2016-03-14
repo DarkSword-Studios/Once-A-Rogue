@@ -19,6 +19,8 @@ namespace Once_A_Rogue
         SpriteBatch spriteBatch;
         Player player;
 
+        enum GameState { MainMenu, Playing, GameOver, }
+
         //Declare a grid to keep track of level space
         string [,] gridSystem;       
         const int ROWS = 9;
@@ -71,6 +73,8 @@ namespace Once_A_Rogue
 
         LevelBuilder builderAlpha;
 
+        GameState gameState;
+
 
         bool buildLevel;
 
@@ -94,6 +98,9 @@ namespace Once_A_Rogue
             //Allow the game to run in fullscreen
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            //Initializing the gamestate
+            gameState = GameState.Playing;
 
             //Run Level Builder! Generate the first level
             gridSystem = new string[COLUMNS, ROWS];
@@ -173,88 +180,101 @@ namespace Once_A_Rogue
                 Exit();
 
             // TODO: Add your update logic here 
-  
-            framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
-            player.UpdateFrame(framesElapsed);
 
-            //Camera / Modular Testing Tool * Remove in Final Cut
-
-            KeyboardState state = Keyboard.GetState();
-
-            //If the camer is not currently running a motion, a call can be made to adjust it up down left or right
-            if (state.IsKeyDown(Keys.Right))
+            if(gameState == GameState.MainMenu)
             {
-                //xMod += 10;
-                if (!camera.isMoving)
+
+            }
+
+            if(gameState == GameState.Playing)
+            {
+                framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
+                player.UpdateFrame(framesElapsed);
+
+                //Camera / Modular Testing Tool * Remove in Final Cut
+
+                KeyboardState state = Keyboard.GetState();
+
+                //If the camer is not currently running a motion, a call can be made to adjust it up down left or right
+                if (state.IsKeyDown(Keys.Right))
                 {
-                    camera.Move("right");
+                    //xMod += 10;
+                    if (!camera.isMoving)
+                    {
+                        camera.Move("right");
+                    }
                 }
-            }
-            if (state.IsKeyDown(Keys.Left))
-            {
-                //xMod -= 10;
-                if (!camera.isMoving)
+                if (state.IsKeyDown(Keys.Left))
                 {
-                    camera.Move("left");
+                    //xMod -= 10;
+                    if (!camera.isMoving)
+                    {
+                        camera.Move("left");
+                    }
                 }
-            }
-            if (state.IsKeyDown(Keys.Up))
-            {
-                //yMod -= 10;
-                if (!camera.isMoving)
+                if (state.IsKeyDown(Keys.Up))
                 {
-                    camera.Move("up");
+                    //yMod -= 10;
+                    if (!camera.isMoving)
+                    {
+                        camera.Move("up");
+                    }
+
                 }
-                
-            }
-            if (state.IsKeyDown(Keys.Down))
-            {
-                //yMod += 10;
-                if (!camera.isMoving)
+                if (state.IsKeyDown(Keys.Down))
                 {
-                    camera.Move("down");
+                    //yMod += 10;
+                    if (!camera.isMoving)
+                    {
+                        camera.Move("down");
+                    }
                 }
-            }
 
-            if (state.IsKeyDown(Keys.A))
+                if (state.IsKeyDown(Keys.A))
+                {
+                    playerMove = "left";
+                }
+
+                if (state.IsKeyDown(Keys.D))
+                {
+                    playerMove = "right";
+                }
+
+                if (state.IsKeyDown(Keys.S))
+                {
+                    playerMove = "down";
+                }
+
+                if (state.IsKeyDown(Keys.W))
+                {
+                    playerMove = "up";
+                }
+
+                if (camera.isMoving)
+                {
+                    camera.Update();
+                }
+                else
+                {
+                    shifting = false;
+                }
+
+                //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
+
+                //if (state.IsKeyDown(Keys.R))
+                //{
+                //    gridSystem = new string[COLUMNS,ROWS];
+                //    gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
+                //}
+
+                //Updating the player position
+                player.Update(camera.screenWidth, camera.screenHeight, camera);
+            }
+            
+            if(gameState == GameState.GameOver)
             {
-                playerMove = "left";
-            }
 
-            if (state.IsKeyDown(Keys.D))
-            {
-                playerMove = "right";
             }
-
-            if (state.IsKeyDown(Keys.S))
-            {
-                playerMove = "down";
-            }
-
-            if (state.IsKeyDown(Keys.W))
-            {
-                playerMove = "up";
-            }
-
-            if (camera.isMoving)
-            {
-                camera.Update();
-            }
-            else
-            {
-                shifting = false;
-            }
-
-            //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
-
-            if (state.IsKeyDown(Keys.R))
-            {
-                gridSystem = new string[COLUMNS,ROWS];
-                gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
-            }
-
-            //Updating the player position
-            player.Update(camera.screenWidth, camera.screenHeight, camera);
 
             base.Update(gameTime);
         }
@@ -271,259 +291,272 @@ namespace Once_A_Rogue
 
             spriteBatch.Begin();
 
-            //If we want to display the build map
-            if (buildLevel)
+            if (gameState == GameState.MainMenu)
             {
-                //Reset build call
-                //buildLevel = false;
 
-                //Start at the beginning of the grid
-                int rowIndex = 0;
-                int columnIndex = 0;
+            }
 
-                //Work across and then down
-                while (rowIndex < ROWS)
+            if (gameState == GameState.Playing)
+            {
+                //If we want to display the build map
+                if (buildLevel)
                 {
-                    while (columnIndex < COLUMNS)
+                    //Reset build call
+                    //buildLevel = false;
+
+                    //Start at the beginning of the grid
+                    int rowIndex = 0;
+                    int columnIndex = 0;
+
+                    //Work across and then down
+                    while (rowIndex < ROWS)
                     {
-                        //If the grid node is NOT EMPTY it MUST BE FULFILLED
-                        if (gridSystem[columnIndex, rowIndex] != null)
+                        while (columnIndex < COLUMNS)
                         {
-                            //Build coordinates based on camera mods and grid placement
-                            int xCoord = ((SCREEN_WIDTH / 2) + camera.xMod);
-                            int yCoord = ((SCREEN_HEIGHT / 2) + camera.yMod);
-
-                            xCoord += ((columnIndex - 4) * 1920);
-                            yCoord += ((rowIndex - 4) * 1080);
-
-                            //Texture2D room;
-
-                            //Based on the node's structure, use the appropriate texture
-
-                            int roomCode;
-
-                            switch(gridSystem[columnIndex,rowIndex].ToUpper())
+                            //If the grid node is NOT EMPTY it MUST BE FULFILLED
+                            if (gridSystem[columnIndex, rowIndex] != null)
                             {
-                                case ("ALLDIRECTIONS"):
+                                //Build coordinates based on camera mods and grid placement
+                                int xCoord = ((SCREEN_WIDTH / 2) + camera.xMod);
+                                int yCoord = ((SCREEN_HEIGHT / 2) + camera.yMod);
 
-                                    roomCode = 1234;
-                                    break;
+                                xCoord += ((columnIndex - 4) * 1920);
+                                yCoord += ((rowIndex - 4) * 1080);
 
-                                case ("LEFT"):
+                                //Texture2D room;
 
-                                    roomCode = 1;
-                                    break;
+                                //Based on the node's structure, use the appropriate texture
 
-                                case ("UP"):
+                                int roomCode;
 
-                                    roomCode = 2;
-                                    break;
-
-                                case ("RIGHT"):
-
-                                    roomCode = 3;
-                                    break;
-
-                                case ("DOWN"):
-
-                                    roomCode = 4;
-                                    break;
-
-                                case ("LEFTDOWN"):
-
-                                    roomCode = 14;
-                                    break;
-
-                                case ("LEFTRIGHT"):
-
-                                    roomCode = 13;
-                                    break;
-
-                                case ("LEFTUP"):
-
-                                    roomCode = 12;
-                                    break;
-
-                                case ("UPRIGHT"):
-
-                                    roomCode = 23;
-                                    break;
-
-                                case ("UPDOWN"):
-
-                                    roomCode = 24;
-                                    break;
-
-                                case ("RIGHTDOWN"):
-
-                                    roomCode = 34;
-                                    break;
-
-                                case ("LEFTUPRIGHT"):
-
-                                    roomCode = 123;
-                                    break;
-
-                                case ("LEFTUPDOWN"):
-
-                                    roomCode = 124;
-                                    break;
-
-                                case ("LEFTRIGHTDOWN"):
-
-                                    roomCode = 134;
-                                    break;
-
-                                case ("UPRIGHTDOWN"):
-
-                                    roomCode = 234;
-                                    break;
-
-                                default:
-                                    roomCode = 2;
-                                    break;
-                            }
-
-                            string roomCodeStr = roomCode.ToString();
-
-                            List<string> possibleRooms = new List<string>();
-
-                            foreach(string file in Directory.GetFiles(@"..\..\..\Content\Rooms"))
-                            {
-                                if (file.Contains(roomCodeStr))
+                                switch (gridSystem[columnIndex, rowIndex].ToUpper())
                                 {
-                                    char[] letterArray = new char[file.Length];
-                                    List<int> numberArray = new List<int>();
-                                    List<int> roomCodeList = new List<int>();
+                                    case ("ALLDIRECTIONS"):
 
-                                    for(int x = 0; x < file.Length; x++)
+                                        roomCode = 1234;
+                                        break;
+
+                                    case ("LEFT"):
+
+                                        roomCode = 1;
+                                        break;
+
+                                    case ("UP"):
+
+                                        roomCode = 2;
+                                        break;
+
+                                    case ("RIGHT"):
+
+                                        roomCode = 3;
+                                        break;
+
+                                    case ("DOWN"):
+
+                                        roomCode = 4;
+                                        break;
+
+                                    case ("LEFTDOWN"):
+
+                                        roomCode = 14;
+                                        break;
+
+                                    case ("LEFTRIGHT"):
+
+                                        roomCode = 13;
+                                        break;
+
+                                    case ("LEFTUP"):
+
+                                        roomCode = 12;
+                                        break;
+
+                                    case ("UPRIGHT"):
+
+                                        roomCode = 23;
+                                        break;
+
+                                    case ("UPDOWN"):
+
+                                        roomCode = 24;
+                                        break;
+
+                                    case ("RIGHTDOWN"):
+
+                                        roomCode = 34;
+                                        break;
+
+                                    case ("LEFTUPRIGHT"):
+
+                                        roomCode = 123;
+                                        break;
+
+                                    case ("LEFTUPDOWN"):
+
+                                        roomCode = 124;
+                                        break;
+
+                                    case ("LEFTRIGHTDOWN"):
+
+                                        roomCode = 134;
+                                        break;
+
+                                    case ("UPRIGHTDOWN"):
+
+                                        roomCode = 234;
+                                        break;
+
+                                    default:
+                                        roomCode = 2;
+                                        break;
+                                }
+
+                                string roomCodeStr = roomCode.ToString();
+
+                                List<string> possibleRooms = new List<string>();
+
+                                foreach (string file in Directory.GetFiles(@"..\..\..\Content\Rooms"))
+                                {
+                                    if (file.Contains(roomCodeStr))
                                     {
-                                        letterArray[x] = file[x];
-                                    }
+                                        char[] letterArray = new char[file.Length];
+                                        List<int> numberArray = new List<int>();
+                                        List<int> roomCodeList = new List<int>();
 
-                                    for (int x = 0; x < roomCodeStr.Length; x++)
-                                    {
-                                        int roomCodeDigit;
-
-                                        int.TryParse(roomCodeStr[x].ToString(), out roomCodeDigit);
-
-                                        roomCodeList.Add(roomCodeDigit);
-                                    }
-
-                                    int fileNumber;
-
-                                    foreach(char c in letterArray)
-                                    {
-                                        string charString = c.ToString();
-                                        if (int.TryParse(charString, out fileNumber))
+                                        for (int x = 0; x < file.Length; x++)
                                         {
-                                            numberArray.Add(fileNumber);
+                                            letterArray[x] = file[x];
                                         }
-                                    }
 
-                                    if(numberArray.Count == roomCodeList.Count)
-                                    {
-                                        int truthCount = 0;
-                                        for(int x = 0; x < numberArray.Count; x++)
+                                        for (int x = 0; x < roomCodeStr.Length; x++)
                                         {
-                                            if(numberArray[x] == roomCodeList[x])
+                                            int roomCodeDigit;
+
+                                            int.TryParse(roomCodeStr[x].ToString(), out roomCodeDigit);
+
+                                            roomCodeList.Add(roomCodeDigit);
+                                        }
+
+                                        int fileNumber;
+
+                                        foreach (char c in letterArray)
+                                        {
+                                            string charString = c.ToString();
+                                            if (int.TryParse(charString, out fileNumber))
                                             {
-                                                truthCount += 1;
+                                                numberArray.Add(fileNumber);
                                             }
                                         }
 
-                                        if(truthCount == roomCodeStr.Length)
+                                        if (numberArray.Count == roomCodeList.Count)
                                         {
-                                            possibleRooms.Add(file);
+                                            int truthCount = 0;
+                                            for (int x = 0; x < numberArray.Count; x++)
+                                            {
+                                                if (numberArray[x] == roomCodeList[x])
+                                                {
+                                                    truthCount += 1;
+                                                }
+                                            }
+
+                                            if (truthCount == roomCodeStr.Length)
+                                            {
+                                                possibleRooms.Add(file);
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            Random random = new Random();
+                                Random random = new Random();
 
-                            string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
-                            
+                                string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
 
-                            //Draw the node
-                            //spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
-                            //path += @"\Rooms\Test.txt";
 
-                            if(levelAnnex[columnIndex, rowIndex] == null)
-                            {
-                                Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
-                                room.BuildRoom(xCoord, yCoord);
-                                levelAnnex[columnIndex, rowIndex] = room;
+                                //Draw the node
+                                //spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
+                                //path += @"\Rooms\Test.txt";
 
-                                //If the generated room is the starting room, it should be initially active
-                                if(columnIndex == ((int)levelAnnex.GetLength(0)/2) && rowIndex == ((int)levelAnnex.GetLength(1)/2))
+                                if (levelAnnex[columnIndex, rowIndex] == null)
                                 {
-                                    levelAnnex[columnIndex, rowIndex].Active = true;
+                                    Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
+                                    room.BuildRoom(xCoord, yCoord);
+                                    levelAnnex[columnIndex, rowIndex] = room;
+
+                                    //If the generated room is the starting room, it should be initially active
+                                    if (columnIndex == ((int)levelAnnex.GetLength(0) / 2) && rowIndex == ((int)levelAnnex.GetLength(1) / 2))
+                                    {
+                                        levelAnnex[columnIndex, rowIndex].Active = true;
+                                    }
+                                }
+
+                                if (!shifting && oldRow != -1)
+                                {
+                                    levelAnnex[oldCol, oldRow].Active = false;
+                                    oldRow = -1;
+                                    oldCol = -1;
+                                }
+
+                                if (levelAnnex[columnIndex, rowIndex].Active)
+                                {
+                                    //Two birds with one stone; update collisions check and adjust active rooms if necessary
+                                    if (!shifting)
+                                    {
+
+                                        switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove))
+                                        {
+                                            case ("right"):
+
+                                                levelAnnex[columnIndex + 1, rowIndex].Active = true;
+                                                shifting = true;
+                                                oldRow = rowIndex;
+                                                oldCol = columnIndex;
+                                                break;
+
+                                            case ("left"):
+
+                                                levelAnnex[columnIndex - 1, rowIndex].Active = true;
+                                                shifting = true;
+                                                oldRow = rowIndex;
+                                                oldCol = columnIndex;
+                                                break;
+
+                                            case ("up"):
+
+                                                levelAnnex[columnIndex, rowIndex - 1].Active = true;
+                                                shifting = true;
+                                                oldRow = rowIndex;
+                                                oldCol = columnIndex;
+                                                break;
+
+                                            case ("down"):
+
+                                                levelAnnex[columnIndex, rowIndex + 1].Active = true;
+                                                shifting = true;
+                                                oldRow = rowIndex;
+                                                oldCol = columnIndex;
+                                                break;
+                                        }
+                                    }
+
+                                    levelAnnex[columnIndex, rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
                                 }
                             }
-
-                            if (!shifting && oldRow != -1)
-                            {
-                                levelAnnex[oldCol, oldRow].Active = false;
-                                oldRow = -1;
-                                oldCol = -1;
-                            }
-
-                            if (levelAnnex[columnIndex, rowIndex].Active)
-                            {
-                                //Two birds with one stone; update collisions check and adjust active rooms if necessary
-                                if (!shifting)
-                                {
-
-                                    switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove))
-                                    {
-                                        case ("right"):
-
-                                            levelAnnex[columnIndex + 1, rowIndex].Active = true;
-                                            shifting = true;
-                                            oldRow = rowIndex;
-                                            oldCol = columnIndex;
-                                            break;
-
-                                        case ("left"):
-
-                                            levelAnnex[columnIndex - 1, rowIndex].Active = true;
-                                            shifting = true;
-                                            oldRow = rowIndex;
-                                            oldCol = columnIndex;
-                                            break;
-
-                                        case ("up"):
-
-                                            levelAnnex[columnIndex, rowIndex - 1].Active = true;
-                                            shifting = true;
-                                            oldRow = rowIndex;
-                                            oldCol = columnIndex;
-                                            break;
-
-                                        case ("down"):
-
-                                            levelAnnex[columnIndex, rowIndex + 1].Active = true;
-                                            shifting = true;
-                                            oldRow = rowIndex;
-                                            oldCol = columnIndex;
-                                            break;
-                                    }                             
-                                }                                                                                                
-
-                            levelAnnex[columnIndex, rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
-                            }                            
+                            columnIndex++;
                         }
-                        columnIndex++;
+                        //Reset column index after running through each column
+                        columnIndex = 0;
+                        rowIndex++;
                     }
-                    //Reset column index after running through each column
-                    columnIndex = 0;
-                    rowIndex++;
                 }
+
+                //Drawing the player
+                player.Draw(spriteBatch, playerIdle, 140, 140);
             }
 
-            //Drawing the player
-            player.Draw(spriteBatch, playerIdle, 140, 140);
+            if(gameState == GameState.GameOver)
+            {
+
+            }
             
 
             spriteBatch.End();
