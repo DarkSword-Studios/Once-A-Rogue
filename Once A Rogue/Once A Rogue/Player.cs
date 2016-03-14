@@ -194,6 +194,7 @@ namespace Once_A_Rogue
                         if (cam.progress > (1080 / 2))
                         {
                             PosX -= 5;
+                            playerState = PlayerState.IdleRight;
                         }
                         break;
 
@@ -206,6 +207,7 @@ namespace Once_A_Rogue
                         if (cam.progress > (1080 / 2))
                         {
                             PosX += 5;
+                            playerState = PlayerState.IdleLeft;
                         }
                         break;
 
@@ -218,6 +220,14 @@ namespace Once_A_Rogue
                         if (cam.progress > (1920 / 2))
                         {
                             PosY -= 5;
+                            if (playerState == PlayerState.WalkingLeft)
+                            {
+                                playerState = PlayerState.IdleLeft;
+                            }
+                            else if (playerState == PlayerState.WalkingRight)
+                            {
+                                playerState = PlayerState.IdleRight;
+                            }
                         }
                         break;
 
@@ -230,6 +240,14 @@ namespace Once_A_Rogue
                         if (cam.progress > (1920 / 2))
                         {
                             PosY += 5;
+                            if (playerState == PlayerState.WalkingLeft)
+                            {
+                                playerState = PlayerState.IdleLeft;
+                            }
+                            else if (playerState == PlayerState.WalkingRight)
+                            {
+                                playerState = PlayerState.IdleRight;
+                            }
                         }
                         break;
                 }
