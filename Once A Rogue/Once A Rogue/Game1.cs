@@ -76,6 +76,9 @@ namespace Once_A_Rogue
         GameState gameState;
 
 
+        Cursor cur;
+
+
         bool buildLevel;
 
         public Game1()
@@ -119,6 +122,9 @@ namespace Once_A_Rogue
 
             //Initializing the player
             player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
+
+            //Initializing the Cursor
+            cur = new Cursor();
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
             camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
@@ -297,7 +303,7 @@ namespace Once_A_Rogue
 
             }
 
-            if (gameState == GameState.Playing)
+            if (gameState == GameState.Playing && this.IsActive)
             {
                 //If we want to display the build map
                 if (buildLevel)
@@ -502,7 +508,7 @@ namespace Once_A_Rogue
                                     //Two birds with one stone; update collisions check and adjust active rooms if necessary
                                     if (!shifting)
                                     {
-
+                                        cur.Update(levelAnnex[columnIndex, rowIndex]);
                                         switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove))
                                         {
                                             case ("right"):
