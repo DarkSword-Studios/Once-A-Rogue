@@ -188,12 +188,12 @@ namespace Once_A_Rogue
                     case "right":
                         if(cam.progress <= (1080/2))
                         {
-                            PosX -= 1;
+                            PosX -= cam.panSpeed - 8;
                         }
 
                         if (cam.progress > (1080 / 2))
                         {
-                            PosX -= 5;
+                            PosX -= cam.panSpeed;
                             playerState = PlayerState.IdleRight;
                         }
                         break;
@@ -201,12 +201,12 @@ namespace Once_A_Rogue
                     case "left":
                         if (cam.progress <= (1080 / 2))
                         {
-                            PosX += 1;
+                            PosX += cam.panSpeed - 8;
                         }
 
                         if (cam.progress > (1080 / 2))
                         {
-                            PosX += 5;
+                            PosX += cam.panSpeed;
                             playerState = PlayerState.IdleLeft;
                         }
                         break;
@@ -214,12 +214,12 @@ namespace Once_A_Rogue
                     case "down":
                         if (cam.progress <= (1920 / 2))
                         {
-                            PosY -= 3;
+                            PosY -= cam.panSpeed - 4;
                         }
 
                         if (cam.progress > (1920 / 2))
                         {
-                            PosY -= 5;
+                            PosY -= cam.panSpeed;
                             if (playerState == PlayerState.WalkingLeft)
                             {
                                 playerState = PlayerState.IdleLeft;
@@ -234,12 +234,12 @@ namespace Once_A_Rogue
                     case "up":
                         if (cam.progress <= (1920 / 2))
                         {
-                            PosY += 3;
+                            PosY += cam.panSpeed - 4;
                         }
 
                         if (cam.progress > (1920 / 2))
                         {
-                            PosY += 5;
+                            PosY += cam.panSpeed;
                             if (playerState == PlayerState.WalkingLeft)
                             {
                                 playerState = PlayerState.IdleLeft;

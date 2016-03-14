@@ -96,6 +96,7 @@ namespace Once_A_Rogue
             // TODO: Add your initialization logic here
 
             //Allow the game to run in fullscreen
+            this.IsMouseVisible = true;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
@@ -120,7 +121,7 @@ namespace Once_A_Rogue
             player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
-            camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT);
+            camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
 
             base.Initialize();
         }

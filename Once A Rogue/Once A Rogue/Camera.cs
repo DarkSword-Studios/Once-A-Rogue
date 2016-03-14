@@ -22,12 +22,14 @@ namespace Once_A_Rogue
         public string direction;
         public Boolean isMoving;
 
+        public int panSpeed;
         public int screenWidth;
         public int screenHeight;
 
         //A camera must be initialized with an origin point and dimensions
-        public Camera(int x, int y, int scrWidth, int scrHeight)
+        public Camera(int x, int y, int scrWidth, int scrHeight, int pan)
         {
+            panSpeed = pan;
             xMod = x;
             yMod = y;
             isMoving = false;
@@ -56,8 +58,8 @@ namespace Once_A_Rogue
             {
                 case "up":
 
-                    progress += 5;
-                    yMod += 5;
+                    progress += panSpeed;
+                    yMod += panSpeed;
 
                     if (progress >= screenHeight)
                     {
@@ -68,8 +70,8 @@ namespace Once_A_Rogue
 
                 case "down":
 
-                    progress += 5;
-                    yMod -= 5;
+                    progress += panSpeed;
+                    yMod -= panSpeed;
 
                     if (progress >= screenHeight)
                     {
@@ -80,8 +82,8 @@ namespace Once_A_Rogue
 
                 case "left":
 
-                    progress += 5;
-                    xMod += 5;
+                    progress += panSpeed;
+                    xMod += panSpeed;
 
                     if (progress >= screenWidth)
                     {
@@ -92,8 +94,8 @@ namespace Once_A_Rogue
 
                 case "right":
 
-                    progress += 5;
-                    xMod -= 5;
+                    progress += panSpeed;
+                    xMod -= panSpeed;
 
                     if (progress >= screenWidth)
                     {

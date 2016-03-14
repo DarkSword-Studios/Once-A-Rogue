@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Once_A_Rogue
 {
-    class Skills
+    class Cursor
     {
     }
 }
