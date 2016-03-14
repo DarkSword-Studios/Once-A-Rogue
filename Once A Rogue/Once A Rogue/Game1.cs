@@ -384,13 +384,49 @@ namespace Once_A_Rogue
                                     break;
                             }
 
+                            string roomCodeStr = roomCode.ToString();
+
                             List<string> possibleRooms = new List<string>();
 
                             foreach(string file in Directory.GetFiles(@"..\..\..\Content\Rooms"))
                             {
-                                if (file.Contains(roomCode.ToString()))
+                                if (file.Contains(roomCodeStr))
                                 {
-                                    possibleRooms.Add(file);
+                                    char[] letterArray = new char[file.Length];
+                                    List<int> numberArray = new List<int>();
+
+                                    for(int x = 0; x < file.Length; x++)
+                                    {
+                                        letterArray[x] = file[x];
+                                    }
+
+                                    int fileNumber;
+
+                                    foreach(char c in letterArray)
+                                    {
+                                        string charString = c.ToString();
+                                        if (int.TryParse(charString, out fileNumber))
+                                        {
+                                            numberArray.Add(fileNumber);
+                                        }
+                                    }
+
+                                    if(numberArray.Count == roomCodeStr.Length)
+                                    {
+                                        int truthCount = 0;
+                                        for(int x = 0; x < numberArray.Count; x++)
+                                        {
+                                            if(numberArray[x] == roomCodeStr[x])
+                                            {
+                                                truthCount++;
+                                            }
+                                        }
+
+                                        if(truthCount == roomCodeStr.Length)
+                                        {
+                                            possibleRooms.Add(file);
+                                        }
+                                    }
                                 }
                             }
 
