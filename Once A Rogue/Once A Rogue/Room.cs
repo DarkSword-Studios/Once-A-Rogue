@@ -127,71 +127,106 @@ namespace Once_A_Rogue
             }
         }
 
-        public String CheckChangeRoom(Player player, Camera camera, String playerMove)
+        public String UpdateEvents(Player player, Camera camera, String playerMove)
         {
-            int row = 0;
-            int col = 0;
+            //int row = 0;
+            //int col = 0;
 
-            while (row < unformattedRoomAnnex.GetLength(0))
+            if(player.PosX == 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
             {
-                while (col < unformattedRoomAnnex.GetLength(1))
-                {
-                    if (unformattedRoomAnnex[row, col] == 79 && playerMove == "right")
-                    {
-                        if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation))
-                        {
-                            if (doorLocals.Contains("RIGHT"))
-                            {
-                                camera.Move("right");
-                                return "right";
-                            }
-                        }
-                    }
-
-                    if (unformattedRoomAnnex[row, col] == 64)
-                    {
-                        if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "left")
-                        {
-                            if (doorLocals.Contains("LEFT"))
-                            {
-                                camera.Move("left");
-                                return "left";
-                            }
-                        }
-                    }
-
-                    if (unformattedRoomAnnex[row, col] == 8)
-                    {
-                        if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "up")
-                        {
-                            if (doorLocals.Contains("UP"))
-                            {
-                                camera.Move("up");
-                                return "up";
-                            }
-                        }
-                    }
-
-                    if (unformattedRoomAnnex[row, col] == 136)
-                    {
-                        if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "down")
-                        {
-                            if (doorLocals.Contains("DOWN"))
-                            {
-                                camera.Move("down");
-                                return "down";
-                            }
-                        }
-                    }
-                    col++;
-                }
-                col = 0;
-                row++;
-              
+                camera.Move("left");
+                return "left";
             }
+
+            if (player.PosX == camera.screenWidth - player.PosRect.Width - 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "right" && doorLocals.Contains("RIGHT"))
+            {
+                camera.Move("right");
+                return "right";
+            }
+
+            if (player.PosY == 120 && player.PosX > 840 && player.PosX < 880 && playerMove == "up" && doorLocals.Contains("UP"))
+            {
+                camera.Move("up");
+                return "up";
+            }
+
+            if (player.PosY == camera.screenHeight - player.PosRect.Height - 120 && player.PosX > 840 && player.PosX < 880 && playerMove == "down" && doorLocals.Contains("DOWN"))
+            {
+                camera.Move("down");
+                return "down";
+            }
+
+            //while (row < unformattedRoomAnnex.GetLength(0))
+            //{
+                //while (col < unformattedRoomAnnex.GetLength(1))
+                //{
+                    //if (unformattedRoomAnnex[row, col] != 0 && player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation))
+                    //{
+                        //if (player.PosX <= 120)
+                        //{
+                            //player.PosX = 120;
+                        //}
+                    //}
+                    
+
+                    //Check for changing rooms
+                    //if (unformattedRoomAnnex[row, col] == 79 && playerMove == "right")
+                    //{
+                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation))
+                    //    {
+                    //        if (doorLocals.Contains("RIGHT"))
+                    //        {
+                    //            camera.Move("right");
+                    //            return "right";
+                    //        }
+                    //    }
+                    //}
+
+                    //if (unformattedRoomAnnex[row, col] == 64)
+                    //{
+                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "left")
+                    //    {
+                    //        if (doorLocals.Contains("LEFT"))
+                    //        {
+                    //            camera.Move("left");
+                    //            return "left";
+                    //        }
+                    //    }
+                    //}
+
+                    //if (unformattedRoomAnnex[row, col] == 8)
+                    //{
+                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "up")
+                    //    {
+                    //        if (doorLocals.Contains("UP"))
+                    //        {
+                    //            camera.Move("up");
+                    //            return "up";
+                    //        }
+                    //    }
+                    //}
+
+                    //if (unformattedRoomAnnex[row, col] == 136)
+                    //{
+                    //    if (player.PosRect.Intersects(finalRoomAnnex[row, col].RelativeLocation) && playerMove == "down")
+                    //    {
+                    //        if (doorLocals.Contains("DOWN"))
+                    //        {
+                    //            camera.Move("down");
+                    //            return "down";
+                    //        }
+                    //    }
+                    //}
+                    //col++;
+                //}
+                //col = 0;
+                //row++;
+
+            //}
 
             return "NONE";
 
         }
+
     }
 }

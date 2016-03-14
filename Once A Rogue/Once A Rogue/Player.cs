@@ -16,6 +16,16 @@ namespace Once_A_Rogue
         //List of known skills
         List<Skills> skillList;
 
+        //Stuff added by Avix
+        int currentFrame = 0;
+        int numFrames = 6;
+
+        enum PlayerState { IdleLeft, IdleRight, WalkingLeft, WalkingRight, AttackLeft, AttackRight };
+
+        PlayerState playerState = PlayerState.IdleRight;
+
+        //End of stuff added by Avix
+
         public Player(int x, int y, int width, int height)
         {
             //Setting default values
@@ -42,41 +52,74 @@ namespace Once_A_Rogue
             if(kbs.IsKeyDown(Keys.A))
             {
                 PosX -= MoveSpeed;
+                playerState = PlayerState.WalkingLeft;
             }
 
             if (kbs.IsKeyDown(Keys.D))
             {
                 PosX += MoveSpeed;
+                playerState = PlayerState.WalkingRight;
             }
 
             if (kbs.IsKeyDown(Keys.S))
             {
                 PosY += MoveSpeed;
+
+                if (playerState == PlayerState.IdleRight)
+                {
+                    playerState = PlayerState.WalkingRight;
+                }
+                else if (playerState == PlayerState.IdleLeft)
+                {
+                    playerState = PlayerState.WalkingLeft;
+                }
             }
 
             if (kbs.IsKeyDown(Keys.W))
             {
                 PosY -= MoveSpeed;
+
+                if (playerState == PlayerState.IdleRight)
+                {
+                    playerState = PlayerState.WalkingRight;
+                }
+                else if (playerState == PlayerState.IdleLeft)
+                {
+                    playerState = PlayerState.WalkingLeft;
+                }
             }
 
-            if (PosY > (roomHeight - PosRect.Height))
+            if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W))
             {
-                PosY = roomHeight - PosRect.Height;
+                if (playerState == PlayerState.WalkingLeft)
+                {
+                    playerState = PlayerState.IdleLeft;
+                }
+                else if (playerState == PlayerState.WalkingRight)
+                {
+                    playerState = PlayerState.IdleRight;
+                }
+
             }
 
-            if (PosY < 0)
+            if (PosY > (roomHeight - PosRect.Height - 120))
             {
-                PosY = 0;
+                PosY = roomHeight - PosRect.Height - 120;
             }
 
-            if (PosX > (roomWidth - PosRect.Width))
+            if (PosY < 120)
             {
-                PosX = roomWidth - PosRect.Width;
+                PosY = 120;
             }
 
-            if (PosX < 0)
+            if (PosX > (roomWidth - PosRect.Width - 120))
             {
-                PosX = 0;
+                PosX = roomWidth - PosRect.Width - 120;
+            }
+
+            if (PosX < 120)
+            {
+                PosX = 120;
             }
         }
 
@@ -84,6 +127,47 @@ namespace Once_A_Rogue
         {
             base.Update();
         }
+
+        //Added by Avix
+        public void Draw(SpriteBatch spritebatch, Texture2D texture, int frameWidth, int frameHeight)
+        {
+            Rectangle frame;
+
+            switch (playerState)
+            {
+                case PlayerState.IdleRight:
+
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+                    spritebatch.Draw(texture, PosRect, frame, Color.White);
+                    break;
+
+                case PlayerState.IdleLeft:
+
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+                    spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
+
+                case PlayerState.WalkingRight:
+
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    spritebatch.Draw(texture, PosRect, frame, Color.White);
+                    break;
+
+                case PlayerState.WalkingLeft:
+
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
+            }
+        }
+
+        public void UpdateFrame(int framesElapsed)
+        {
+            
+            currentFrame = framesElapsed % numFrames + 1;
+        
+        }
+        //End of things added by Avix
 
         public void Update(int roomWidth, int roomHeight, Camera cam)
         {
@@ -101,7 +185,7 @@ namespace Once_A_Rogue
                     case "right":
                         if(cam.progress <= (1080/2))
                         {
-                            PosX -= 2;
+                            PosX -= 1;
                         }
 
                         if (cam.progress > (1080 / 2))
@@ -112,7 +196,7 @@ namespace Once_A_Rogue
                     case "left":
                         if (cam.progress <= (1080 / 2))
                         {
-                            PosX += 2;
+                            PosX += 1;
                         }
 
                         if (cam.progress > (1080 / 2))

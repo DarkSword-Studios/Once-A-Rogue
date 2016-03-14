@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Reflection; //Needed for string to variable calls
 using System.IO; //Needed for finding rooms
+using System.Collections.Generic; //Needed for lists
+using System; //Needed for random objects
 
 
 
@@ -41,7 +43,10 @@ namespace Once_A_Rogue
         int oldRow = -1;
         int oldCol = -1;
         string playerMove = "none";
-            
+
+
+        int framesElapsed;
+        int timePerFrame = 100;
 
         //Declare Room Textures
         /*
@@ -62,6 +67,7 @@ namespace Once_A_Rogue
         Texture2D upRightDown;
         */
         Texture2D tilemap;
+        Texture2D playerIdle;
 
         LevelBuilder builderAlpha;
 
@@ -104,7 +110,7 @@ namespace Once_A_Rogue
 
 
             //Initializing the player
-            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 100, 200);
+            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
             camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -142,7 +148,8 @@ namespace Once_A_Rogue
             leftRightDown = Content.Load<Texture2D>("LeftRightDown-RoomCode.png");
             upRightDown = Content.Load<Texture2D>("UpRightDown-RoomCode.png");
             */
-            tilemap = Content.Load<Texture2D>("tilemap.png");
+            tilemap = Content.Load<Texture2D>("Tileset.png");
+            playerIdle = Content.Load <Texture2D>("PlayerAnims.png");
 
         }
 
@@ -166,6 +173,9 @@ namespace Once_A_Rogue
                 Exit();
 
             // TODO: Add your update logic here 
+  
+            framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
+            player.UpdateFrame(framesElapsed);
 
             //Camera / Modular Testing Tool * Remove in Final Cut
 
@@ -289,99 +299,112 @@ namespace Once_A_Rogue
                             //Texture2D room;
 
                             //Based on the node's structure, use the appropriate texture
-                            /*
+
+                            int roomCode;
+
                             switch(gridSystem[columnIndex,rowIndex].ToUpper())
                             {
                                 case ("ALLDIRECTIONS"):
 
-                                    room = allDirections;
+                                    roomCode = 1234;
                                     break;
 
                                 case ("LEFT"):
 
-                                    room = left;
+                                    roomCode = 1;
                                     break;
 
                                 case ("UP"):
 
-                                    room = up;
+                                    roomCode = 2;
                                     break;
 
                                 case ("RIGHT"):
 
-                                    room = right;
+                                    roomCode = 3;
                                     break;
 
                                 case ("DOWN"):
 
-                                    room = down;
+                                    roomCode = 4;
                                     break;
 
                                 case ("LEFTDOWN"):
 
-                                    room = leftDown;
+                                    roomCode = 14;
                                     break;
 
                                 case ("LEFTRIGHT"):
 
-                                    room = leftRight;
+                                    roomCode = 13;
                                     break;
 
                                 case ("LEFTUP"):
 
-                                    room = leftUp;
+                                    roomCode = 12;
                                     break;
 
                                 case ("UPRIGHT"):
 
-                                    room = upRight;
+                                    roomCode = 23;
                                     break;
 
                                 case ("UPDOWN"):
 
-                                    room = upDown;
+                                    roomCode = 24;
                                     break;
 
                                 case ("RIGHTDOWN"):
 
-                                    room = rightDown;
+                                    roomCode = 34;
                                     break;
 
                                 case ("LEFTUPRIGHT"):
 
-                                    room = leftUpRight;
+                                    roomCode = 123;
                                     break;
 
                                 case ("LEFTUPDOWN"):
 
-                                    room = leftUpDown;
+                                    roomCode = 124;
                                     break;
 
                                 case ("LEFTRIGHTDOWN"):
 
-                                    room = leftRightDown;
+                                    roomCode = 134;
                                     break;
 
                                 case ("UPRIGHTDOWN"):
 
-                                    room = upRightDown;
+                                    roomCode = 234;
                                     break;
 
                                 default:
-                                    room = up;
+                                    roomCode = 2;
                                     break;
                             }
-                            */
+
+                            List<string> possibleRooms = new List<string>();
+
+                            foreach(string file in Directory.GetFiles(@"..\..\..\Content\Rooms"))
+                            {
+                                if (file.Contains(roomCode.ToString()))
+                                {
+                                    possibleRooms.Add(file);
+                                }
+                            }
+
+                            Random random = new Random();
+
+                            string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
 
                             //Draw the node
                             //spriteBatch.Draw(room, new Vector2(xCoord, yCoord), Color.White);
-
-                            string path = @"..\..\..\Content\Rooms\Test.txt";
                             //path += @"\Rooms\Test.txt";
 
                             if(levelAnnex[columnIndex, rowIndex] == null)
                             {
-                                Room room = new Room(path, false, gridSystem[columnIndex, rowIndex]);
+                                Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
                                 room.BuildRoom(xCoord, yCoord);
                                 levelAnnex[columnIndex, rowIndex] = room;
 
@@ -405,7 +428,7 @@ namespace Once_A_Rogue
                                 if (!shifting)
                                 {
 
-                                    switch (levelAnnex[columnIndex, rowIndex].CheckChangeRoom(player, camera, playerMove))
+                                    switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove))
                                     {
                                         case ("right"):
 
@@ -453,7 +476,8 @@ namespace Once_A_Rogue
             }
 
             //Drawing the player
-            player.Draw(spriteBatch);
+            player.Draw(spriteBatch, playerIdle, 140, 140);
+            
 
             spriteBatch.End();
 
