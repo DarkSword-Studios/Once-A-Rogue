@@ -19,12 +19,12 @@ namespace Once_A_Rogue
         public void Update(Room room, Player player)
         {
 
-            room.TagTiles(msState.Position, 1, 1, 1, 1, player.PosRect, 2, 2);
+            room.TagTiles(msState.Position, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.PosRect, player.CurrSkill.RangeX, player.CurrSkill.RangeY);
             msState = Mouse.GetState();
 
             if (msState.LeftButton == ButtonState.Pressed && prevMsState.LeftButton == ButtonState.Released)
             {
-
+                player.CurrSkill.OnActivated(player);
             }
 
         }
