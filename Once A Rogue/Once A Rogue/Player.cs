@@ -13,22 +13,60 @@ namespace Once_A_Rogue
     //3/13/2016
     //Class that represents the player character
     {
-        //List of known skills
+        //Attributes
+        //List containing known skills
         List<Skills> skillList;
+        
+        //String array of weapon choices
+        string[] weaponArray;
+
+        //Currently selected weapon
+        private string currWeapon;
+
+        public string CurrWeapon
+        {
+            get { return currWeapon; }
+            set { currWeapon = value; }
+        }
+
+        //Currently selected skill
+        private Skills currSkill;
+
+        public Skills CurrSkill
+        {
+            get { return currSkill; }
+            set { currSkill = value; }
+        }
 
         //Stuff added by Avix
         int currentFrame = 0;
         int numFrames = 6;
 
-        enum PlayerState { IdleLeft, IdleRight, WalkingLeft, WalkingRight, AttackLeft, AttackRight };
+        public enum PlayerState { IdleLeft, IdleRight, WalkingLeft, WalkingRight, AttackLeft, AttackRight };
 
-        PlayerState playerState = PlayerState.IdleRight;
+        private PlayerState playerState;
+
+        public PlayerState PlayerStates
+        {
+            get { return playerState; }
+            set { playerState = value; }
+        }
 
         //End of stuff added by Avix
 
         public Player(int x, int y, int width, int height)
         {
+            //Initializing the collections
+            skillList = new List<Skills>();
+            skillList.Add(new MeleeAttack());
+            weaponArray = new string[4];
+            weaponArray[0] = "Sword";
+            weaponArray[1] = "Daggers";
+            weaponArray[2] = "Bow";
+            weaponArray[3] = "Staff";
+
             //Setting default values
+            playerState = PlayerState.IdleRight;
             MoveSpeedTotal = 5;
             MoveSpeed = 5;
             StunResist = 0;
@@ -38,15 +76,19 @@ namespace Once_A_Rogue
             PoisenResist = 0;
             MaxHealth = 20;
             CurrHealth = MaxHealth;
-            skillList = new List<Skills>();
             PosRect = new Rectangle(x, y, width, height);
+            currWeapon = weaponArray[0];
+            CurrSkill = skillList[0];
         }
 
         //Method for processing user input
         public void ProcessInput(int roomWidth, int roomHeight)
         {
-            //Figuring out which keyboard is down
+            //Figuring out which key is down
             KeyboardState kbs = Keyboard.GetState();
+
+            //Figuring out which mouse buttn is being pressed
+            MouseState msState = Mouse.GetState();
 
             //Moving the player based on which key is down
             if(kbs.IsKeyDown(Keys.A))
@@ -100,6 +142,11 @@ namespace Once_A_Rogue
                     playerState = PlayerState.IdleRight;
                 }
 
+            }
+
+            if(msState.LeftButton == ButtonState.Pressed)
+            {
+                CurrSkill.OnActivated(this);
             }
 
             if (PosY > (roomHeight - PosRect.Height - 120))

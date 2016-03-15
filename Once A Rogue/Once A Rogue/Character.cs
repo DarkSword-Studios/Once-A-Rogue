@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Once_A_Rogue
 {
-    class Character
+    class Character:GameObject
     //Ian Moon
     //03/9/2016
     //This is the base class for all interactable characters in the game
@@ -19,39 +19,6 @@ namespace Once_A_Rogue
 
         //Enumeration for specific animation triggers
         enum CharacterState { Normal, Stunned, Damaged, OnFire }
-
-        //Graphical Attributes
-
-        //Display for the character
-        private Texture2D texture;
-
-        public Texture2D Texture
-        {
-            get { return texture; }
-            set { texture = value; }
-        }
-
-        //Rectangle for the characters position
-        private Rectangle posRect;
-
-        public Rectangle PosRect
-        {
-            get { return posRect; }
-            set { posRect = value; }
-        }
-
-        //Properties for easy access to the characters X and Y values
-        public int PosX
-        {
-            get { return posRect.X; }
-            set { posRect.X = value; }
-        }
-
-        public int PosY
-        {
-            get { return posRect.Y; }
-            set { posRect.Y = value; }
-        }
 
         //Gameplay Attributes
 

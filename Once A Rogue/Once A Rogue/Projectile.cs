@@ -7,5 +7,6 @@ namespace Once_A_Rogue
 {
     class Projectile
     {
+        //Attributes
     }
 }
