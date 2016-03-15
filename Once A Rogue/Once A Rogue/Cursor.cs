@@ -16,10 +16,10 @@ namespace Once_A_Rogue
         private MouseState msState;
         private MouseState prevMsState;
         
-        public void Update(Room room)
+        public void Update(Room room, Player player)
         {
 
-            room.TagTiles(msState.Position, 1, 1, 1, 1);
+            room.TagTiles(msState.Position, 1, 1, 1, 1, player.PosRect, 2, 2);
             msState = Mouse.GetState();
 
             if (msState.LeftButton == ButtonState.Pressed && prevMsState.LeftButton == ButtonState.Released)

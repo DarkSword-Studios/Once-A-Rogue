@@ -165,8 +165,8 @@ namespace Once_A_Rogue
             int tileX = origin.X / 120;
             int tileY = origin.Y / 120;
 
-            int maxX = tileX + posXTiles;
-            int maxY = tileY + posYTiles;
+            int maxX = tileX + posXTiles + 1;
+            int maxY = tileY + posYTiles + 1;
 
             tileX -= negXTiles;
             tileY -= negYTiles;
@@ -189,9 +189,54 @@ namespace Once_A_Rogue
             
         }
 
-        public void TagTiles(Point origin, int posXTiles, int negXTiles, int posYTiles, int negYTiles, Boolean playerBound, int rangeX, int rangeY)
+        public void TagTiles(Point origin, int posXTiles, int negXTiles, int posYTiles, int negYTiles, Rectangle player, int rangeX, int rangeY)
         {
+            int playerX = (player.X + player.Width / 2) / 120;
+            int playerY = (player.Y + player.Height) / 120;
 
+            int tileX = origin.X / 120;
+            int tileY = origin.Y / 120;
+
+            if(tileX > (playerX + rangeX - posXTiles))
+            {
+                tileX = playerX + rangeX - posXTiles;
+            }
+
+            if (tileX < (playerX - rangeX + negXTiles))
+            {
+                tileX = playerX - rangeX + posXTiles;
+            }
+
+            if (tileY > (playerY + rangeY - posYTiles))
+            {
+                tileY = playerY + rangeY - posYTiles;
+            }
+
+            if (tileY < (playerY - rangeY + negYTiles))
+            {
+                tileY = playerY - rangeY + posYTiles;
+            }
+
+            int maxX = tileX + posXTiles + 1;
+            int maxY = tileY + posYTiles + 1;
+
+            tileX -= negXTiles;
+            tileY -= negYTiles;
+
+            for (int y = tileY; y < maxY; y++)
+            {
+                for (int x = tileX; x < maxX; x++)
+                {
+                    if (x > 0 && x < 15 && y > 0 && y < 8)
+                    {
+                        finalRoomAnnex[y, x].ValidTag = true;
+                    }
+                    else if ((x == 0 || x == 15 || y == 0 || y == 8) && y > -1 && x > -1 && y < 9 && x < 16)
+                    {
+                        finalRoomAnnex[y, x].InvalidTag = true;
+                    }
+                }
+            }
         }
 
     }

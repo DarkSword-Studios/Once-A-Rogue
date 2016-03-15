@@ -508,7 +508,7 @@ namespace Once_A_Rogue
                                     //Two birds with one stone; update collisions check and adjust active rooms if necessary
                                     if (!shifting)
                                     {
-                                        cur.Update(levelAnnex[columnIndex, rowIndex]);
+                                        cur.Update(levelAnnex[columnIndex, rowIndex], player);
                                         switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove))
                                         {
                                             case ("right"):
