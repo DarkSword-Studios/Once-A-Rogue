@@ -58,7 +58,7 @@ namespace Once_A_Rogue
         {
             //Initializing the collections
             skillList = new List<Skills>();
-            skillList.Add(new MeleeAttack());
+            skillList.Add(new MeleeAttack(this));
             weaponArray = new string[4];
             weaponArray[0] = "Sword";
             weaponArray[1] = "Daggers";
@@ -173,6 +173,22 @@ namespace Once_A_Rogue
         public override void Update()
         {
             base.Update();
+
+            foreach(Skills sk in skillList)
+            {
+                if(sk.Cooldown > 0)
+                {
+                    sk.Cooldown -= 1;
+                }
+                else if(sk.Cooldown < 0)
+                {
+                    sk.Cooldown = 0;
+                }
+                else
+                {
+                    
+                }
+            }
         }
 
         //Added by Avix
