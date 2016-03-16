@@ -62,6 +62,7 @@ namespace Once_A_Rogue
             //Initializing the collections
             skillList = new List<Skills>();
             skillList.Add(new MeleeAttack(this));
+            //skillList.Add(new Fireball())
             weaponArray = new string[4];
             weaponArray[0] = "Sword";
             weaponArray[1] = "Daggers";

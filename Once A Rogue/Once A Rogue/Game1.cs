@@ -289,6 +289,14 @@ namespace Once_A_Rogue
 
                 //Updating the player position
                 player.Update(camera.screenWidth, camera.screenHeight, camera);
+
+                if (CurrProjectiles.Count > 0) ;
+                {
+                    foreach (Projectile project in CurrProjectiles)
+                    {
+                        project.Update();
+                    }
+                }
             }
             
             if(gameState == GameState.GameOver)
@@ -571,6 +579,15 @@ namespace Once_A_Rogue
 
                 //Drawing the player
                 player.Draw(spriteBatch, playerIdle, 140, 140);
+
+                //Drawing the projectiles on the screen
+                if (CurrProjectiles.Count > 0) ;
+                {
+                    foreach (Projectile project in CurrProjectiles)
+                    {
+                        project.Draw(spriteBatch);
+                    }
+                }
             }
 
             if(gameState == GameState.GameOver)

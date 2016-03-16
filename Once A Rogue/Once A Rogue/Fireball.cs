@@ -9,6 +9,15 @@ namespace Once_A_Rogue
     {
         public Fireball(Player player)
         {
+            Cooldown = 0;
+            CooldownTotal = 5;
+            BurstRadius = 0;
+            IsDirectional = true;
+        }
+
+        public override void OnActivated(Player player)
+        {
+            base.OnActivated(player);
         }
     }
 }

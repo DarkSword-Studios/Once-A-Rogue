@@ -46,6 +46,14 @@ namespace Once_A_Rogue
             set { rangeY = value; }
         }
 
+        private bool isDirectional;
+
+        public bool IsDirectional
+        {
+            get { return isDirectional; }
+            set { isDirectional = value; }
+        }
+
 
         //How far out the burst is of the skill is from a center point
         private int burstRadius;
@@ -68,7 +76,7 @@ namespace Once_A_Rogue
 
         virtual public void OnActivated(Player player)
         {
-
+            
         }
     }
 }
