@@ -317,22 +317,35 @@ namespace Once_A_Rogue
                     gameState = GameState.Playing;
                 }
 
-                if (arrowState == ArrowState.pos1 && SingleKeyPress(Keys.Enter))
+                if (arrowState == ArrowState.pos1)
                 {
-                    gameState = GameState.Playing;
+                    if (kbs.IsKeyDown(Keys.Enter))
+                    {
+                        gameState = GameState.Playing;
+                    }
                 }
-                if ((arrowState == ArrowState.pos1) && (SingleKeyPress(Keys.S)))
+                if (arrowState == ArrowState.pos1)
                 {
-                    arrowState = ArrowState.pos2;
+                    if (kbs.IsKeyDown(Keys.S))
+                    {
+                        arrowState = ArrowState.pos2;
+                    }
                 }
 
-                if ((arrowState == ArrowState.pos2) && (SingleKeyPress(Keys.W)))
+                if (arrowState == ArrowState.pos2)
                 {
-                    arrowState = ArrowState.pos1;
+                    if (kbs.IsKeyDown(Keys.W))
+                    {
+                        arrowState = ArrowState.pos1;
+                    }
                 }
-                if ((arrowState == ArrowState.pos2) && (SingleKeyPress(Keys.Enter)))
+
+                if (arrowState == ArrowState.pos2)
                 {
-                    Exit();
+                    if (kbs.IsKeyDown(Keys.Enter))
+                    {
+                        Exit();
+                    }
                 }
             }
 
@@ -634,6 +647,7 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(select, new Vector2(30, 354), Color.White);
                 }
+
                 if (arrowState == ArrowState.pos2)
                 {
                     spriteBatch.Draw(select, new Vector2(30, 429), Color.White);
