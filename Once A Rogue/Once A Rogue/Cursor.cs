@@ -18,7 +18,6 @@ namespace Once_A_Rogue
         
         public void Update(Room room, Player player)
         {
-
             room.TagTiles(msState.Position, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.PosRect, player.CurrSkill.RangeX, player.CurrSkill.RangeY);
             msState = Mouse.GetState();
 
@@ -26,7 +25,6 @@ namespace Once_A_Rogue
             {
                 player.CurrSkill.OnActivated(player);
             }
-
         }
     }
 }

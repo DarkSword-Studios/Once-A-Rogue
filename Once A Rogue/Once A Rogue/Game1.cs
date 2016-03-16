@@ -81,6 +81,16 @@ namespace Once_A_Rogue
 
         bool buildLevel;
 
+        //List to keep track of projectiles
+        private List<Projectile> currProjectiles;
+
+        public List<Projectile> CurrProjectiles
+        {
+            get { return currProjectiles; }
+            set { currProjectiles = value; }
+        }
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -125,6 +135,9 @@ namespace Once_A_Rogue
 
             //Initializing the Cursor
             cur = new Cursor();
+
+            //Initializing the projectile list
+            currProjectiles = new List<Projectile>();
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
             camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);

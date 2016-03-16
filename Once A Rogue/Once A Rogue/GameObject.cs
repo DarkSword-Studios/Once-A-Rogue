@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Once_A_Rogue
 {
-    class GameObject
+    public class GameObject
     {
         private Texture2D texture;
 

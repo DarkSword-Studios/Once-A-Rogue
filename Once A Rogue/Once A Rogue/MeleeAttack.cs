@@ -19,7 +19,6 @@ namespace Once_A_Rogue
             set { damage = value; }
         }
 
-
         public MeleeAttack(Player player)
         {
             Cooldown = 0;

@@ -23,6 +23,9 @@ namespace Once_A_Rogue
         //Currently selected weapon
         private string currWeapon;
 
+        //Keeping track of the direction the player is facing
+        string direction;
+
         public string CurrWeapon
         {
             get { return currWeapon; }
@@ -95,12 +98,14 @@ namespace Once_A_Rogue
             {
                 PosX -= MoveSpeed;
                 playerState = PlayerState.WalkingLeft;
+                direction = "left";
             }
 
             if (kbs.IsKeyDown(Keys.D))
             {
                 PosX += MoveSpeed;
                 playerState = PlayerState.WalkingRight;
+                direction = "right";
             }
 
             if (kbs.IsKeyDown(Keys.S))
