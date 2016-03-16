@@ -20,6 +20,15 @@ namespace Once_A_Rogue
         //String array of weapon choices
         string[] weaponArray;
 
+        //Soul Count
+        private int souls;
+
+        public int Souls
+        {
+            get { return souls; }
+            set { souls = value; }
+        }
+
         //Currently selected weapon
         private string currWeapon;
 
