@@ -19,7 +19,9 @@ namespace Once_A_Rogue
         SpriteBatch spriteBatch;
         Player player;
 
-        enum GameState { MainMenu, Playing, GameOver, }
+        enum GameState { MainMenu, Playing, GameOver, paused, }
+
+        enum MenuState { paused, notPaused }
 
         //Declare a grid to keep track of level space
         string [,] gridSystem;       
@@ -71,10 +73,21 @@ namespace Once_A_Rogue
         Texture2D tilemap;
         Texture2D playerIdle;
 
+        //Declare HUD Textures
+        Texture2D pause;
+        Texture2D exit;
+        Texture2D resume;
+        Texture2D context;
+
+        //Keyboard states
+        KeyboardState kbs;
+        KeyboardState previousKBS;
+
         LevelBuilder builderAlpha;
 
         GameState gameState;
 
+        MenuState menuState;
 
         Cursor cur;
 
@@ -115,6 +128,8 @@ namespace Once_A_Rogue
 
             //Initializing the gamestate
             gameState = GameState.Playing;
+
+            menuState = MenuState.notPaused;
 
             //Run Level Builder! Generate the first level
             gridSystem = new string[COLUMNS, ROWS];
@@ -178,6 +193,9 @@ namespace Once_A_Rogue
             tilemap = Content.Load<Texture2D>("Tileset.png");
             playerIdle = Content.Load <Texture2D>("PlayerAnims.png");
 
+            //Initialize HUD textures
+            pause = Content.Load<Texture2D>("HUDpause.png");
+
         }
 
         /// <summary>
@@ -196,7 +214,7 @@ namespace Once_A_Rogue
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
 
             // TODO: Add your update logic here 
@@ -205,6 +223,7 @@ namespace Once_A_Rogue
             {
 
             }
+
 
             if(gameState == GameState.Playing)
             {
@@ -588,17 +607,54 @@ namespace Once_A_Rogue
                         project.Draw(spriteBatch);
                     }
                 }
+
+                
             }
 
             if(gameState == GameState.GameOver)
             {
 
             }
-            
+
+            //checks if escape is pressed, then brings up the menu if so
+            if ((gameState == GameState.Playing) && (SingleKeyPress(Keys.Escape)))
+            {
+
+                gameState = GameState.paused;
+                spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
+                
+
+            }
+
+            //checks if escape is pressed, then brings up the menu if so
+            if ((gameState == GameState.paused) && (SingleKeyPress(Keys.Escape)))
+            {
+
+                gameState = GameState.Playing;
+
+            }
 
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        //checks for a single key press
+        public bool SingleKeyPress(Keys key)
+        {
+            previousKBS = kbs;
+            kbs = Keyboard.GetState();
+
+            if ((previousKBS.IsKeyUp(key)) && (kbs.IsKeyDown(key)))
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+
         }
     }
 }
