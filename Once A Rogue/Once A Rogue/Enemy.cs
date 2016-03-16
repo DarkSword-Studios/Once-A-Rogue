@@ -74,10 +74,33 @@ namespace Once_A_Rogue
             }
         }
 
+        //BRAINSTORM: Attribute to control stealth of enemy
+        private int stealthLevel;
+
+        public int StealthLevel
+        {
+            get { return stealthLevel; }
+            set
+            {
+                if(stealthLevel > 50)
+                {
+                    //Change opacity of particular enemy sprite here:
+
+                    //Since in stealth, make enemy move slower
+                    MoveSpeed = MoveSpeedTotal / 2;
+
+                    //Add attribute to increase 'dodge' ability of enemy (IE more likely to not get hit by attacks)
+                }
+                else
+                {
+                    stealthLevel = value;
+                }
+            }
+        }
         //Method to handle enemy attacks
         public void Attack()
         {
-
+            //Add code to handle enemy attacking
         }
 
         //BRAINSTORM: Only call this method with certain types of enemies that would likely run away when faced with
@@ -134,8 +157,19 @@ namespace Once_A_Rogue
 
             }
 
+          }
 
+        //BRAINSTORM: If there are a certain amount of enemies of a certain type gathered together, boost attack of enemies
+        public void Rally()
+        {
+            
+        }
 
+        //Do we even need this constructor?
+        public Enemy(int fearlvl, int armorlvl) : base()//Add code here
+        {
+            fearLevel = fearlvl;
+            armorLevel = armorlvl;
         }
 
 
