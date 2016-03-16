@@ -611,6 +611,11 @@ namespace Once_A_Rogue
                 
             }
 
+            if(gameState == GameState.paused)
+            {
+                spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
+            }
+
             if(gameState == GameState.GameOver)
             {
 
@@ -619,19 +624,13 @@ namespace Once_A_Rogue
             //checks if escape is pressed, then brings up the menu if so
             if ((gameState == GameState.Playing) && (SingleKeyPress(Keys.Escape)))
             {
-
                 gameState = GameState.paused;
-                spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
-                
-
             }
 
             //checks if escape is pressed, then brings up the menu if so
             if ((gameState == GameState.paused) && (SingleKeyPress(Keys.Escape)))
             {
-
                 gameState = GameState.Playing;
-
             }
 
             spriteBatch.End();
