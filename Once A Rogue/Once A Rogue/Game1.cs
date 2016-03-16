@@ -19,9 +19,13 @@ namespace Once_A_Rogue
         SpriteBatch spriteBatch;
         Player player;
 
+        //Enums for game state
         enum GameState { MainMenu, Playing, GameOver, paused, }
+        GameState gameState;
 
-        enum MenuState { paused, notPaused }
+        //Enums for selector arrow
+        enum ArrowState { pos1, pos2, pos3 }
+        ArrowState arrowState;
 
         //Declare a grid to keep track of level space
         string [,] gridSystem;       
@@ -53,44 +57,22 @@ namespace Once_A_Rogue
         int timePerFrame = 100;
 
         //Declare Room Textures
-        /*
-        Texture2D allDirections;
-        Texture2D left;
-        Texture2D up;
-        Texture2D right;
-        Texture2D down;
-        Texture2D leftDown;
-        Texture2D leftRight;
-        Texture2D leftUp;
-        Texture2D upRight;
-        Texture2D upDown;
-        Texture2D rightDown;
-        Texture2D leftUpRight;
-        Texture2D leftUpDown;
-        Texture2D leftRightDown;
-        Texture2D upRightDown;
-        */
-        Texture2D tilemap;
-        Texture2D playerIdle;
+        //Texture2D allDirections, left, up, right, down, leftDown, leftRight, leftUp, upRight, upDown, rightDown, leftUpRight, leftUpDown, leftRightDown, upRightDown;
+        
+        Texture2D tilemap, playerIdle;
 
         //Declare HUD Textures
-        Texture2D pause;
-        Texture2D exit;
-        Texture2D resume;
-        Texture2D context;
+        Texture2D pause, exit, resume, context, select;
 
         //Keyboard states
-        KeyboardState kbs;
-        KeyboardState previousKBS;
+        KeyboardState kbs, previousKBS, state;
+
+        //Mouse states
+        MouseState mbs;
 
         LevelBuilder builderAlpha;
 
-        GameState gameState;
-
-        MenuState menuState;
-
         Cursor cur;
-
 
         bool buildLevel;
 
@@ -103,12 +85,10 @@ namespace Once_A_Rogue
             set { currProjectiles = value; }
         }
 
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            
+            Content.RootDirectory = "Content";            
         }
 
         /// <summary>
@@ -128,8 +108,7 @@ namespace Once_A_Rogue
 
             //Initializing the gamestate
             gameState = GameState.Playing;
-
-            menuState = MenuState.notPaused;
+            arrowState = ArrowState.pos2;
 
             //Run Level Builder! Generate the first level
             gridSystem = new string[COLUMNS, ROWS];
@@ -195,7 +174,9 @@ namespace Once_A_Rogue
 
             //Initialize HUD textures
             pause = Content.Load<Texture2D>("HUDpause.png");
-
+            exit = Content.Load<Texture2D>("HUDexittowindowsbutton.png");
+            select = Content.Load<Texture2D>("HUDselect.png");
+            resume = Content.Load<Texture2D>("HUDresume.png");
         }
 
         /// <summary>
@@ -224,7 +205,6 @@ namespace Once_A_Rogue
 
             }
 
-
             if(gameState == GameState.Playing)
             {
                 framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
@@ -232,7 +212,8 @@ namespace Once_A_Rogue
 
                 //Camera / Modular Testing Tool * Remove in Final Cut
 
-                KeyboardState state = Keyboard.GetState();
+                state = Keyboard.GetState();
+                mbs = Mouse.GetState();
 
                 //If the camer is not currently running a motion, a call can be made to adjust it up down left or right
                 if (state.IsKeyDown(Keys.Right))
@@ -309,18 +290,50 @@ namespace Once_A_Rogue
                 //Updating the player position
                 player.Update(camera.screenWidth, camera.screenHeight, camera);
 
-                if (CurrProjectiles.Count > 0) ;
+                if (CurrProjectiles.Count > 0)
                 {
                     foreach (Projectile project in CurrProjectiles)
                     {
                         project.Update();
                     }
                 }
+
+                if(SingleKeyPress(Keys.Escape))
+                {
+                    gameState = GameState.paused;
+                }
             }
             
             if(gameState == GameState.GameOver)
             {
 
+            }
+
+            if(gameState == GameState.paused)
+            {
+                //These will check for player input in the menu and adjust accordingly
+                if (SingleKeyPress(Keys.Escape))
+                {
+                    gameState = GameState.Playing;
+                }
+
+                if (arrowState == ArrowState.pos1 && SingleKeyPress(Keys.Enter))
+                {
+                    gameState = GameState.Playing;
+                }
+                if ((arrowState == ArrowState.pos1) && (SingleKeyPress(Keys.S)))
+                {
+                    arrowState = ArrowState.pos2;
+                }
+
+                if ((arrowState == ArrowState.pos2) && (SingleKeyPress(Keys.W)))
+                {
+                    arrowState = ArrowState.pos1;
+                }
+                if ((arrowState == ArrowState.pos2) && (SingleKeyPress(Keys.Enter)))
+                {
+                    Exit();
+                }
             }
 
             base.Update(gameTime);
@@ -343,7 +356,8 @@ namespace Once_A_Rogue
 
             }
 
-            if (gameState == GameState.Playing && this.IsActive)
+            //this is drawn no matter what so even when paused, the game is still "drawn", it will just be "idle"
+            if (this.IsActive)
             {
                 //If we want to display the build map
                 if (buildLevel)
@@ -607,30 +621,28 @@ namespace Once_A_Rogue
                         project.Draw(spriteBatch);
                     }
                 }
-
-                
             }
 
+            //draws the following if the game is paused
             if(gameState == GameState.paused)
             {
                 spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(resume, new Vector2(100, 351), Color.White);
+                spriteBatch.Draw(exit, new Vector2(100, 426), Color.White);
+
+                if (arrowState == ArrowState.pos1)
+                {
+                    spriteBatch.Draw(select, new Vector2(30, 354), Color.White);
+                }
+                if (arrowState == ArrowState.pos2)
+                {
+                    spriteBatch.Draw(select, new Vector2(30, 429), Color.White);
+                }
             }
 
-            if(gameState == GameState.GameOver)
+            if (gameState == GameState.GameOver)
             {
 
-            }
-
-            //checks if escape is pressed, then brings up the menu if so
-            if ((gameState == GameState.Playing) && (SingleKeyPress(Keys.Escape)))
-            {
-                gameState = GameState.paused;
-            }
-
-            //checks if escape is pressed, then brings up the menu if so
-            if ((gameState == GameState.paused) && (SingleKeyPress(Keys.Escape)))
-            {
-                gameState = GameState.Playing;
             }
 
             spriteBatch.End();
