@@ -131,6 +131,7 @@ namespace Once_A_Rogue
         protected bool IsOnFire;
         protected bool IsPoisoned;
         protected bool IsExplosive;
+        protected bool IsFeared;
 
         //Variables of the status effects
         private int stunDur;
