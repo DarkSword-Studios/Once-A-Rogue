@@ -16,7 +16,10 @@ using System.IO;
 
 namespace RoomBuilder
 {
-   public partial class MainWindow : Window
+    public partial class MainWindow : Window
+    //Ian Moon
+    //3/3/2016
+    //This class handles the maniipulation of the actual window of the tile map editor, such as commands to load and save and zooming on the canvas.
     {
         //Creating an instance of an editor
         private TileMapEditor editor;

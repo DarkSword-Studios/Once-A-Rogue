@@ -18,6 +18,9 @@ namespace RoomBuilder
     /// Interaction logic for MapPropertWindow.xaml
     /// </summary>
     public partial class MapPropertyWindow : Window
+    //Ian Moon
+    //3/3/2016
+    //This class creates a window where the user can modify the height and width of the canvas, as well as the height and width of the tiles.
     {
         public MapPropertyWindow()
         {

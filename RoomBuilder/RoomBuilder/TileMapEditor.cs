@@ -10,6 +10,9 @@ using System.IO;
 namespace RoomBuilder
 {
     class TileMapEditor
+    //Ian Moon
+    //3/3/2016
+    //This class sets up a tilemap editor
     {
         //Creating a main window
         private MainWindow editorWindow;
@@ -146,11 +149,15 @@ namespace RoomBuilder
                 }
             }
 
+            //Changing the main window to have the cropped images
             editorWindow.SetImages(images);
+
+            //Setting the canvas properties and images
             editorWindow.SetCanvasProperties(width * tileWidth, height * tileHeight, tileWidth, tileHeight);
             editorWindow.SetCanvasContent(tileMap, width, height, tileWidth, tileHeight);
         }
 
+        //Method to draw on the canvas
         internal void Draw(System.Windows.Point point, int p)
         {
             //Getting the point clicked upon
