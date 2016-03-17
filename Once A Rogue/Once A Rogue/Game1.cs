@@ -402,7 +402,7 @@ namespace Once_A_Rogue
                 player.Draw(spriteBatch, playerIdle, 140, 140);
 
                 //Drawing the projectiles on the screen
-                if (CurrProjectiles.Count > 0) ;
+                if (CurrProjectiles.Count > 0)
                 {
                     foreach (Projectile project in CurrProjectiles)
                     {

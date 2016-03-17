@@ -9,7 +9,7 @@ namespace Once_A_Rogue
 //Implemented by: Stasha Blank
 //Team: DarkSword Studios
 //Purpose: Generates Level Structure
-//Date Modified: 2/25/16
+//Date Modified: 3/17/16
 
 {
     class LevelBuilder
@@ -370,6 +370,8 @@ namespace Once_A_Rogue
                 //Based on the node's structure, use the appropriate room code
                 int roomCode;
 
+                //Room codes are transformed from text to numbers in an effort to shorten file names
+                //1 = has left connector; 2 = has up connector; 3 = has right connector; 4 = has down connector
                 switch (gridSystem[columnIndex, rowIndex].ToUpper())
                 {
                     case ("ALLDIRECTIONS"):
@@ -454,10 +456,13 @@ namespace Once_A_Rogue
 
                 string roomCodeStr = roomCode.ToString();
 
+                //This list keeps track of all of the rooms in Content/Rooms/ that would be valid fits for the current room to build
                 List<string> possibleRooms = new List<string>();
 
+                //Read in each file in the Content/Rooms/ folder (where we keep the room.txt files)
                 foreach (string file in Directory.GetFiles(@"..\..\..\Content\Rooms"))
                 {
+                    //The purpose of this code is to determine if the file is valid to put in the possible rooms list
                     if (file.Contains(roomCodeStr))
                     {
                         //Start of file processing by Ian
@@ -465,11 +470,13 @@ namespace Once_A_Rogue
                         List<int> numberArray = new List<int>();
                         List<int> roomCodeList = new List<int>();
 
+                        //Store each character in the filename to a character array
                         for (int x = 0; x < file.Length; x++)
                         {
                             letterArray[x] = file[x];
                         }
 
+                        //Pick out only the digits in the character array
                         for (int x = 0; x < roomCodeStr.Length; x++)
                         {
                             int roomCodeDigit;
@@ -481,6 +488,7 @@ namespace Once_A_Rogue
 
                         int fileNumber;
 
+                        //Check the length of the room code
                         foreach (char c in letterArray)
                         {
                             string charString = c.ToString();
@@ -490,6 +498,7 @@ namespace Once_A_Rogue
                             }
                         }
 
+                        //Verify the room code found in the file name against the room code needed
                         if (numberArray.Count == roomCodeList.Count)
                         {
                             int truthCount = 0;
@@ -501,6 +510,7 @@ namespace Once_A_Rogue
                                 }
                             }
 
+                            //If everything checks out, the room is added to the list of possible rooms
                             if (truthCount == roomCodeStr.Length)
                             {
                                 possibleRooms.Add(file);
@@ -512,15 +522,22 @@ namespace Once_A_Rogue
 
                 Random random = new Random();
 
+                //At this point a room file is chosen from the valid list
                 string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
 
+                //Assuming this node in the level annex hasn't been fulfilled;
                 if (levelAnnex[columnIndex, rowIndex] == null)
                 {
+                    //Create a new room from the file picked in the specific position within the level annex
                     Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
+
+                    //Build the level to take care of necessary initialization
                     room.BuildRoom(xCoord, yCoord);
+
+                    //Add the room to the level annex after it has been built
                     levelAnnex[columnIndex, rowIndex] = room;
 
-                    //If the generated room is the starting room, it should be initially active
+                    //If the generated room is the starting room, it should be initially active (we need a place to start, every other room's activity can be determined algorithmically)
                     if (columnIndex == ((int)levelAnnex.GetLength(0) / 2) && rowIndex == ((int)levelAnnex.GetLength(1) / 2))
                     {
                         levelAnnex[columnIndex, rowIndex].Active = true;
@@ -529,7 +546,7 @@ namespace Once_A_Rogue
 
 
             }
-
+            //Lastly, return the level annex so that changes can be saved
             return levelAnnex;
 
         }
