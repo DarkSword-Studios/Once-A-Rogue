@@ -10,7 +10,11 @@ using Microsoft.Xna.Framework.Input;
 namespace Once_A_Rogue
 {
     public class GameObject
+    //Ian Moon
+    //3/9/2016
+    //This class represents a generic object on the screen
     {
+        //Texture to display
         private Texture2D texture;
 
         public Texture2D Texture

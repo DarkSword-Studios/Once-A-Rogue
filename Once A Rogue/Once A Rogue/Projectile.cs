@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework;
 namespace Once_A_Rogue
 {
     public class Projectile:GameObject
+    //Ian Moon
+    //3/9/2016
+    //This class is for any projectile that needs to be produced
     {
         //Attributes
         int velocityX;
@@ -24,6 +27,8 @@ namespace Once_A_Rogue
             direction = dir;
             Texture = text;
             PosRect = posRect;
+
+            //Adding the projectile to a projectile list in the game class
             game.CurrProjectiles.Add(this);
         }
 
@@ -38,9 +43,9 @@ namespace Once_A_Rogue
             PosRect = posRect;
         }
 
-
         public void Update()
         {
+            //Making sure the projectile is going the correct direction
             if(direction == "left")
             {
                 velocityX = -velocityX;

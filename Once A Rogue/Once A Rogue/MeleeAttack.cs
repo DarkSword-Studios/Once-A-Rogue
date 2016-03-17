@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework;
 namespace Once_A_Rogue
 {
     class MeleeAttack:Skills
+    //Ian Moon
+    //3/15/2016
+    //This class represents a melee attack by the player
     {
         //Attributes
         private int damage;
@@ -21,11 +24,13 @@ namespace Once_A_Rogue
 
         public MeleeAttack(Player player)
         {
+            //Setting default values
             Cooldown = 0;
             RangeX = 1;
             RangeY = 0;
             BurstRadius = 0;
             
+            //Setting the attacks damage and total cooldown based on the weapon currently equipped.
             if(player.CurrWeapon == "Sword")
             {
                 CooldownTotal = 1;
@@ -51,22 +56,24 @@ namespace Once_A_Rogue
             }
         }
 
+        //Method for when the skill is activated
         public override void OnActivated(Player player)
         {
             //Getting position of the mouse
             MouseState msState = Mouse.GetState();
 
-            if(msState.X >= player.PosX)
-            {
-                player.PlayerStates = Player.PlayerState.AttackLeft;
-                Cooldown = CooldownTotal;
-            }
+            //Currently does not work but will eventually handle the player animation based on player position vs mouse position.
+            //if(msState.X >= player.PosX)
+            //{
+            //    player.PlayerStates = Player.PlayerState.AttackLeft;
+            //    Cooldown = CooldownTotal;
+            //}
 
-            if ((player.PlayerStates == Player.PlayerState.IdleRight) || (player.PlayerStates == Player.PlayerState.WalkingRight))
-            {
-                player.PlayerStates = Player.PlayerState.AttackRight;
-                Cooldown = CooldownTotal;
-            }
+            //if ((player.PlayerStates == Player.PlayerState.IdleRight) || (player.PlayerStates == Player.PlayerState.WalkingRight))
+            //{
+            //    player.PlayerStates = Player.PlayerState.AttackRight;
+            //    Cooldown = CooldownTotal;
+            //}
         }
     }
 }

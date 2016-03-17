@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Input;
 namespace Once_A_Rogue
 {
     class Skills
+    //Ian Moon
+    //3/9/2016
+    //This class is the foundation for the skills in the game
     {
         //Attributes
 
@@ -46,6 +49,7 @@ namespace Once_A_Rogue
             set { rangeY = value; }
         }
 
+        //Determining whether the skill is direction based or area based.
         private bool isDirectional;
 
         public bool IsDirectional
@@ -74,6 +78,7 @@ namespace Once_A_Rogue
             }
         }
 
+        //A method for when the skill is used
         virtual public void OnActivated(Player player)
         {
             
