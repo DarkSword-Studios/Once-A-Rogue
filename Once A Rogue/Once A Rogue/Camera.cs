@@ -41,11 +41,11 @@ namespace Once_A_Rogue
         //This should only be called once per camera move
         public void Move(string dir)
         {
+            //If the camera is currently moving, avoid all additional camera calls
             if (isMoving)
             {
                 return;
             }
-
             direction = dir;
             isMoving = true;
             progress = 0;
@@ -53,14 +53,18 @@ namespace Once_A_Rogue
 
         //When called to update, the camera will adjust its current position. NEVER CALL UPDATE BEFORE INITIALIZING A CAMERA MOVE WITH Move()
         public void Update()
-        {         
+        {    
+            //The camera will update based on the direction it is travelling     
             switch (direction)
             {
                 case "up":
 
+                    //The movement is based on the panscreen
+                    //Adjust both the coordinate and the progress indicator
                     progress += panSpeed;
                     yMod += panSpeed;
 
+                    //If the progress has reached its desired value - indicate that the camera should stop moving
                     if (progress >= screenHeight)
                     {
                         isMoving = false;

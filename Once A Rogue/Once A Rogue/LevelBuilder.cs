@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO; //Needed for bringing in files
 
 namespace Once_A_Rogue
 
@@ -41,7 +42,7 @@ namespace Once_A_Rogue
             int roomCount = 1;
 
             //Random object to handle arbitrary pulls
-            Random random = new Random(); 
+            Random random = new Random();
 
             //Arrays of assortments of rooms for each situation (multi w/ guranteed direction : single direction)
             string[] possibleRoomsMultiLeft = new string[] {"allDirections", "leftDown", "leftRight", "leftUp",
@@ -56,7 +57,7 @@ namespace Once_A_Rogue
             string[] possibleRoomsMultiUp = new string[] {"allDirections", "leftUp", "upRight",
             "upDown", "leftUpRight", "leftUpDown", "upRightDown"};
 
-            string[] possibleRoomsSingle = new string[] {"left", "up", "right", "down"};
+            string[] possibleRoomsSingle = new string[] { "left", "up", "right", "down" };
 
             //Grand master queue, praise this mighty control structure (Holds and dispenses unfulfilled nodes)
             Queue<string> nodeQueue = new Queue<string>();
@@ -92,7 +93,7 @@ namespace Once_A_Rogue
             nodeQueue.Enqueue(temp);
 
             //RUN UNTIL NODE QUEUE IS EMPTY OR THERE WILL BE SEVERE CONSEQUENCES
-            while(nodeQueue.Count != 0)
+            while (nodeQueue.Count != 0)
             {
                 //Ask the queue for a node
                 string node = nodeQueue.Dequeue();
@@ -101,7 +102,7 @@ namespace Once_A_Rogue
                 string selectedRoom = "";
 
                 //This condition runs true if the room builder hasn't met the quota, and the current node has not been fulfilled
-                if(roomCount <= numRooms && !roomUsed.ContainsKey(node.Substring(1)))
+                if (roomCount <= numRooms && !roomUsed.ContainsKey(node.Substring(1)))
                 {
                     //Examine the first digit to see which connection is a must-have, and select a room from the proper array
                     switch (node[0])
@@ -177,7 +178,7 @@ namespace Once_A_Rogue
                     }
                     if (selectedRoom.Contains("RIGHT") || selectedRoom == "ALLDIRECTIONS")
                     {
-                        if(xCoord < grid.GetLength(0) - 2)
+                        if (xCoord < grid.GetLength(0) - 2)
                         {
                             roomNum = "1";
                             roomNum += (xCoord + 1).ToString();
@@ -188,7 +189,7 @@ namespace Once_A_Rogue
                         {
                             grid[grid.GetLength(0) - 1, yCoord] = "left";
                         }
-                        
+
                     }
                     if (selectedRoom.Contains("DOWN") || selectedRoom == "ALLDIRECTIONS")
                     {
@@ -206,7 +207,7 @@ namespace Once_A_Rogue
                     }
                 }
                 //This condition runs true if the quota of rooms HAS been met and the node is unfulfilled
-                else if(roomCount > numRooms && !roomUsed.ContainsKey(node.Substring(1)))
+                else if (roomCount > numRooms && !roomUsed.ContainsKey(node.Substring(1)))
                 {
                     //Once we've reached the room quota, it's time to end all open brances with end nodes
                     switch (node[0])
@@ -246,7 +247,7 @@ namespace Once_A_Rogue
                 //This condition runs true if the current node HAS BEEN FULFILLED
                 //Unfortunately if this is the case we have TWO OR MORE ASKING NODES, which results in a broken connection 50% of the time
                 else if (roomUsed.ContainsKey(node.Substring(1)))
-                {              
+                {
                     int xCoord = int.Parse(node[1].ToString());
                     int yCoord = int.Parse(node[2].ToString());
 
@@ -266,7 +267,7 @@ namespace Once_A_Rogue
                             {
                                 //Examine the asking node to see if it's null
                                 string room = grid[xCoord - 1, yCoord];
-                                if(room != null)
+                                if (room != null)
                                 {
                                     //Format the all directions room for direction splicing
                                     if (grid[xCoord - 1, yCoord] == "allDirections")
@@ -277,7 +278,7 @@ namespace Once_A_Rogue
                                     grid[xCoord - 1, yCoord] = grid[xCoord - 1, yCoord].Replace("right", "");
                                     grid[xCoord - 1, yCoord] = grid[xCoord - 1, yCoord].Replace("Right", "");
                                 }
-                                
+
                             }
                             //Else - Connection approved; discrepency cleared
                             break;
@@ -287,7 +288,7 @@ namespace Once_A_Rogue
                             if (!grid[xCoord, yCoord].ToUpper().Contains("UP"))
                             {
                                 string room = grid[xCoord, yCoord - 1];
-                                if(room != null)
+                                if (room != null)
                                 {
                                     if (grid[xCoord, yCoord - 1] == "allDirections")
                                     {
@@ -297,7 +298,7 @@ namespace Once_A_Rogue
                                     grid[xCoord, yCoord - 1] = grid[xCoord, yCoord - 1].Replace("down", "");
                                     grid[xCoord, yCoord - 1] = grid[xCoord, yCoord - 1].Replace("Down", "");
                                 }
-                                
+
                             }
                             //Else - Connection approved ; node removed
                             break;
@@ -307,7 +308,7 @@ namespace Once_A_Rogue
                             if (!grid[xCoord, yCoord].ToUpper().Contains("RIGHT"))
                             {
                                 string room = grid[xCoord + 1, yCoord];
-                                if(room != null)
+                                if (room != null)
                                 {
                                     if (grid[xCoord + 1, yCoord] == "allDirections")
                                     {
@@ -317,7 +318,7 @@ namespace Once_A_Rogue
                                     grid[xCoord + 1, yCoord] = grid[xCoord + 1, yCoord].Replace("left", "");
                                     grid[xCoord + 1, yCoord] = grid[xCoord + 1, yCoord].Replace("Left", "");
                                 }
-                                
+
                             }
                             //Else - Connection approved ; node removed
                             break;
@@ -327,7 +328,7 @@ namespace Once_A_Rogue
                             if (!grid[xCoord, yCoord].ToUpper().Contains("DOWN"))
                             {
                                 string room = grid[xCoord, yCoord + 1];
-                                if(room != null)
+                                if (room != null)
                                 {
                                     if (grid[xCoord, yCoord + 1] == "allDirections")
                                     {
@@ -337,7 +338,7 @@ namespace Once_A_Rogue
                                     grid[xCoord, yCoord + 1] = grid[xCoord, yCoord + 1].Replace("up", "");
                                     grid[xCoord, yCoord + 1] = grid[xCoord, yCoord + 1].Replace("Up", "");
                                 }
-                                
+
                             }
                             //Else - Connection approved ; node removed
                             break;
@@ -347,10 +348,190 @@ namespace Once_A_Rogue
                         grid[xCoord, yCoord] = "allDirections";
                     }
                 }
-                
+
             }
 
             return grid;
-        }   
+        }
+
+        public Room[,] BuildRoom(string[,] gridSystem, Room[,] levelAnnex, Camera camera, int rowIndex, int columnIndex)
+        {
+
+            //If the grid node is NOT EMPTY it MUST BE FULFILLED
+            if (gridSystem[columnIndex, rowIndex] != null)
+            {
+                //Build coordinates based on camera mods and grid placement
+                int xCoord = ((camera.screenWidth / 2) + camera.xMod);
+                int yCoord = ((camera.screenHeight / 2) + camera.yMod);
+
+                xCoord += ((columnIndex - 4) * 1920);
+                yCoord += ((rowIndex - 4) * 1080);
+
+                //Based on the node's structure, use the appropriate room code
+                int roomCode;
+
+                switch (gridSystem[columnIndex, rowIndex].ToUpper())
+                {
+                    case ("ALLDIRECTIONS"):
+
+                        roomCode = 1234;
+                        break;
+
+                    case ("LEFT"):
+
+                        roomCode = 1;
+                        break;
+
+                    case ("UP"):
+
+                        roomCode = 2;
+                        break;
+
+                    case ("RIGHT"):
+
+                        roomCode = 3;
+                        break;
+
+                    case ("DOWN"):
+
+                        roomCode = 4;
+                        break;
+
+                    case ("LEFTDOWN"):
+
+                        roomCode = 14;
+                        break;
+
+                    case ("LEFTRIGHT"):
+
+                        roomCode = 13;
+                        break;
+
+                    case ("LEFTUP"):
+
+                        roomCode = 12;
+                        break;
+
+                    case ("UPRIGHT"):
+
+                        roomCode = 23;
+                        break;
+
+                    case ("UPDOWN"):
+
+                        roomCode = 24;
+                        break;
+
+                    case ("RIGHTDOWN"):
+
+                        roomCode = 34;
+                        break;
+
+                    case ("LEFTUPRIGHT"):
+
+                        roomCode = 123;
+                        break;
+
+                    case ("LEFTUPDOWN"):
+
+                        roomCode = 124;
+                        break;
+
+                    case ("LEFTRIGHTDOWN"):
+
+                        roomCode = 134;
+                        break;
+
+                    case ("UPRIGHTDOWN"):
+
+                        roomCode = 234;
+                        break;
+
+                    default:
+                        roomCode = 2;
+                        break;
+                }
+
+                string roomCodeStr = roomCode.ToString();
+
+                List<string> possibleRooms = new List<string>();
+
+                foreach (string file in Directory.GetFiles(@"..\..\..\Content\Rooms"))
+                {
+                    if (file.Contains(roomCodeStr))
+                    {
+                        //Start of file processing by Ian
+                        char[] letterArray = new char[file.Length];
+                        List<int> numberArray = new List<int>();
+                        List<int> roomCodeList = new List<int>();
+
+                        for (int x = 0; x < file.Length; x++)
+                        {
+                            letterArray[x] = file[x];
+                        }
+
+                        for (int x = 0; x < roomCodeStr.Length; x++)
+                        {
+                            int roomCodeDigit;
+
+                            int.TryParse(roomCodeStr[x].ToString(), out roomCodeDigit);
+
+                            roomCodeList.Add(roomCodeDigit);
+                        }
+
+                        int fileNumber;
+
+                        foreach (char c in letterArray)
+                        {
+                            string charString = c.ToString();
+                            if (int.TryParse(charString, out fileNumber))
+                            {
+                                numberArray.Add(fileNumber);
+                            }
+                        }
+
+                        if (numberArray.Count == roomCodeList.Count)
+                        {
+                            int truthCount = 0;
+                            for (int x = 0; x < numberArray.Count; x++)
+                            {
+                                if (numberArray[x] == roomCodeList[x])
+                                {
+                                    truthCount += 1;
+                                }
+                            }
+
+                            if (truthCount == roomCodeStr.Length)
+                            {
+                                possibleRooms.Add(file);
+                            }
+                        }
+                    }
+                }
+                //End of file processing by Ian
+
+                Random random = new Random();
+
+                string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
+
+                if (levelAnnex[columnIndex, rowIndex] == null)
+                {
+                    Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
+                    room.BuildRoom(xCoord, yCoord);
+                    levelAnnex[columnIndex, rowIndex] = room;
+
+                    //If the generated room is the starting room, it should be initially active
+                    if (columnIndex == ((int)levelAnnex.GetLength(0) / 2) && rowIndex == ((int)levelAnnex.GetLength(1) / 2))
+                    {
+                        levelAnnex[columnIndex, rowIndex].Active = true;
+                    }
+                }
+
+
+            }
+
+            return levelAnnex;
+
+        }
     }
 }

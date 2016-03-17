@@ -50,7 +50,7 @@ namespace Once_A_Rogue
             set { currSkill = value; }
         }
 
-        //Stuff added by Avix
+        //Stuff added by Stasha
         int currentFrame = 0;
         int numFrames = 6;
 
@@ -64,7 +64,7 @@ namespace Once_A_Rogue
             set { playerState = value; }
         }
 
-        //End of stuff added by Avix
+        //End of stuff added by Stasha
 
         public Player(int x, int y, int width, int height)
         {
@@ -206,7 +206,7 @@ namespace Once_A_Rogue
             }
         }
 
-        //Added by Avix
+        //Added by Stasha
         public void Draw(SpriteBatch spritebatch, Texture2D texture, int frameWidth, int frameHeight)
         {
             Rectangle frame;
@@ -245,7 +245,7 @@ namespace Once_A_Rogue
             currentFrame = framesElapsed % numFrames + 1;
         
         }
-        //End of things added by Avix
+        //End of things added by Stasha
 
         public void Update(int roomWidth, int roomHeight, Camera cam)
         {
