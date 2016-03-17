@@ -20,12 +20,16 @@ namespace Once_A_Rogue
         Player player;
 
         //Enums for game state
-        enum GameState { MainMenu, Playing, GameOver, paused, }
+        enum GameState { MainMenu, Playing, GameOver, paused, howTo }
         GameState gameState;
 
         //Enums for selector arrow
         enum ArrowState { pos1, pos2, pos3 }
         ArrowState arrowState;
+
+        //Enums for player weapon state
+        enum PlayWepState { Sword, Rogue, Mage, Ranger }
+        PlayWepState playWepState;
 
         //Declare a grid to keep track of level space
         string [,] gridSystem;       
@@ -64,7 +68,7 @@ namespace Once_A_Rogue
         Texture2D tilemap, playerIdle;
 
         //Declare HUD Textures
-        Texture2D pause, exit, resume, context, select;
+        Texture2D pause, exit, resume, context, select, control, controls, mage, ranger, sword, rogue, back;
 
         //Keyboard states
         KeyboardState kbs, previousKBS, state;
@@ -109,7 +113,8 @@ namespace Once_A_Rogue
 
             //Initializing the gamestate
             gameState = GameState.Playing;
-            arrowState = ArrowState.pos2;
+            arrowState = ArrowState.pos1;
+            playWepState = PlayWepState.Sword;
 
             //Run Level Builder! Generate the first level
             gridSystem = new string[COLUMNS, ROWS];
@@ -178,6 +183,13 @@ namespace Once_A_Rogue
             exit = Content.Load<Texture2D>("HUDexittowindowsbutton.png");
             select = Content.Load<Texture2D>("HUDselect.png");
             resume = Content.Load<Texture2D>("HUDresume.png");
+            control = Content.Load<Texture2D>("HUDcontrol.png");
+            controls = Content.Load<Texture2D>("HUDcontrols.png");
+            sword = Content.Load<Texture2D>("HUDsword.png");
+            rogue = Content.Load<Texture2D>("HUDrogue.png");
+            mage = Content.Load<Texture2D>("HUDmage.png");
+            ranger = Content.Load<Texture2D>("HUDranger.png");
+            back = Content.Load<Texture2D>("HUDback.png");
         }
 
         /// <summary>
@@ -221,22 +233,18 @@ namespace Once_A_Rogue
                 {
                     playerMove = "left";
                 }
-
                 if (state.IsKeyDown(Keys.D))
                 {
                     playerMove = "right";
                 }
-
                 if (state.IsKeyDown(Keys.S))
                 {
                     playerMove = "down";
                 }
-
                 if (state.IsKeyDown(Keys.W))
                 {
                     playerMove = "up";
                 }
-
                 if (camera.isMoving)
                 {
                     camera.Update();
@@ -244,6 +252,23 @@ namespace Once_A_Rogue
                 else
                 {
                     shifting = false;
+                }
+
+                if (kbs.IsKeyDown(Keys.Z))
+                {
+                    playWepState = PlayWepState.Sword;
+                }
+                if (kbs.IsKeyDown(Keys.X))
+                {
+                    playWepState = PlayWepState.Rogue;
+                }
+                if (kbs.IsKeyDown(Keys.C))
+                {
+                    playWepState = PlayWepState.Mage;
+                }
+                if (kbs.IsKeyDown(Keys.V))
+                {
+                    playWepState = PlayWepState.Ranger;
                 }
 
                 //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
@@ -268,12 +293,25 @@ namespace Once_A_Rogue
                 if(SingleKeyPress(Keys.Escape))
                 {
                     gameState = GameState.paused;
+                    arrowState = ArrowState.pos1;
                 }
             }
             
             if(gameState == GameState.GameOver)
             {
 
+            }
+
+            if(gameState == GameState.howTo)
+            {
+                if (SingleKeyPress(Keys.Escape))
+                {
+                    gameState = GameState.paused;
+                }
+                if (SingleKeyPress(Keys.Enter))
+                {
+                    gameState = GameState.paused;
+                }
             }
 
             if(gameState == GameState.paused)
@@ -305,13 +343,31 @@ namespace Once_A_Rogue
                     {
                         arrowState = ArrowState.pos1;
                     }
+                    if (kbs.IsKeyDown(Keys.S))
+                    {
+                        arrowState = ArrowState.pos3;
+                    }
                 }
-
                 if (arrowState == ArrowState.pos2)
                 {
                     if (kbs.IsKeyDown(Keys.Enter))
                     {
+                        gameState = GameState.howTo;
+                    }
+                }
+
+                if (arrowState == ArrowState.pos3)
+                {
+                    if (kbs.IsKeyDown(Keys.Enter))
+                    {
                         Exit();
+                    }
+                }
+                if (arrowState == ArrowState.pos3)
+                {
+                    if (kbs.IsKeyDown(Keys.W))
+                    {
+                        arrowState = ArrowState.pos2;
                     }
                 }
             }
@@ -353,6 +409,23 @@ namespace Once_A_Rogue
                         project.Draw(spriteBatch);
                     }
                 }
+
+                if (playWepState == PlayWepState.Sword)
+                {
+                    spriteBatch.Draw(sword, new Vector2(1699, 868), Color.White);
+                }
+                if (playWepState == PlayWepState.Rogue)
+                {
+                    spriteBatch.Draw(rogue, new Vector2(1699, 868), Color.White);
+                }
+                if (playWepState == PlayWepState.Mage)
+                {
+                    spriteBatch.Draw(mage, new Vector2(1699, 868), Color.White);
+                }
+                if (playWepState == PlayWepState.Ranger)
+                {
+                    spriteBatch.Draw(ranger, new Vector2(1699, 868), Color.White);
+                }
             }
 
             //draws the following if the game is paused
@@ -360,17 +433,28 @@ namespace Once_A_Rogue
             {
                 spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
                 spriteBatch.Draw(resume, new Vector2(100, 351), Color.White);
-                spriteBatch.Draw(exit, new Vector2(100, 426), Color.White);
+                spriteBatch.Draw(control, new Vector2(100, 426), Color.White);
+                spriteBatch.Draw(exit, new Vector2(100, 501), Color.White);
 
                 if (arrowState == ArrowState.pos1)
                 {
                     spriteBatch.Draw(select, new Vector2(30, 354), Color.White);
                 }
-
                 if (arrowState == ArrowState.pos2)
                 {
                     spriteBatch.Draw(select, new Vector2(30, 429), Color.White);
                 }
+                if (arrowState == ArrowState.pos3)
+                {
+                    spriteBatch.Draw(select, new Vector2(30, 504), Color.White);
+                }
+            }
+
+            if(gameState == GameState.howTo)
+            {
+                spriteBatch.Draw(controls, new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(back, new Vector2(927, 982), Color.White);
+                spriteBatch.Draw(select, new Vector2(852, 983), Color.White);
             }
 
             if (gameState == GameState.GameOver)
