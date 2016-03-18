@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Once_A_Rogue
 {
+    //Class to determine wall space in game
     class Wall
     {
     }

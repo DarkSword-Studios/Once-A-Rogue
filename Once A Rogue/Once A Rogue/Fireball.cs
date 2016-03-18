@@ -5,8 +5,11 @@ using System.Text;
 
 namespace Once_A_Rogue
 {
+    //Class to define specific Fireball skill 
     class Fireball:Skills
     {
+
+        //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts initially at 0
         public Fireball(Player player)
         {
             Cooldown = 0;
@@ -15,6 +18,7 @@ namespace Once_A_Rogue
             IsDirectional = true;
         }
 
+        //Overide OnActivated method
         public override void OnActivated(Player player)
         {
             base.OnActivated(player);

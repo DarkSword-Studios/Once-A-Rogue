@@ -8,9 +8,13 @@ using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
 {
+
+    //Class to handle Melee Attack skill
     class MeleeAttack:Skills
     {
         //Attributes
+
+        //Int to store damage of melee attack
         private int damage;
 
         public int Damage
@@ -19,6 +23,7 @@ namespace Once_A_Rogue
             set { damage = value; }
         }
 
+        //Constructor passing in player object
         public MeleeAttack(Player player)
         {
             Cooldown = 0;
@@ -26,6 +31,7 @@ namespace Once_A_Rogue
             RangeY = 0;
             BurstRadius = 0;
             
+            //If loops to determine damage and cooldown of different weapons
             if(player.CurrWeapon == "Sword")
             {
                 CooldownTotal = 1;
@@ -51,6 +57,7 @@ namespace Once_A_Rogue
             }
         }
 
+        //Overriden OnActivated method
         public override void OnActivated(Player player)
         {
             //Getting position of the mouse

@@ -8,7 +8,7 @@ namespace Once_A_Rogue
     class Enemy : Character
     {   //Julian Januszka
         //3/15/16
-        //Inhertid class of Character to handle enemies 
+        //Inherited class of Character to handle enemies 
 
 
         //Value for fear level of enemy
