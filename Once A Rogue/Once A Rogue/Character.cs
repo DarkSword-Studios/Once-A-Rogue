@@ -55,7 +55,7 @@ namespace Once_A_Rogue
             }
         }
 
-
+        //Int to handle maximum amount of health that the character can have
         private int maxHealth;
 
         public int MaxHealth
@@ -89,6 +89,7 @@ namespace Once_A_Rogue
             set { moveSpeedTotal = value; }
         }
 
+        //Represents the current movement speed of the character
         private int moveSpeed;
 
         public int MoveSpeed
@@ -103,6 +104,7 @@ namespace Once_A_Rogue
                     IsRooted = true;
                 }
 
+                //If the value is greater than the total move speed, set movespeed to moverSpeedTotal
                 else if(value > moveSpeedTotal)
                 {
                     moveSpeed = moveSpeedTotal;

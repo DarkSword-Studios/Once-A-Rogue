@@ -229,6 +229,7 @@ namespace Once_A_Rogue
                 state = Keyboard.GetState();
                 mbs = Mouse.GetState();
 
+                //Set W A S D keys to four different directions
                 if (state.IsKeyDown(Keys.A))
                 {
                     playerMove = "left";
