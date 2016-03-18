@@ -5,6 +5,7 @@ using System.Reflection; //Needed for string to variable calls
 using System.IO; //Needed for finding rooms
 using System.Collections.Generic; //Needed for lists
 using System; //Needed for random objects
+using Microsoft.Xna.Framework.Media; //Needed for music
 
 
 
@@ -24,7 +25,7 @@ namespace Once_A_Rogue
         GameState gameState;
 
         //Enums for selector arrow
-        enum ArrowState { pos1, pos2, pos3 }
+        enum ArrowState { pos1, pos2, pos3, menu1, menu2 }
         ArrowState arrowState;
 
         //Enums for player weapon state
@@ -68,18 +69,18 @@ namespace Once_A_Rogue
         Texture2D tilemap, playerIdle;
 
         //Declare HUD Textures
-        Texture2D pause, exit, resume, context, select, control, controls, mage, ranger, sword, rogue, back;
+        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM;
 
         //Keyboard states
         KeyboardState kbs, previousKBS, state;
-
-        //Mouse states
-        MouseState mbs;
 
         //Level builder to create and connect rooms
         LevelBuilder builderAlpha;
 
         Cursor cur;
+
+        //Song for music
+        Song mainMusic;
 
         //List to keep track of projectiles
         private List<Projectile> currProjectiles;
@@ -112,8 +113,8 @@ namespace Once_A_Rogue
             graphics.ApplyChanges();
 
             //Initializing the gamestate
-            gameState = GameState.Playing;
-            arrowState = ArrowState.pos1;
+            gameState = GameState.MainMenu;
+            arrowState = ArrowState.menu1;
             playWepState = PlayWepState.Sword;
 
             //Run Level Builder! Generate the first level
@@ -190,6 +191,14 @@ namespace Once_A_Rogue
             mage = Content.Load<Texture2D>("HUDmage.png");
             ranger = Content.Load<Texture2D>("HUDranger.png");
             back = Content.Load<Texture2D>("HUDback.png");
+            main = Content.Load<Texture2D>("HUDMain.png");
+            play = Content.Load<Texture2D>("HUDplay.png");
+            exitM = Content.Load<Texture2D>("HUDexit.png");
+
+            //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
+            //Song is Finding The Balance by Kevin Macleod
+            mainMusic = Content.Load<Song>("music.wav");
+            MediaPlayer.Play(mainMusic);
         }
 
         /// <summary>
@@ -212,10 +221,36 @@ namespace Once_A_Rogue
                 Exit();
 
             // TODO: Add your update logic here 
-
-            if(gameState == GameState.MainMenu)
+            if (gameState == GameState.MainMenu)
             {
-
+                if (arrowState == ArrowState.menu1)
+                {
+                    if (SingleKeyPress(Keys.Enter))
+                    {
+                        gameState = GameState.Playing;
+                    }
+                }
+                if (arrowState == ArrowState.menu1)
+                {
+                    if (kbs.IsKeyDown(Keys.S))
+                    {
+                        arrowState = ArrowState.menu2;
+                    }
+                }
+                if (arrowState == ArrowState.menu2)
+                {
+                    if (SingleKeyPress(Keys.Enter))
+                    {
+                        Exit();
+                    }
+                }
+                if (arrowState == ArrowState.menu2)
+                {
+                    if (kbs.IsKeyDown(Keys.W))
+                    {
+                        arrowState = ArrowState.menu1;
+                    }
+                }
             }
 
             if(gameState == GameState.Playing)
@@ -227,7 +262,6 @@ namespace Once_A_Rogue
                 player.UpdateFrame(framesElapsed);
 
                 state = Keyboard.GetState();
-                mbs = Mouse.GetState();
 
                 //Set W A S D keys to four different directions
                 if (state.IsKeyDown(Keys.A))
@@ -309,10 +343,6 @@ namespace Once_A_Rogue
                 {
                     gameState = GameState.paused;
                 }
-                if (SingleKeyPress(Keys.Enter))
-                {
-                    gameState = GameState.paused;
-                }
             }
 
             if(gameState == GameState.paused)
@@ -388,13 +418,25 @@ namespace Once_A_Rogue
 
             spriteBatch.Begin();
 
+            //This draws the main menu
             if (gameState == GameState.MainMenu)
             {
+                spriteBatch.Draw(main, new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(play, new Vector2(784, 522), Color.White);
+                spriteBatch.Draw(exitM, new Vector2(405, 652), Color.White);
 
+                if(arrowState == ArrowState.menu1)
+                {
+                    spriteBatch.Draw(select, new Vector2(707, 535), Color.White);
+                }
+                if (arrowState == ArrowState.menu2)
+                {
+                    spriteBatch.Draw(select, new Vector2(329, 667), Color.White);
+                }
             }
 
             //this is drawn no matter what so even when paused, the game is still "drawn", it will just be "idle"
-            if (this.IsActive)
+            if ((this.IsActive) && (gameState != GameState.MainMenu))
             {
                 //Extremely important call to draw all active rooms
                 DrawRooms();
@@ -454,8 +496,6 @@ namespace Once_A_Rogue
             if(gameState == GameState.howTo)
             {
                 spriteBatch.Draw(controls, new Vector2(0, 0), Color.White);
-                spriteBatch.Draw(back, new Vector2(927, 982), Color.White);
-                spriteBatch.Draw(select, new Vector2(852, 983), Color.White);
             }
 
             if (gameState == GameState.GameOver)
