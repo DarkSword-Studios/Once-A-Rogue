@@ -7,7 +7,7 @@ namespace Once_A_Rogue
 {
 
     //Specific class to handle the specific behaviors of the in game bosses. 
-    //Inherits from the character class
+    //Inherits from the enemy class
     class Boss
     {
         //test text

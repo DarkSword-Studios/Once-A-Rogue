@@ -56,7 +56,6 @@
     <Compile Include="Room.cs" />
     <Compile Include="Skills.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="Wall.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
