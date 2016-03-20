@@ -12,7 +12,7 @@ namespace Once_A_Rogue
     //This class represents a fireball skill that the Player will be a able to use
     {
 
-        //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts initially at 0
+        //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts castable
         public Fireball(Player player)
         {
             Cooldown = 0;
