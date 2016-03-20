@@ -199,6 +199,7 @@ namespace Once_A_Rogue
             //Song is Finding The Balance by Kevin Macleod
             mainMusic = Content.Load<Song>("music.wav");
             MediaPlayer.Play(mainMusic);
+            MediaPlayer.Volume = (float)(MediaPlayer.Volume * .20);
         }
 
         /// <summary>
@@ -615,6 +616,7 @@ namespace Once_A_Rogue
             }
         }
 
+        //Method for drawing the rooms.
         public void DrawRooms()
         {
             //Start at the beginning of the grid
