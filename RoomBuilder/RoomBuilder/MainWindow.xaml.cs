@@ -92,10 +92,18 @@ namespace RoomBuilder
         //Event Handler for loading in a tile set image
         private void TilesetCommand(object sender, ExecutedRoutedEventArgs e)
         {
-            if(editor != null)
+            try
             {
-                //Getting the image that will be used as the tileset
-                BitmapImage image = new BitmapImage(new Uri(OpenFile(".png")));
+                if (editor != null)
+                {
+                    //Getting the image that will be used as the tileset
+                    BitmapImage image = new BitmapImage(new Uri(OpenFile(".png")));
+                }
+            }
+
+            catch
+            {
+
             }
         }
 
