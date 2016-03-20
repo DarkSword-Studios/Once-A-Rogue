@@ -7,6 +7,9 @@ namespace Once_A_Rogue
 {
     //Class to define specific Fireball skill 
     class Fireball:Skills
+    //Ian Moon
+    //3/20/2016
+    //This class represents a fireball skill that the Player will be a able to use
     {
 
         //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts initially at 0
