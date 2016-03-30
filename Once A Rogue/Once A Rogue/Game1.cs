@@ -60,10 +60,6 @@ namespace Once_A_Rogue
         int oldCol = -1;
         string playerMove = "none";
 
-        //Keeps track of the current frame of animation for the player
-        int framesElapsed;
-        int timePerFrame = 100;
-
         //Declare Room Textures
         //Texture2D allDirections, left, up, right, down, leftDown, leftRight, leftUp, upRight, upDown, rightDown, leftUpRight, leftUpDown, leftRightDown, upRightDown;
         
@@ -263,8 +259,8 @@ namespace Once_A_Rogue
                 //Extremely important call to update all active rooms
                 UpdateRooms();
             
-                framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
-                player.UpdateFrame(framesElapsed);
+                
+                player.UpdateFrame(gameTime);
 
                 //Set W A S D keys to four different directions
                 if (kbs.IsKeyDown(Keys.A))

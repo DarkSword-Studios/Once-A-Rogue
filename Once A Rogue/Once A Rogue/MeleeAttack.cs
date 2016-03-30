@@ -63,17 +63,20 @@ namespace Once_A_Rogue
             MouseState msState = Mouse.GetState();
 
             //Currently does not work but will eventually handle the player animation based on player position vs mouse position.
-            //if(msState.X >= player.PosX)
-            //{
-            //    player.PlayerStates = Player.PlayerState.AttackLeft;
-            //    Cooldown = CooldownTotal;
-            //}
+            if (msState.X <= player.PosX + player.PosRect.Width / 2)
+            {
+                player.PlayerStates = Player.PlayerState.AttackLeft;
+                player.CurrentFrame = 0;
+                player.framesElapsed = 0;
+                player.timeElapsed = 0;
+                Cooldown = CooldownTotal;
+            }
 
-            //if ((player.PlayerStates == Player.PlayerState.IdleRight) || (player.PlayerStates == Player.PlayerState.WalkingRight))
-            //{
-            //    player.PlayerStates = Player.PlayerState.AttackRight;
-            //    Cooldown = CooldownTotal;
-            //}
+            if (msState.X > player.PosX + player.PosRect.Width / 2)
+            {
+                player.PlayerStates = Player.PlayerState.AttackRight;
+                Cooldown = CooldownTotal;
+            }
         }
     }
 }

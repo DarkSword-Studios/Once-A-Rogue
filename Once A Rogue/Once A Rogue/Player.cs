@@ -51,8 +51,21 @@ namespace Once_A_Rogue
         }
 
         //Stuff added by Stasha
-        int currentFrame = 0;
+        private int currentFrame;
+
+        public int CurrentFrame
+        {
+            get { return currentFrame; }
+            set { currentFrame = value; }
+        }
+
+        //Keeps track of the current frame of animation for the player
+        int timePerFrame = 100;
         int numFrames = 6;
+        public int framesElapsed;
+        public int timeElapsed;
+
+
 
         public enum PlayerState { IdleLeft, IdleRight, WalkingLeft, WalkingRight, AttackLeft, AttackRight };
 
@@ -92,6 +105,7 @@ namespace Once_A_Rogue
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];
             CurrSkill = skillList[0];
+            currentFrame = 0;
         }
 
         //Method for processing user input
@@ -146,7 +160,7 @@ namespace Once_A_Rogue
                 }
             }
 
-            if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W))
+            if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W) && playerState != PlayerState.AttackLeft && playerState != PlayerState.AttackRight)
             {
                 if (playerState == PlayerState.WalkingLeft)
                 {
@@ -159,7 +173,17 @@ namespace Once_A_Rogue
 
             }
 
-            if(msState.LeftButton == ButtonState.Pressed)
+            if(currentFrame == 6 && playerState == PlayerState.AttackLeft)
+            {
+                playerState = PlayerState.IdleLeft;
+            }
+
+            if (currentFrame == 6 && playerState == PlayerState.AttackRight)
+            {
+                playerState = PlayerState.IdleRight;
+            }
+
+            if (msState.LeftButton == ButtonState.Pressed)
             {
                 CurrSkill.OnActivated(this);
             }
@@ -236,12 +260,19 @@ namespace Once_A_Rogue
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
                     spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
+
+                case PlayerState.AttackLeft:
+
+                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
+                    spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
             }
         }
 
-        public void UpdateFrame(int framesElapsed)
+        public void UpdateFrame(GameTime gameTime)
         {
-            
+            timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
+            framesElapsed = (int)(timeElapsed / timePerFrame);
             currentFrame = framesElapsed % numFrames + 1;
         
         }
