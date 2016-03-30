@@ -6,6 +6,7 @@ using System.IO; //Needed for finding rooms
 using System.Collections.Generic; //Needed for lists
 using System; //Needed for random objects
 using Microsoft.Xna.Framework.Media; //Needed for music
+using System.Threading;
 
 
 
@@ -72,7 +73,7 @@ namespace Once_A_Rogue
         Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM;
 
         //Keyboard states
-        KeyboardState kbs, previousKBS, state;
+        KeyboardState previousKBS, kbs;
 
         //Level builder to create and connect rooms
         LevelBuilder builderAlpha;
@@ -197,9 +198,9 @@ namespace Once_A_Rogue
 
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
             //Song is Finding The Balance by Kevin Macleod
-            mainMusic = Content.Load<Song>("music.wav");
-            MediaPlayer.Play(mainMusic);
-            MediaPlayer.Volume = (float)(MediaPlayer.Volume * .20);
+            //mainMusic = Content.Load<Song>("music.wav");
+            //MediaPlayer.Play(mainMusic);
+            //MediaPlayer.Volume = (float)(MediaPlayer.Volume * .20);
         }
 
         /// <summary>
@@ -220,6 +221,9 @@ namespace Once_A_Rogue
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
+
+            previousKBS = kbs;
+            kbs = Keyboard.GetState();
 
             // TODO: Add your update logic here 
             if (gameState == GameState.MainMenu)
@@ -262,22 +266,20 @@ namespace Once_A_Rogue
                 framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
                 player.UpdateFrame(framesElapsed);
 
-                state = Keyboard.GetState();
-
                 //Set W A S D keys to four different directions
-                if (state.IsKeyDown(Keys.A))
+                if (kbs.IsKeyDown(Keys.A))
                 {
                     playerMove = "left";
                 }
-                if (state.IsKeyDown(Keys.D))
+                if (kbs.IsKeyDown(Keys.D))
                 {
                     playerMove = "right";
                 }
-                if (state.IsKeyDown(Keys.S))
+                if (kbs.IsKeyDown(Keys.S))
                 {
                     playerMove = "down";
                 }
-                if (state.IsKeyDown(Keys.W))
+                if (kbs.IsKeyDown(Keys.W))
                 {
                     playerMove = "up";
                 }
@@ -363,24 +365,24 @@ namespace Once_A_Rogue
                 }
                 if (arrowState == ArrowState.pos1)
                 {
-                    if (kbs.IsKeyDown(Keys.S))
+                    if (SingleKeyPress(Keys.S))
                     {
                         arrowState = ArrowState.pos2;
                     }
                 }
 
-                if (arrowState == ArrowState.pos2)
+                if(arrowState == ArrowState.pos2)
                 {
-                    if (kbs.IsKeyDown(Keys.W))
+                    if (SingleKeyPress(Keys.W))
                     {
                         arrowState = ArrowState.pos1;
                     }
-                    if (kbs.IsKeyDown(Keys.S))
+                    if (SingleKeyPress(Keys.S))
                     {
                         arrowState = ArrowState.pos3;
                     }
                 }
-                if (arrowState == ArrowState.pos2)
+                if(arrowState == ArrowState.pos2)
                 {
                     if (kbs.IsKeyDown(Keys.Enter))
                     {
@@ -395,9 +397,10 @@ namespace Once_A_Rogue
                         Exit();
                     }
                 }
+
                 if (arrowState == ArrowState.pos3)
                 {
-                    if (kbs.IsKeyDown(Keys.W))
+                    if (SingleKeyPress(Keys.W))
                     {
                         arrowState = ArrowState.pos2;
                     }
@@ -512,11 +515,10 @@ namespace Once_A_Rogue
         //checks for a single key press
         public bool SingleKeyPress(Keys key)
         {
-            previousKBS = kbs;
-            kbs = Keyboard.GetState();
-
             if ((previousKBS.IsKeyUp(key)) && (kbs.IsKeyDown(key)))
             {
+                previousKBS = kbs;
+                kbs = Keyboard.GetState();
                 return true;
             }
 
@@ -524,7 +526,6 @@ namespace Once_A_Rogue
             {
                 return false;
             }
-
         }
 
         public void UpdateRooms()
