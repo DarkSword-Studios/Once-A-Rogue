@@ -75,6 +75,9 @@ namespace Once_A_Rogue
             if (msState.X > player.PosX + player.PosRect.Width / 2)
             {
                 player.PlayerStates = Player.PlayerState.AttackRight;
+                player.CurrentFrame = 0;
+                player.framesElapsed = 0;
+                player.timeElapsed = 0;
                 Cooldown = CooldownTotal;
             }
         }

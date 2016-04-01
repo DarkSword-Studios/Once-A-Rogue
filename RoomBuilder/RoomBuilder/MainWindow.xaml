@@ -16,9 +16,9 @@
             </MenuItem>
         </Menu>
         <Grid Margin="0,24,0,0">
-            <Canvas HorizontalAlignment="Stretch" Name="canvas1" VerticalAlignment="Stretch" MouseMove="MoveMouse" MouseDown="PressDownMouse" MouseUp="canvas2_MouseLeftButtonUp" MouseWheel="canvas1_MouseWheel" Margin="203,0,0,0"/>
-            <Canvas HorizontalAlignment="Stretch" Name="canvas2"  VerticalAlignment="Stretch" MouseMove="MoveMouse" MouseDown="PressDownMouse" MouseUp="canvas2_MouseLeftButtonUp" MouseWheel="canvas1_MouseWheel" Margin="203,0,0,0"/>
-            <ListView HorizontalAlignment="Left" Name="listView1" Width="203" VerticalAlignment="Stretch">
+            <Canvas HorizontalAlignment="Stretch" Name="canvas1" VerticalAlignment="Stretch" MouseMove="MoveMouse" MouseDown="PressDownMouse" MouseUp="canvas2_MouseLeftButtonUp" MouseWheel="canvas1_MouseWheel" Margin="0,0,0,0"/>
+            <Canvas HorizontalAlignment="Stretch" Name="canvas2"  VerticalAlignment="Stretch" MouseMove="MoveMouse" MouseDown="PressDownMouse" MouseUp="canvas2_MouseLeftButtonUp" MouseWheel="canvas1_MouseWheel" Margin="0,0,208,0"/>
+            <ListView HorizontalAlignment="Left" Name="listView1" Width="203" VerticalAlignment="Stretch" Margin="1069,0,0,0">
             </ListView>
         </Grid>
     </Grid>

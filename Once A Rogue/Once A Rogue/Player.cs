@@ -266,6 +266,12 @@ namespace Once_A_Rogue
                     frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
                     spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
+
+                case PlayerState.AttackRight:
+
+                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
+                    spritebatch.Draw(texture, PosRect, frame, Color.White);
+                    break;
             }
         }
 
