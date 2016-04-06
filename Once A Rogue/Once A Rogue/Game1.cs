@@ -61,9 +61,7 @@ namespace Once_A_Rogue
         string playerMove = "none";
 
         //Declare Room Textures
-        //Texture2D allDirections, left, up, right, down, leftDown, leftRight, leftUp, upRight, upDown, rightDown, leftUpRight, leftUpDown, leftRightDown, upRightDown;
-        
-        Texture2D tilemap, playerIdle;
+        Texture2D tilemap, playerTextures, projectileTextures;
 
         //Declare HUD Textures
         Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM;
@@ -80,13 +78,13 @@ namespace Once_A_Rogue
         Song mainMusic;
 
         //List to keep track of projectiles
-        private List<Projectile> currProjectiles;
+        //private List<Projectile> currProjectiles;
 
-        public List<Projectile> CurrProjectiles
-        {
-            get { return currProjectiles; }
-            set { currProjectiles = value; }
-        }
+        //public List<Projectile> CurrProjectiles
+        //{
+        //    get { return currProjectiles; }
+        //    set { currProjectiles = value; }
+        //}
 
         public Game1()
         {
@@ -154,7 +152,7 @@ namespace Once_A_Rogue
             cur = new Cursor();
 
             //Initializing the projectile list
-            currProjectiles = new List<Projectile>();           
+            //currProjectiles = new List<Projectile>();           
 
             base.Initialize();
         }
@@ -174,7 +172,8 @@ namespace Once_A_Rogue
 
             //Load in tilemap and player spritesheet
             tilemap = Content.Load<Texture2D>("Tileset.png");
-            playerIdle = Content.Load <Texture2D>("PlayerAnims.png");
+            playerTextures = Content.Load <Texture2D>("PlayerAnims.png");
+            projectileTextures = Content.Load<Texture2D>("Projectile Spritesheet.png");
 
             //Initialize HUD textures
             pause = Content.Load<Texture2D>("HUDpause.png");
@@ -298,11 +297,11 @@ namespace Once_A_Rogue
                 }
                 if (kbs.IsKeyDown(Keys.C))
                 {
-                    playWepState = PlayWepState.Mage;
+                    playWepState = PlayWepState.Ranger;
                 }
                 if (kbs.IsKeyDown(Keys.V))
                 {
-                    playWepState = PlayWepState.Ranger;
+                    playWepState = PlayWepState.Mage;
                 }
 
                 //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
@@ -316,9 +315,9 @@ namespace Once_A_Rogue
                 //Updating the player position
                 player.Update(camera.screenWidth, camera.screenHeight, camera);
 
-                if (CurrProjectiles.Count > 0)
+                if (Skills.projectiles.Count > 0)
                 {
-                    foreach (Projectile project in CurrProjectiles)
+                    foreach (Projectile project in Skills.projectiles)
                     {
                         project.Update();
                     }
@@ -442,14 +441,14 @@ namespace Once_A_Rogue
                 DrawRooms();
                 
                 //Drawing the player
-                player.Draw(spriteBatch, playerIdle, 140, 140);
+                player.Draw(spriteBatch, playerTextures, 140, 140);
 
                 //Drawing the projectiles on the screen
-                if (CurrProjectiles.Count > 0)
+                if (Skills.projectiles.Count > 0)
                 {
-                    foreach (Projectile project in CurrProjectiles)
+                    foreach (Projectile project in Skills.projectiles)
                     {
-                        project.Draw(spriteBatch);
+                        project.Draw(spriteBatch, projectileTextures);
                     }
                 }
 

@@ -17,53 +17,50 @@ namespace Once_A_Rogue
         int velocityX;
         int velocityY;
         int duration;
-        string direction;
+        int rowY;
+        int numFrames;
+        int currentFrame;
+        const int FRAMEWIDTH = 40;
+        const int FRAMEHEIGHT = 40;
 
         //Parameterized Constructor
-        public Projectile(int vectorX, int vectorY, string dir, Texture2D text, Rectangle posRect, Game1 game)
+        public Projectile(int vectorX, int vectorY, int rowY, int numFrames)
         {
             vectorX = velocityX;
             vectorY = velocityY;
-            direction = dir;
-            Texture = text;
-            PosRect = posRect;
+            this.rowY = rowY;
+            this.numFrames = numFrames;
 
             //Adding the projectile to a projectile list in the game class
-            game.CurrProjectiles.Add(this);
+            //game.CurrProjectiles.Add(this);
         }
 
         //Overload Constructor
-        public Projectile(int vectorX, int vectorY, int dur, string dir, Texture2D text, Rectangle posRect, Game1 game)
+        public Projectile(int vectorX, int vectorY, int dur, int rowY, int numFrames)
         {
             velocityX = vectorX;
             velocityY = vectorY;
             duration = dur;
-            direction = dir;
-            Texture = text;
-            PosRect = posRect;
+            this.rowY = rowY;
+            this.numFrames = numFrames;
+
+            //Adding the projectile to a projectile list in the game class
+            //game.CurrProjectiles.Add(this);
         }
 
         public void Update()
         {
-            //Making sure the projectile is going the correct direction
-            if(direction == "left")
-            {
-                velocityX = -velocityX;
-            }
-
-            if(direction == "down")
-            {
-                velocityY = -velocityY;
-            }
-
             PosX = PosX + velocityX;
 
             PosY = PosY + velocityY;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
-            spriteBatch.Draw(Texture, PosRect, Color.White);
+            //spriteBatch.Draw(Texture, PosRect, Color.White);
+
+            Rectangle frame = new Rectangle(currentFrame * FRAMEWIDTH, FRAMEHEIGHT * rowY, FRAMEWIDTH, FRAMEHEIGHT);
+            spriteBatch.Draw(texture, PosRect, frame, Color.White);
         }
     }
 }

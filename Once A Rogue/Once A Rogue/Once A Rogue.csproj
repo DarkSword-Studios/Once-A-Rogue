@@ -152,6 +152,9 @@
     <Content Include="Content\HUDresume.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Projectile Spritesheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Right-RoomCode.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

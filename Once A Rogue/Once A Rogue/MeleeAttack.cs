@@ -57,29 +57,10 @@ namespace Once_A_Rogue
         }
 
         //Method for when the skill is activated
-        public override void OnActivated(Player player)
+        public override Boolean OnActivated(Player player)
         {
-            //Getting position of the mouse
-            MouseState msState = Mouse.GetState();
-
-            //Currently does not work but will eventually handle the player animation based on player position vs mouse position.
-            if (msState.X <= player.PosX + player.PosRect.Width / 2)
-            {
-                player.PlayerStates = Player.PlayerState.AttackLeft;
-                player.CurrentFrame = 0;
-                player.framesElapsed = 0;
-                player.timeElapsed = 0;
-                Cooldown = CooldownTotal;
-            }
-
-            if (msState.X > player.PosX + player.PosRect.Width / 2)
-            {
-                player.PlayerStates = Player.PlayerState.AttackRight;
-                player.CurrentFrame = 0;
-                player.framesElapsed = 0;
-                player.timeElapsed = 0;
-                Cooldown = CooldownTotal;
-            }
+            base.OnActivated(player);
+            return false;
         }
     }
 }

@@ -15,6 +15,9 @@ namespace Once_A_Rogue
     {
         //Attributes
 
+
+        public static List<Projectile> projectiles = new List<Projectile>();
+
         //Cooldown handling
         private double cooldown;
 
@@ -79,9 +82,33 @@ namespace Once_A_Rogue
         }
 
         //A method for when the skill is used
-        virtual public void OnActivated(Player player)
+        virtual public Boolean OnActivated(Player player)
         {
-            
+            //Getting position of the mouse
+            MouseState msState = Mouse.GetState();
+
+            //Handles the player animation based on player position vs mouse position.
+            if (msState.X <= player.PosX + player.PosRect.Width / 2)
+            {
+                player.PlayerStates = Player.PlayerState.AttackLeft;
+                player.CurrentFrame = 0;
+                player.framesElapsed = 0;
+                player.timeElapsed = 0;
+                Cooldown = CooldownTotal;
+                return true;
+            }
+            else
+            {
+                player.PlayerStates = Player.PlayerState.AttackRight;
+                player.CurrentFrame = 0;
+                player.framesElapsed = 0;
+                player.timeElapsed = 0;
+                Cooldown = CooldownTotal;
+                return false;
+            }
+
+
+
         }
     }
 }

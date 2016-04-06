@@ -13,7 +13,7 @@ namespace Once_A_Rogue
     {
 
         //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts castable
-        public Fireball(Player player)
+        public Fireball()
         {
             Cooldown = 0;
             CooldownTotal = 5;
@@ -22,9 +22,15 @@ namespace Once_A_Rogue
         }
 
         //Overide OnActivated method
-        public override void OnActivated(Player player)
+        public override Boolean OnActivated(Player player)
         {
-            base.OnActivated(player);
+            if (base.OnActivated(player))
+            {
+                Skills.projectiles.Add(new Projectile(1, 0, 0, 7));
+                return true;
+            }
+
+            return false;
         }
     }
 }
