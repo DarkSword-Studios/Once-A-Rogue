@@ -93,6 +93,7 @@ namespace Once_A_Rogue
                 Cooldown = CooldownTotal;
                 return true;
             }
+
             else
             {
                 player.PlayerStates = Player.PlayerState.AttackRight;
