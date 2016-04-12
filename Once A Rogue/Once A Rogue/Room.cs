@@ -28,7 +28,9 @@ namespace Once_A_Rogue
         private Boolean active;
 
         //Keep track of the connections that the room supports
-        private string doorLocals; 
+        private string doorLocals;
+
+        private Boolean discovered;
 
         public Boolean Active
         {
@@ -40,8 +42,27 @@ namespace Once_A_Rogue
             set
             {
                 active = value;
+                discovered = true;
             }
         }
+
+        public Boolean Discovered
+        {
+            get
+            {
+                return discovered;
+            }
+        }
+
+        public string DoorLocals
+        {
+            get
+            {
+                return doorLocals;
+            }
+        }
+
+
 
         //This constructor will read in a file and populate the room annex array
         public Room(string file, Boolean activityState, string doors)
@@ -56,11 +77,12 @@ namespace Once_A_Rogue
 
             active = activityState;
             doorLocals = doors.ToUpper();
+            discovered = false;
 
             //Fixes a slight consistency error
             if (doorLocals == "ALLDIRECTIONS")
             {
-                doorLocals = "RIGHTLEFTUPDOWN";
+                doorLocals = "RIGHTUPLEFTDOWN";
             }
 
             //Read the file until empty

@@ -49,6 +49,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="LevelBuilder.cs" />
     <Compile Include="MeleeAttack.cs" />
+    <Compile Include="Minimap.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
@@ -71,7 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\AllDirections-RoomCode.png">
+    <Content Include="Content\LEFTUPRIGHTDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\music.wav">
@@ -83,7 +84,7 @@
     <Content Include="Content\HUDcontextmenubutton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Down-RoomCode.png">
+    <Content Include="Content\DOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\HUDcontrol.png">
@@ -119,25 +120,25 @@
     <Content Include="Content\HUDsword.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Left-RoomCode.png">
+    <Content Include="Content\LEFTmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\LeftDown-RoomCode.png">
+    <Content Include="Content\LEFTDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\LeftRight-RoomCode.png">
+    <Content Include="Content\LEFTRIGHTmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\LeftRightDown-RoomCode.png">
+    <Content Include="Content\LEFTRIGHTDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\LeftUp-RoomCode.png">
+    <Content Include="Content\LEFTUPmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\LeftUpDown-RoomCode.png">
+    <Content Include="Content\LEFTUPDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\LeftUpRight-RoomCode.png">
+    <Content Include="Content\LEFTUPRIGHTmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\HUDpause.png">
@@ -155,10 +156,10 @@
     <Content Include="Content\Projectile Spritesheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Right-RoomCode.png">
+    <Content Include="Content\RIGHTmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\RightDown-RoomCode.png">
+    <Content Include="Content\RIGHTDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Rooms\Test.txt" />
@@ -168,16 +169,16 @@
     <Content Include="Content\Tileset.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Up-RoomCode.png">
+    <Content Include="Content\UPmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UpDown-RoomCode.png">
+    <Content Include="Content\UPDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UpRight-RoomCode.png">
+    <Content Include="Content\UPRIGHTmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UpRightDown-RoomCode.png">
+    <Content Include="Content\UPRIGHTDOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

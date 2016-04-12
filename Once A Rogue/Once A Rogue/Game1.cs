@@ -63,6 +63,12 @@ namespace Once_A_Rogue
         //Declare Room Textures
         Texture2D tilemap, playerTextures, projectileTextures;
 
+        //Declare Minimap Textures
+        Texture2D leftuprightdown;
+
+        //Handle Minimap Textures:
+        Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
+
         //Declare HUD Textures
         Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM;
 
@@ -189,6 +195,10 @@ namespace Once_A_Rogue
             main = Content.Load<Texture2D>("HUDMain.png");
             play = Content.Load<Texture2D>("HUDplay.png");
             exitM = Content.Load<Texture2D>("HUDexit.png");
+
+            //Initialize MiniMap textures
+            leftuprightdown = Content.Load<Texture2D>("LEFTUPRIGHTDOWNmap.png");
+            mapTextures.Add("LEFTUPRIGHTDOWNmap.png", leftuprightdown);
 
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
             //Song is Finding The Balance by Kevin Macleod
@@ -501,6 +511,8 @@ namespace Once_A_Rogue
             {
 
             }
+
+            //Minimap.Draw(spriteBatch, mapTextures, levelAnnex, true);
 
             spriteBatch.End();
 
