@@ -78,13 +78,13 @@ namespace Once_A_Rogue
         Song mainMusic;
 
         //List to keep track of projectiles
-        //private List<Projectile> currProjectiles;
+        private static List<Projectile> currProjectiles;
 
-        //public List<Projectile> CurrProjectiles
-        //{
-        //    get { return currProjectiles; }
-        //    set { currProjectiles = value; }
-        //}
+        public static List<Projectile> CurrProjectiles
+        {
+            get { return currProjectiles; }
+            set { currProjectiles = value; }
+        }
 
         public Game1()
         {
@@ -106,6 +106,8 @@ namespace Once_A_Rogue
             this.IsMouseVisible = true;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            currProjectiles = new List<Projectile>();
 
             //Initializing the gamestate
             gameState = GameState.MainMenu;
@@ -149,10 +151,7 @@ namespace Once_A_Rogue
             player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
 
             //Initializing the Cursor
-            cur = new Cursor();
-
-            //Initializing the projectile list
-            //currProjectiles = new List<Projectile>();           
+            cur = new Cursor();          
 
             base.Initialize();
         }
@@ -260,6 +259,7 @@ namespace Once_A_Rogue
             
                 
                 player.UpdateFrame(gameTime);
+                player.UpdateCooldowns(gameTime);
 
                 //Set W A S D keys to four different directions
                 if (kbs.IsKeyDown(Keys.A))
@@ -287,19 +287,19 @@ namespace Once_A_Rogue
                     shifting = false;
                 }
 
-                if (kbs.IsKeyDown(Keys.Z))
+                if (player.CurrWeapon == "Sword")
                 {
                     playWepState = PlayWepState.Sword;
                 }
-                if (kbs.IsKeyDown(Keys.X))
+                if (player.CurrWeapon == "Daggers")
                 {
                     playWepState = PlayWepState.Rogue;
                 }
-                if (kbs.IsKeyDown(Keys.C))
+                if (player.CurrWeapon == "Bow")
                 {
                     playWepState = PlayWepState.Ranger;
                 }
-                if (kbs.IsKeyDown(Keys.V))
+                if (player.CurrWeapon == "Staff")
                 {
                     playWepState = PlayWepState.Mage;
                 }
@@ -315,9 +315,9 @@ namespace Once_A_Rogue
                 //Updating the player position
                 player.Update(camera.screenWidth, camera.screenHeight, camera);
 
-                if (Skills.projectiles.Count > 0)
+                if (Game1.CurrProjectiles.Count > 0)
                 {
-                    foreach (Projectile project in Skills.projectiles)
+                    foreach (Projectile project in Game1.CurrProjectiles)
                     {
                         project.Update();
                     }
@@ -444,9 +444,9 @@ namespace Once_A_Rogue
                 player.Draw(spriteBatch, playerTextures, 140, 140);
 
                 //Drawing the projectiles on the screen
-                if (Skills.projectiles.Count > 0)
+                if (Game1.CurrProjectiles.Count > 0)
                 {
-                    foreach (Projectile project in Skills.projectiles)
+                    foreach (Projectile project in Game1.CurrProjectiles)
                     {
                         project.Draw(spriteBatch, projectileTextures);
                     }

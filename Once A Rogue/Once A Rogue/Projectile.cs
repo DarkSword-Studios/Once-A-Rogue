@@ -14,8 +14,9 @@ namespace Once_A_Rogue
     //This class is for any projectile that needs to be produced
     {
         //Attributes
-        int velocityX;
-        int velocityY;
+        Vector2 projPos;
+        Vector2 vector;
+        MouseState ms;
         int duration;
         int rowY;
         int numFrames;
@@ -24,35 +25,35 @@ namespace Once_A_Rogue
         const int FRAMEHEIGHT = 40;
 
         //Parameterized Constructor
-        public Projectile(int vectorX, int vectorY, int rowY, int numFrames)
+        public Projectile(Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
         {
-            vectorX = velocityX;
-            vectorY = velocityY;
+            projPos = new Vector2(x, y);
+            vector = vec;
             this.rowY = rowY;
             this.numFrames = numFrames;
+            PosRect = new Rectangle(x, y, width, height);
 
             //Adding the projectile to a projectile list in the game class
-            //game.CurrProjectiles.Add(this);
+            Game1.CurrProjectiles.Add(this);
         }
 
         //Overload Constructor
-        public Projectile(int vectorX, int vectorY, int dur, int rowY, int numFrames)
+        public Projectile(Vector2 vec, MouseState mouseState, int rowY, int numFrames, int height, int width, int x, int y)
         {
-            velocityX = vectorX;
-            velocityY = vectorY;
-            duration = dur;
+            projPos = new Vector2(x, y);
+            vector = vec;
+            ms = mouseState;
             this.rowY = rowY;
             this.numFrames = numFrames;
+            PosRect = new Rectangle(x, y, width, height);
 
             //Adding the projectile to a projectile list in the game class
-            //game.CurrProjectiles.Add(this);
+            Game1.CurrProjectiles.Add(this);
         }
 
         public void Update()
         {
-            PosX = PosX + velocityX;
-
-            PosY = PosY + velocityY;
+            projPos += vector * 10;
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture)
@@ -60,7 +61,7 @@ namespace Once_A_Rogue
             //spriteBatch.Draw(Texture, PosRect, Color.White);
 
             Rectangle frame = new Rectangle(currentFrame * FRAMEWIDTH, FRAMEHEIGHT * rowY, FRAMEWIDTH, FRAMEHEIGHT);
-            spriteBatch.Draw(texture, PosRect, frame, Color.White);
+            spriteBatch.Draw(texture, projPos, frame, Color.White);
         }
     }
 }

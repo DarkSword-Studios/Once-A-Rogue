@@ -14,9 +14,13 @@ namespace Once_A_Rogue
     //Class that represents the player character
     {
         //Attributes
-        //List containing known skills
-        List<Skills> skillList;
-        
+
+        //Lists containing known skills
+        List<Skills> mageSkillList;
+        List<Skills> rogueSkillList;
+        List<Skills> rangerSkillList;
+        List<Skills> warriorSkillList;
+
         //String array of weapon choices
         string[] weaponArray;
 
@@ -33,7 +37,7 @@ namespace Once_A_Rogue
         private string currWeapon;
 
         //Keeping track of the direction the player is facing
-        string direction;
+        //string direction;
 
         public string CurrWeapon
         {
@@ -43,6 +47,9 @@ namespace Once_A_Rogue
 
         //Currently selected skill
         private Skills currSkill;
+
+        //Current skillList
+        List<Skills> currSkillList;
 
         public Skills CurrSkill
         {
@@ -81,10 +88,22 @@ namespace Once_A_Rogue
 
         public Player(int x, int y, int width, int height)
         {
-            //Initializing the collections
-            skillList = new List<Skills>();
-            skillList.Add(new MeleeAttack(this));
-            skillList.Add(new Fireball());
+            //Initializing the skill collections
+            warriorSkillList = new List<Skills>();
+            mageSkillList = new List<Skills>();
+            rangerSkillList = new List<Skills>();
+            rogueSkillList = new List<Skills>();
+
+            //Adding skills to each
+            warriorSkillList.Add(new MeleeAttack(this));
+            mageSkillList.Add(new MeleeAttack(this));
+            rogueSkillList.Add(new MeleeAttack(this));
+            rangerSkillList.Add(new MeleeAttack(this));
+
+
+            mageSkillList.Add(new Fireball());
+
+            //Initializing the weapon array
             weaponArray = new string[4];
             weaponArray[0] = "Sword";
             weaponArray[1] = "Daggers";
@@ -104,7 +123,8 @@ namespace Once_A_Rogue
             CurrHealth = MaxHealth;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];
-            CurrSkill = skillList[0];
+            currSkillList = warriorSkillList;
+            CurrSkill = currSkillList[0];
             currentFrame = 0;
         }
 
@@ -122,14 +142,14 @@ namespace Once_A_Rogue
             {
                 PosX -= MoveSpeed;
                 playerState = PlayerState.WalkingLeft;
-                direction = "left";
+                //direction = "left";
             }
 
             if (kbs.IsKeyDown(Keys.D))
             {
                 PosX += MoveSpeed;
                 playerState = PlayerState.WalkingRight;
-                direction = "right";
+                //direction = "right";
             }
 
             if (kbs.IsKeyDown(Keys.S))
@@ -211,34 +231,50 @@ namespace Once_A_Rogue
             if(kbs.IsKeyDown(Keys.Z))
             {
                 CurrWeapon = weaponArray[0];
+                CurrSkill = warriorSkillList[0];
+                CurrSkill = currSkillList[0];
             }
 
-            if(kbs.IsKeyDown(Keys.L))
+            if (kbs.IsKeyDown(Keys.X))
             {
-                CurrSkill = skillList[1];
+                CurrWeapon = weaponArray[1];
+                CurrSkill = rogueSkillList[0];
+                CurrSkill = currSkillList[0];
+            }
+
+            if (kbs.IsKeyDown(Keys.C))
+            {
+                CurrWeapon = weaponArray[2];
+                currSkillList = rangerSkillList;
+                CurrSkill = currSkillList[0];
+            }
+
+            if (kbs.IsKeyDown(Keys.V))
+            {
+                CurrWeapon = weaponArray[3];
+                currSkillList = mageSkillList;
+                CurrSkill = currSkillList[0];
+            }
+
+            if (kbs.IsKeyDown(Keys.D1))
+            {
+                CurrSkill = currSkillList[0];
+            }
+
+            if (kbs.IsKeyDown(Keys.D2))
+            {
+                Skills prevSkill = currSkill;
+
+                try
+                {
+                    CurrSkill = currSkillList[1];
+                }
+                catch
+                {
+                    currSkill = prevSkill;
+                }
             }
         }
-
-        //public override void Update()
-        //{
-        //    base.Update();
-
-        //    foreach(Skills sk in skillList)
-        //    {
-        //        if(sk.Cooldown > 0)
-        //        {
-        //            sk.Cooldown -= 1;
-        //        }
-        //        else if(sk.Cooldown < 0)
-        //        {
-        //            sk.Cooldown = 0;
-        //        }
-        //        else
-        //        {
-                    
-        //        }
-        //    }
-        //}
 
         //Added by Stasha
         public void Draw(SpriteBatch spritebatch, Texture2D texture, int frameWidth, int frameHeight)
@@ -375,6 +411,61 @@ namespace Once_A_Rogue
                             }
                         }
                         break;
+                }
+            }
+        }
+
+        public void UpdateCooldowns(GameTime gameTime)
+        {
+            foreach(Skills skill in warriorSkillList)
+            {
+                if(skill.Cooldown > 0)
+                {
+                    skill.Cooldown -= gameTime.ElapsedGameTime.Milliseconds;
+                }
+
+                if(skill.Cooldown < 0)
+                {
+                    skill.Cooldown = 0;
+                }
+            }
+
+            foreach (Skills skill in mageSkillList)
+            {
+                if (skill.Cooldown > 0)
+                {
+                    skill.Cooldown -= gameTime.ElapsedGameTime.Milliseconds;
+                }
+
+                if (skill.Cooldown < 0)
+                {
+                    skill.Cooldown = 0;
+                }
+            }
+
+            foreach (Skills skill in rogueSkillList)
+            {
+                if (skill.Cooldown > 0)
+                {
+                    skill.Cooldown -= gameTime.ElapsedGameTime.Milliseconds;
+                }
+
+                if (skill.Cooldown < 0)
+                {
+                    skill.Cooldown = 0;
+                }
+            }
+
+            foreach (Skills skill in rangerSkillList)
+            {
+                if (skill.Cooldown > 0)
+                {
+                    skill.Cooldown -= gameTime.ElapsedGameTime.Milliseconds;
+                }
+
+                if (skill.Cooldown < 0)
+                {
+                    skill.Cooldown = 0;
                 }
             }
         }

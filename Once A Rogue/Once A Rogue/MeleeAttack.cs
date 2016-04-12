@@ -29,37 +29,41 @@ namespace Once_A_Rogue
             RangeX = 1;
             RangeY = 0;
             BurstRadius = 0;
-            
-            //Setting the attacks damage and total cooldown based on the weapon currently equipped.
-            if(player.CurrWeapon == "Sword")
-            {
-                CooldownTotal = 1;
-                damage = 10;
-            }
-
-            if(player.CurrWeapon == "Daggers")
-            {
-                CooldownTotal = .5;
-                damage = 5;
-            }
-
-            if(player.CurrWeapon == "Bow")
-            {
-                CooldownTotal = 1;
-                damage = 7;
-            }
-
-            if(player.CurrWeapon == "Staff")
-            {
-                CooldownTotal = 1.5;
-                damage = 5;
-            }
         }
 
         //Method for when the skill is activated
         public override Boolean OnActivated(Player player)
         {
-            base.OnActivated(player);
+            //Setting the attacks damage and total cooldown based on the weapon currently equipped.
+            if (player.CurrWeapon == "Sword")
+            {
+                CooldownTotal = 1000;
+                damage = 10;
+            }
+
+            if (player.CurrWeapon == "Daggers")
+            {
+                CooldownTotal = 500;
+                damage = 5;
+            }
+
+            if (player.CurrWeapon == "Bow")
+            {
+                CooldownTotal = 1000;
+                damage = 7;
+            }
+
+            if (player.CurrWeapon == "Staff")
+            {
+                CooldownTotal = 1500;
+                damage = 5;
+            }
+
+            if (Cooldown == 0)
+            {
+                base.OnActivated(player);
+            }
+
             return false;
         }
     }

@@ -14,10 +14,6 @@ namespace Once_A_Rogue
     //This class is the foundation for the skills in the game
     {
         //Attributes
-
-
-        public static List<Projectile> projectiles = new List<Projectile>();
-
         //Cooldown handling
         private double cooldown;
 
@@ -106,9 +102,6 @@ namespace Once_A_Rogue
                 Cooldown = CooldownTotal;
                 return false;
             }
-
-
-
         }
     }
 }
