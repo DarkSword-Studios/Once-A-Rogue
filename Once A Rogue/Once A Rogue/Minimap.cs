@@ -14,8 +14,8 @@ namespace Once_A_Rogue
 {
     class Minimap
     {
-        private const int TILE_WIDTH = 200;
-        private const int TILE_HEIGHT = 120;
+        private const int TILE_WIDTH = 150;
+        private const int TILE_HEIGHT = 90;
 
         private const int TILE_SEPARATION = 10;
 
@@ -64,13 +64,17 @@ namespace Once_A_Rogue
             {
                 for(int x = 0; x < map.GetLength(0); x++)
                 {
-                    if(map[x,y] != null && map[x, y].Boss)
+                    if((map[x,y] != null && map[x, y].Boss && map[x, y].Discovered) || debug && (map[x, y] != null && map[x, y].Boss))
                     {
                         int xCoord = ((camera.screenWidth / 2) - (TILE_WIDTH * 3 / 4)) + ((x - (map.GetLength(0) / 2)) * (TILE_WIDTH + TILE_SEPARATION));
                         int yCoord = ((camera.screenHeight / 2) - (TILE_HEIGHT * 3 / 4)) + ((y - (map.GetLength(1) / 2)) * (TILE_HEIGHT + TILE_SEPARATION));
 
                         Rectangle location = new Rectangle(xCoord, yCoord, TILE_WIDTH, TILE_HEIGHT);
 
+                        //if (map[x, y].Active && !map[x, y].Discovered)
+                        //{
+                        //    spriteBatch.Draw(textures[map[x, y].DoorLocals], location, Color.Gold * 0.5f);
+                        //}
                         if (map[x, y].Active)
                         {
                             spriteBatch.Draw(textures[map[x, y].DoorLocals], location, Color.Gold * 0.5f);
@@ -79,6 +83,10 @@ namespace Once_A_Rogue
                         {
                             spriteBatch.Draw(textures[map[x, y].DoorLocals], location, Color.Purple * 0.5f);
                         }
+                        //else
+                        //{
+                        //    spriteBatch.Draw(textures["whiteSlate"], location, Color.Purple * 0.5f);
+                        //}
                     }
                     else if(map[x,y] != null && (map[x,y].Discovered || debug))
                     {

@@ -134,7 +134,7 @@ namespace Once_A_Rogue
 
             builderAlpha = new LevelBuilder();
 
-            numRooms = 10;
+            numRooms = 999;
 
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
             camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
@@ -232,9 +232,10 @@ namespace Once_A_Rogue
             mapTextures.Add("LEFTUPDOWN", leftupdown = Content.Load<Texture2D>("LEFTUPDOWNmap.png"));
             mapTextures.Add("LEFTRIGHTDOWN", leftrightdown = Content.Load<Texture2D>("LEFTRIGHTDOWNmap.png"));
             mapTextures.Add("UPRIGHTDOWN", uprightdown = Content.Load<Texture2D>("UPRIGHTDOWNmap.png"));
-
+            
             //Rig environment filter
             whiteSlate = Content.Load<Texture2D>("whiteSlate.png");
+            mapTextures.Add("whiteSlate", whiteSlate);
             Atmosphere.Filter = whiteSlate;
 
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
@@ -243,6 +244,7 @@ namespace Once_A_Rogue
             bossMusic = Content.Load<Song>("Music/RogueRequiem.wav");
             MediaPlayer.Play(mainMusic);
             MediaPlayer.Volume = (float)(MediaPlayer.Volume * .40);
+            MediaPlayer.IsRepeating = true;
 
             currentSong = "mainMusic";
         }
@@ -268,6 +270,16 @@ namespace Once_A_Rogue
 
             previousKBS = kbs;
             kbs = Keyboard.GetState();
+
+            if (this.IsActive == false)
+            {
+                MediaPlayer.Pause();
+            }
+
+            else
+            {
+                MediaPlayer.Resume();
+            }
 
             // TODO: Add your update logic here 
             if (gameState == GameState.MainMenu)
@@ -302,7 +314,7 @@ namespace Once_A_Rogue
                 }
             }
 
-            if(gameState == GameState.Playing)
+            if(gameState == GameState.Playing && this.IsActive)
             {
                 //Extremely important call to update all active rooms
                 UpdateRooms();
@@ -367,9 +379,23 @@ namespace Once_A_Rogue
 
                 if (Game1.CurrProjectiles.Count > 0)
                 {
+                    List<Projectile> removeProj = new List<Projectile>();
+
                     foreach (Projectile project in Game1.CurrProjectiles)
                     {
-                        project.Update();
+                        if((project.ProjPos.X >= 120 && project.ProjPos.X <= camera.screenWidth - 120) && (project.ProjPos.Y > 120 && project.ProjPos.Y < camera.screenHeight - 120))
+                        {
+                            project.Update(gameTime);
+                        }
+                        else
+                        {
+                            removeProj.Add(project);
+                        }
+                    }
+
+                    foreach(Projectile project in removeProj)
+                    {
+                        Game1.currProjectiles.Remove(project);              
                     }
                 }
 
@@ -612,7 +638,10 @@ namespace Once_A_Rogue
                         if (levelAnnex[columnIndex, rowIndex].Active)
                         {
 
-                            
+                            if (shifting)
+                            {
+                                currProjectiles.Clear();
+                            }
 
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary
                             //Cannot run check if the frame is shifting
@@ -621,7 +650,7 @@ namespace Once_A_Rogue
                                 //Update song to be either boss music or roaming music
                                 if (levelAnnex[columnIndex, rowIndex].Boss && currentSong != "bossMusic")
                                 {
-                                    MediaPlayer.Play(bossMusic);
+                                    MediaPlayer.Play(bossMusic);                                  
                                     currentSong = "bossMusic";
                                 }
 

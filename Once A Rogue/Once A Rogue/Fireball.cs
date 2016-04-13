@@ -20,9 +20,8 @@ namespace Once_A_Rogue
             Cooldown = 0;
             CooldownTotal = 3000;
             BurstRadius = 0;
-            IsDirectional = true;
-            RangeX = 5;
-            RangeY = 5;
+            RangeX = 10;
+            RangeY = 10;
         }
 
         //Overide OnActivated method

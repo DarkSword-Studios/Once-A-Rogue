@@ -14,13 +14,23 @@ namespace Once_A_Rogue
     //This class is for any projectile that needs to be produced
     {
         //Attributes
-        Vector2 projPos;
+        private Vector2 projPos;
+
+        public Vector2 ProjPos
+        {
+            get { return projPos; }
+            set { projPos = value; }
+        }
+
+
         Vector2 vector;
         MouseState ms;
-        int duration;
         int rowY;
         int numFrames;
-        int currentFrame;
+        int currentFrame = 0;
+        int framesElapsed = 0;
+        int timeElapsed = 0;
+        int timePerFrame = 100;
         const int FRAMEWIDTH = 40;
         const int FRAMEHEIGHT = 40;
 
@@ -51,9 +61,13 @@ namespace Once_A_Rogue
             Game1.CurrProjectiles.Add(this);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
-            projPos += vector * 10;
+            projPos += vector * 1;
+
+            timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
+            framesElapsed = (int)(timeElapsed / timePerFrame);
+            currentFrame = framesElapsed % numFrames + 1;
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture)

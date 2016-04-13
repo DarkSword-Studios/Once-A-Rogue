@@ -67,7 +67,7 @@ namespace Once_A_Rogue
         }
 
         //Keeps track of the current frame of animation for the player
-        int timePerFrame = 100;
+        int timePerFrame = 50;
         int numFrames = 6;
         public int framesElapsed;
         public int timeElapsed;
@@ -99,6 +99,7 @@ namespace Once_A_Rogue
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
             rangerSkillList.Add(new MeleeAttack(this));
+            rangerSkillList.Add(new PiercingShot());
 
 
             mageSkillList.Add(new Fireball());
@@ -268,6 +269,20 @@ namespace Once_A_Rogue
                 try
                 {
                     CurrSkill = currSkillList[1];
+                }
+                catch
+                {
+                    currSkill = prevSkill;
+                }
+            }
+
+            if (kbs.IsKeyDown(Keys.D3))
+            {
+                Skills prevSkill = currSkill;
+
+                try
+                {
+                    CurrSkill = currSkillList[2];
                 }
                 catch
                 {
