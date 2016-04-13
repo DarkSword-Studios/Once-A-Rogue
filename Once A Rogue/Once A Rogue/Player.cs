@@ -232,14 +232,14 @@ namespace Once_A_Rogue
             if(kbs.IsKeyDown(Keys.Z))
             {
                 CurrWeapon = weaponArray[0];
-                CurrSkill = warriorSkillList[0];
+                currSkillList = warriorSkillList;
                 CurrSkill = currSkillList[0];
             }
 
             if (kbs.IsKeyDown(Keys.X))
             {
                 CurrWeapon = weaponArray[1];
-                CurrSkill = rogueSkillList[0];
+                currSkillList = rogueSkillList;
                 CurrSkill = currSkillList[0];
             }
 
