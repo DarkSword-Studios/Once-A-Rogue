@@ -64,8 +64,8 @@ namespace Once_A_Rogue
         Texture2D tilemap, playerTextures, projectileTextures;
 
         //Declare Minimap Textures
-        Texture2D leftuprightdown;
-
+        Texture2D leftuprightdown, down, up, left, right, leftup, leftright, leftdown, upright, updown, rightdown;
+        Texture2D leftupright, leftupdown, leftrightdown, uprightdown, blackSlate, unknown;
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
@@ -152,6 +152,8 @@ namespace Once_A_Rogue
                 columnIndex = 0;
                 rowIndex++;
             }
+            //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
+            Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
             //Initializing the player
             player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
@@ -196,9 +198,24 @@ namespace Once_A_Rogue
             play = Content.Load<Texture2D>("HUDplay.png");
             exitM = Content.Load<Texture2D>("HUDexit.png");
 
-            //Initialize MiniMap textures
-            leftuprightdown = Content.Load<Texture2D>("LEFTUPRIGHTDOWNmap.png");
-            mapTextures.Add("LEFTUPRIGHTDOWNmap.png", leftuprightdown);
+            //Initialize MiniMap textures and add them to the map texture dictionary
+            mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
+            mapTextures.Add("Unknown", unknown = Content.Load<Texture2D>("Unknown.png"));
+            mapTextures.Add("LEFTUPRIGHTDOWN", leftuprightdown = Content.Load<Texture2D>("LEFTUPRIGHTDOWNmap.png"));
+            mapTextures.Add("DOWN", down = Content.Load<Texture2D>("DOWNmap.png"));
+            mapTextures.Add("UP", up = Content.Load<Texture2D>("UPmap.png"));
+            mapTextures.Add("LEFT", left = Content.Load<Texture2D>("LEFTmap.png"));
+            mapTextures.Add("RIGHT", right = Content.Load<Texture2D>("RIGHTmap.png"));
+            mapTextures.Add("LEFTUP", leftup = Content.Load<Texture2D>("LEFTUPmap.png"));
+            mapTextures.Add("LEFTRIGHT", leftright = Content.Load<Texture2D>("LEFTRIGHTmap.png"));
+            mapTextures.Add("LEFTDOWN", leftdown = Content.Load<Texture2D>("LEFTDOWNmap.png"));
+            mapTextures.Add("UPRIGHT", upright = Content.Load<Texture2D>("UPRIGHTmap.png"));
+            mapTextures.Add("UPDOWN", updown = Content.Load<Texture2D>("UPDOWNmap.png"));
+            mapTextures.Add("RIGHTDOWN", rightdown = Content.Load<Texture2D>("RIGHTDOWNmap.png"));
+            mapTextures.Add("LEFTUPRIGHT", leftupright = Content.Load<Texture2D>("LEFTUPRIGHTmap.png"));
+            mapTextures.Add("LEFTUPDOWN", leftupdown = Content.Load<Texture2D>("LEFTUPDOWNmap.png"));
+            mapTextures.Add("LEFTRIGHTDOWN", leftrightdown = Content.Load<Texture2D>("LEFTRIGHTDOWNmap.png"));
+            mapTextures.Add("UPRIGHTDOWN", uprightdown = Content.Load<Texture2D>("UPRIGHTDOWNmap.png"));
 
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
             //Song is Finding The Balance by Kevin Macleod
@@ -337,6 +354,11 @@ namespace Once_A_Rogue
                 {
                     gameState = GameState.paused;
                     arrowState = ArrowState.pos1;
+                }
+
+                if (SingleKeyPress(Keys.M))
+                {
+                    Minimap.Visible = !Minimap.Visible;
                 }
             }
             
@@ -478,6 +500,11 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(ranger, new Vector2(1699, 868), Color.White);
                 }
+
+                if (Minimap.Visible)
+                {
+                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
+                }
             }
 
             //draws the following if the game is paused
@@ -511,8 +538,6 @@ namespace Once_A_Rogue
             {
 
             }
-
-            //Minimap.Draw(spriteBatch, mapTextures, levelAnnex, true);
 
             spriteBatch.End();
 
@@ -579,6 +604,7 @@ namespace Once_A_Rogue
 
                                         //The new room becomes active
                                         levelAnnex[columnIndex + 1, rowIndex].Active = true;
+                                        Minimap.UpdatePeripherals(levelAnnex, columnIndex + 1, rowIndex);
 
                                         //The frame is shifting !!!! HALT ROOM UPDATES UNTIL TRANSITION IS COMPLETE
                                         shifting = true;
@@ -592,6 +618,7 @@ namespace Once_A_Rogue
                                     case ("left"):
 
                                         levelAnnex[columnIndex - 1, rowIndex].Active = true;
+                                        Minimap.UpdatePeripherals(levelAnnex, columnIndex - 1, rowIndex);
                                         shifting = true;
                                         oldRow = rowIndex;
                                         oldCol = columnIndex;
@@ -600,6 +627,7 @@ namespace Once_A_Rogue
                                     case ("up"):
 
                                         levelAnnex[columnIndex, rowIndex - 1].Active = true;
+                                        Minimap.UpdatePeripherals(levelAnnex, columnIndex, rowIndex - 1);
                                         shifting = true;
                                         oldRow = rowIndex;
                                         oldCol = columnIndex;
@@ -608,6 +636,7 @@ namespace Once_A_Rogue
                                     case ("down"):
 
                                         levelAnnex[columnIndex, rowIndex + 1].Active = true;
+                                        Minimap.UpdatePeripherals(levelAnnex, columnIndex, rowIndex + 1);
                                         shifting = true;
                                         oldRow = rowIndex;
                                         oldCol = columnIndex;

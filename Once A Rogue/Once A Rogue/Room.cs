@@ -31,6 +31,20 @@ namespace Once_A_Rogue
         private string doorLocals;
 
         private Boolean discovered;
+        private Boolean aware;
+
+        public Boolean Aware
+        {
+            get
+            {
+                return aware;
+            }
+
+            set
+            {
+                aware = value;
+            }
+        }
 
         public Boolean Active
         {
@@ -42,7 +56,11 @@ namespace Once_A_Rogue
             set
             {
                 active = value;
-                discovered = true;
+                if (value)
+                {
+                    discovered = true;
+                    aware = false;
+                }          
             }
         }
 
@@ -78,11 +96,12 @@ namespace Once_A_Rogue
             active = activityState;
             doorLocals = doors.ToUpper();
             discovered = false;
+            aware = false;
 
             //Fixes a slight consistency error
             if (doorLocals == "ALLDIRECTIONS")
             {
-                doorLocals = "RIGHTUPLEFTDOWN";
+                doorLocals = "LEFTUPRIGHTDOWN";
             }
 
             //Read the file until empty

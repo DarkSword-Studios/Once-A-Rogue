@@ -540,7 +540,7 @@ namespace Once_A_Rogue
                     //If the generated room is the starting room, it should be initially active (we need a place to start, every other room's activity can be determined algorithmically)
                     if (columnIndex == ((int)levelAnnex.GetLength(0) / 2) && rowIndex == ((int)levelAnnex.GetLength(1) / 2))
                     {
-                        levelAnnex[columnIndex, rowIndex].Active = true;
+                        levelAnnex[columnIndex, rowIndex].Active = true;                        
                     }
                 }
 

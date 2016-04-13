@@ -14,30 +14,82 @@ namespace Once_A_Rogue
 {
     class Minimap
     {
-        public static void Draw(SpriteBatch spriteBatch, Dictionary<string, Texture2D> textures, Room[,] map, Boolean debug)
+        private const int TILE_WIDTH = 200;
+        private const int TILE_HEIGHT = 120;
+
+        private const int TILE_SEPARATION = 10;
+
+        private static Boolean visible;
+
+        public static Boolean Visible
         {
+            get
+            {
+                return visible;
+            }
+
+            set
+            {
+                visible = value;
+            }
+        }
+
+        public static void UpdatePeripherals(Room[,] rooms, int xCoord, int yCoord)
+        {
+            string adjacentRooms = rooms[xCoord, yCoord].DoorLocals;
+
+            if (adjacentRooms.Contains("LEFT"))
+            {
+                rooms[xCoord - 1, yCoord].Aware = true;
+            }
+            if (adjacentRooms.Contains("UP"))
+            {
+                rooms[xCoord, yCoord - 1].Aware = true;
+            }
+            if (adjacentRooms.Contains("RIGHT"))
+            {
+                rooms[xCoord + 1, yCoord].Aware = true;
+            }
+            if (adjacentRooms.Contains("DOWN"))
+            {
+                rooms[xCoord, yCoord + 1].Aware = true;
+            }
+        }
+
+        public static void Draw(Camera camera, SpriteBatch spriteBatch, Dictionary<string, Texture2D> textures, Room[,] map, Boolean debug)
+        {
+            spriteBatch.Draw(textures["BlackSlate"], new Rectangle(0, 0, camera.screenWidth, camera.screenHeight), Color.Black * 0.3f);
+
             for(int y = 0; y < map.GetLength(1); y++)
             {
                 for(int x = 0; x < map.GetLength(0); x++)
                 {
-                    if(map[x,y] != null && (map[x,y].Discovered == true || debug))
+                    if(map[x,y] != null && (map[x,y].Discovered || debug))
                     {
-                        int xCoord = x * 100;
-                        int yCoord = y * 100;
+                        int xCoord = ((camera.screenWidth / 2) - (TILE_WIDTH * 3 / 4)) + ((x - (map.GetLength(0) / 2)) * (TILE_WIDTH + TILE_SEPARATION));
+                        int yCoord = ((camera.screenHeight / 2) - (TILE_HEIGHT * 3 / 4)) + ((y - (map.GetLength(1) / 2)) * (TILE_HEIGHT + TILE_SEPARATION));
 
-                        Rectangle location = new Rectangle(xCoord, yCoord, 100, 100);
+                        Rectangle location = new Rectangle(xCoord, yCoord, TILE_WIDTH, TILE_HEIGHT);
 
-                        //NOTE: Maybe draw using gold to indicate current room?
-                        //spriteBatch.Draw(textures[map[x, y].DoorLocals + "map.png"], location, Color.White * 0.5f);
                         if (map[x, y].Active)
                         {
-                            spriteBatch.Draw(textures["LEFTUPRIGHTDOWNmap.png"], location, Color.Gold * 0.5f);
+                            spriteBatch.Draw(textures[map[x, y].DoorLocals], location, Color.Gold * 0.5f);
                         }
                         else
                         {
-                            spriteBatch.Draw(textures["LEFTUPRIGHTDOWNmap.png"], location, Color.White * 0.5f);
+                            spriteBatch.Draw(textures[map[x, y].DoorLocals], location, Color.White * 0.5f);
                         }
                         
+                    }
+                    else if(map[x, y] != null && map[x, y].Aware)
+                    {
+                        int xCoord = ((camera.screenWidth / 2) - (TILE_WIDTH * 3 / 4)) + ((x - (map.GetLength(0) / 2)) * (TILE_WIDTH + TILE_SEPARATION));
+                        int yCoord = ((camera.screenHeight / 2) - (TILE_HEIGHT * 3 / 4)) + ((y - (map.GetLength(1) / 2)) * (TILE_HEIGHT + TILE_SEPARATION));
+
+                        Rectangle location = new Rectangle(xCoord, yCoord, TILE_WIDTH, TILE_HEIGHT);
+
+                        spriteBatch.Draw(textures["Unknown"], location, Color.White * 0.5f);
+
                     }
                 }
             }
