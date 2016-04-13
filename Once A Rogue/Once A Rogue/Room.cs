@@ -32,6 +32,20 @@ namespace Once_A_Rogue
 
         private Boolean discovered;
         private Boolean aware;
+        private Boolean boss;
+
+        public Boolean Boss
+        {
+            get
+            {
+                return boss;
+            }
+
+            set
+            {
+                boss = value;
+            }
+        }
 
         public Boolean Aware
         {
@@ -42,7 +56,11 @@ namespace Once_A_Rogue
 
             set
             {
-                aware = value;
+                if (!discovered)
+                {
+                    aware = value;
+                }
+                
             }
         }
 
@@ -179,6 +197,12 @@ namespace Once_A_Rogue
                 col = 0;
                 row++;
             }
+
+            if (boss)
+            {
+                Atmosphere.BossFilter(spriteBatch, xCoord, yCoord);
+            }
+            
         }
         //This method handles whether or not the camera should be moved to an adjacent room
         public String UpdateEvents(Player player, Camera camera, String playerMove)

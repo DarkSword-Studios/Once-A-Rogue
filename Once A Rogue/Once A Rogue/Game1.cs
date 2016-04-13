@@ -51,6 +51,9 @@ namespace Once_A_Rogue
         //Track active rooms
         List<Room> activeRooms;
 
+        //Track potential boss rooms
+        List<Room> possibleBossRooms;
+
         //The camera manages the viewport and location of drawn objects
         Camera camera;
 
@@ -65,7 +68,7 @@ namespace Once_A_Rogue
 
         //Declare Minimap Textures
         Texture2D leftuprightdown, down, up, left, right, leftup, leftright, leftdown, upright, updown, rightdown;
-        Texture2D leftupright, leftupdown, leftrightdown, uprightdown, blackSlate, unknown;
+        Texture2D leftupright, leftupdown, leftrightdown, uprightdown, blackSlate, whiteSlate, unknown;
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
@@ -81,7 +84,10 @@ namespace Once_A_Rogue
         Cursor cur;
 
         //Song for music
-        Song mainMusic;
+        Song mainMusic, bossMusic;
+
+        //Keep track of current song
+        string currentSong;
 
         //List to keep track of projectiles
         private static List<Projectile> currProjectiles;
@@ -133,11 +139,16 @@ namespace Once_A_Rogue
             //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
             camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
 
+            //Rig environment port
+            Atmosphere.Camera = camera;
+
             //Fill the grid with room codes
             gridSystem = builderAlpha.BuildLevel(gridSystem, numRooms);
 
             int rowIndex = 0;
             int columnIndex = 0;
+
+            possibleBossRooms = new List<Room>();
 
             //For each space in the grid
             while (rowIndex < ROWS)
@@ -145,13 +156,18 @@ namespace Once_A_Rogue
                 while (columnIndex < COLUMNS)
                 {
                     //Attempt to build the room with the specified room code and put it into the level annex
-                    levelAnnex = builderAlpha.BuildRoom(gridSystem, levelAnnex, camera, rowIndex, columnIndex);
+                    levelAnnex = builderAlpha.BuildRoom(gridSystem, levelAnnex, possibleBossRooms, camera, rowIndex, columnIndex);
                     columnIndex++;
                 }
                 //Reset column index after running through each column
                 columnIndex = 0;
                 rowIndex++;
             }
+
+            //Pick a boss room
+            Random random = new Random();
+            possibleBossRooms[random.Next(0, possibleBossRooms.Count)].Boss = true;
+
             //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
@@ -217,11 +233,18 @@ namespace Once_A_Rogue
             mapTextures.Add("LEFTRIGHTDOWN", leftrightdown = Content.Load<Texture2D>("LEFTRIGHTDOWNmap.png"));
             mapTextures.Add("UPRIGHTDOWN", uprightdown = Content.Load<Texture2D>("UPRIGHTDOWNmap.png"));
 
+            //Rig environment filter
+            whiteSlate = Content.Load<Texture2D>("whiteSlate.png");
+            Atmosphere.Filter = whiteSlate;
+
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
             //Song is Finding The Balance by Kevin Macleod
-            //mainMusic = Content.Load<Song>("music.wav");
-            //MediaPlayer.Play(mainMusic);
-            //MediaPlayer.Volume = (float)(MediaPlayer.Volume * .20);
+            mainMusic = Content.Load<Song>("Music/music.wav");
+            bossMusic = Content.Load<Song>("Music/RogueRequiem.wav");
+            MediaPlayer.Play(mainMusic);
+            MediaPlayer.Volume = (float)(MediaPlayer.Volume * .40);
+
+            currentSong = "mainMusic";
         }
 
         /// <summary>
@@ -589,10 +612,25 @@ namespace Once_A_Rogue
                         if (levelAnnex[columnIndex, rowIndex].Active)
                         {
 
+                            
+
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary
                             //Cannot run check if the frame is shifting
                             if (!shifting)
                             {
+                                //Update song to be either boss music or roaming music
+                                if (levelAnnex[columnIndex, rowIndex].Boss && currentSong != "bossMusic")
+                                {
+                                    MediaPlayer.Play(bossMusic);
+                                    currentSong = "bossMusic";
+                                }
+
+                                else if (!levelAnnex[columnIndex, rowIndex].Boss && currentSong != "mainMusic")
+                                {
+                                    MediaPlayer.Play(mainMusic);
+                                    currentSong = "mainMusic";
+                                }
+
                                 //Update the cursor, which will in turn update tile detection
                                 cur.Update(levelAnnex[columnIndex, rowIndex], player);
 

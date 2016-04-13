@@ -354,7 +354,7 @@ namespace Once_A_Rogue
             return grid;
         }
 
-        public Room[,] BuildRoom(string[,] gridSystem, Room[,] levelAnnex, Camera camera, int rowIndex, int columnIndex)
+        public Room[,] BuildRoom(string[,] gridSystem, Room[,] levelAnnex, List<Room> bossRooms, Camera camera, int rowIndex, int columnIndex)
         {
 
             //If the grid node is NOT EMPTY it MUST BE FULFILLED
@@ -369,6 +369,7 @@ namespace Once_A_Rogue
 
                 //Based on the node's structure, use the appropriate room code
                 int roomCode;
+                Boolean addToBossList = false;
 
                 //Room codes are transformed from text to numbers in an effort to shorten file names
                 //1 = has left connector; 2 = has up connector; 3 = has right connector; 4 = has down connector
@@ -382,21 +383,25 @@ namespace Once_A_Rogue
                     case ("LEFT"):
 
                         roomCode = 1;
+                        addToBossList = true;
                         break;
 
                     case ("UP"):
 
                         roomCode = 2;
+                        addToBossList = true;
                         break;
 
                     case ("RIGHT"):
 
                         roomCode = 3;
+                        addToBossList = true;
                         break;
 
                     case ("DOWN"):
 
                         roomCode = 4;
+                        addToBossList = true;
                         break;
 
                     case ("LEFTDOWN"):
@@ -533,6 +538,12 @@ namespace Once_A_Rogue
 
                     //Build the level to take care of necessary initialization
                     room.BuildRoom(xCoord, yCoord);
+
+                    //This is where we take potential boss room candidates and flag them for processing
+                    if (addToBossList)
+                    {
+                        bossRooms.Add(room);
+                    }
 
                     //Add the room to the level annex after it has been built
                     levelAnnex[columnIndex, rowIndex] = room;
