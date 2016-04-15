@@ -91,11 +91,18 @@ namespace Once_A_Rogue
 
         //List to keep track of projectiles
         private static List<Projectile> currProjectiles;
+        private static List<Projectile> removeProj;
 
         public static List<Projectile> CurrProjectiles
         {
             get { return currProjectiles; }
             set { currProjectiles = value; }
+        }
+
+        public static List<Projectile> RemoveProj
+        {
+            get { return removeProj; }
+            set { removeProj = value; }
         }
 
         public Game1()
@@ -379,7 +386,7 @@ namespace Once_A_Rogue
 
                 if (Game1.CurrProjectiles.Count > 0)
                 {
-                    List<Projectile> removeProj = new List<Projectile>();
+                    removeProj = new List<Projectile>();
 
                     foreach (Projectile project in Game1.CurrProjectiles)
                     {

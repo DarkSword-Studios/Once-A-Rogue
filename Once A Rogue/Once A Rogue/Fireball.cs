@@ -18,10 +18,10 @@ namespace Once_A_Rogue
         public Fireball()
         {
             Cooldown = 0;
-            CooldownTotal = 3000;
+            CooldownTotal = 1000;
             BurstRadius = 0;
-            RangeX = 10;
-            RangeY = 10;
+            RangeX = 5;
+            RangeY = 5;
         }
 
         //Overide OnActivated method
@@ -51,7 +51,7 @@ namespace Once_A_Rogue
                         target.Normalize();
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(target, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                    Game1.CurrProjectiles.Add(new Projectile(target, RangeX * 120, RangeY * 120, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     return false;
                 }
             }
