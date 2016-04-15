@@ -20,6 +20,23 @@ namespace Once_A_Rogue
         private string type;
 
         private Rectangle relativeImageLocal;
+        private Rectangle relativeLocation;
+
+        public Boolean DoDraw
+        {
+            get
+            {
+                return doDraw;
+            }
+        }
+
+        public Boolean Passable
+        {
+            get
+            {
+                return passable;
+            }
+        }
 
         public Rectangle RelativeImageLocal
         {
@@ -28,14 +45,27 @@ namespace Once_A_Rogue
                 return relativeImageLocal;
             }
         }
+        public Rectangle RelativeLocation
+        {
+            get
+            {
+                return relativeLocation;
+            }
 
-        public Interactable(string type, Rectangle relativeImageLocal, Boolean passable, Boolean interactable, Boolean doDraw)
+            set
+            {
+                relativeLocation = value;
+            }
+        }
+
+        public Interactable(string type, Rectangle relativeLocation, Rectangle relativeImageLocal, Boolean passable, Boolean interactable, Boolean doDraw)
         {
             this.type = type;
             this.passable = passable;
             this.interactable = interactable;
             this.doDraw = doDraw;
             this.relativeImageLocal = relativeImageLocal;
+            this.relativeLocation = relativeLocation;
         }
 
         public void Interact()

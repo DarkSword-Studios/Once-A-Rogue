@@ -23,6 +23,8 @@ namespace Once_A_Rogue
 
         //The tilesize we are working with is 120 pixels
         const int TILESIZE = 120;
+
+        List<Interactable> interactables;
         
         //This variables manages the room's activity state which is important (do we update the room? Do we draw it? Only if it's active)
         private Boolean active;
@@ -115,6 +117,8 @@ namespace Once_A_Rogue
             doorLocals = doors.ToUpper();
             discovered = false;
             aware = false;
+
+            interactables = new List<Interactable>();
 
             //Fixes a slight consistency error
             if (doorLocals == "ALLDIRECTIONS")
@@ -289,18 +293,27 @@ namespace Once_A_Rogue
                         //Locate the specified tile texture, and give it a new location within the room
                         Rectangle imageLocal = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
 
+                        if(interactableLayer[row, col] == 82)
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, false);
+                        }
                         //Load the interactable if there is one
-                        finalRoomAnnex[row, col].Interactable = new Interactable("Note", imageLocal, true, true, true);
+                        else if(interactableLayer[row, col] == 80)
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, true, true);
+                        }
+                        else
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, true);
+                        }
+                        interactables.Add(finalRoomAnnex[row, col].Interactable);
+                        
                     }
                     col++;
                 }
                 col = 0;
                 row++;
             }
-
-
-
-
         }
 
         //This method draws a room, given the sprite batch, the tilemap, and an x / y coordinate
@@ -320,7 +333,7 @@ namespace Once_A_Rogue
                     //Draw the tile
                     spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
 
-                    if(finalRoomAnnex[row, col].Interactable != null)
+                    if(finalRoomAnnex[row, col].Interactable != null && finalRoomAnnex[row, col].Interactable.DoDraw)
                     {
                         spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].Interactable.RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
                     }
@@ -343,6 +356,32 @@ namespace Once_A_Rogue
         //This method handles whether or not the camera should be moved to an adjacent room
         public String UpdateEvents(Player player, Camera camera, String playerMove)
         {
+            Rectangle newPlayerPositionRight = new Rectangle(player.PosX + player.MoveSpeed, player.PosY, player.PosRect.Width, player.PosRect.Height);
+            Rectangle newPlayerPositionLeft = new Rectangle(player.PosX - player.MoveSpeed, player.PosY, player.PosRect.Width, player.PosRect.Height);
+            Rectangle newPlayerPositionUp = new Rectangle(player.PosX, player.PosY + player.MoveSpeed, player.PosRect.Width, player.PosRect.Height);
+            Rectangle newPlayerPositionDown = new Rectangle(player.PosX, player.PosY - player.MoveSpeed, player.PosRect.Width, player.PosRect.Height);
+            foreach (Interactable interactable in interactables)
+            {
+                
+                if (playerMove == "left" && newPlayerPositionLeft.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosX = interactable.RelativeLocation.Right + player.MoveSpeed;
+                }
+                else if (playerMove == "right" && newPlayerPositionRight.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosX = interactable.RelativeLocation.Left - player.PosRect.Width - player.MoveSpeed;
+                }
+                else if (playerMove == "up" && newPlayerPositionUp.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosY = interactable.RelativeLocation.Bottom + player.MoveSpeed;
+                }
+                else if (playerMove == "down" && newPlayerPositionDown.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosY = interactable.RelativeLocation.Top - player.PosRect.Height - player.MoveSpeed;
+                }
+
+            }
+
             //Each of these if statements asks if the player is standing right in front of a door (not on the edges) and moving in the direction of that door
             if(player.PosX == 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
             {

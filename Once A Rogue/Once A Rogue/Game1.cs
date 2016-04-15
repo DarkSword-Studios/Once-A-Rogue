@@ -323,22 +323,24 @@ namespace Once_A_Rogue
                 player.UpdateFrame(gameTime);
                 player.UpdateCooldowns(gameTime);
 
+                playerMove = "";
+
                 //Set W A S D keys to four different directions
                 if (kbs.IsKeyDown(Keys.A))
                 {
-                    playerMove = "left";
+                    playerMove += "left";
                 }
-                if (kbs.IsKeyDown(Keys.D))
+                else if (kbs.IsKeyDown(Keys.D))
                 {
-                    playerMove = "right";
+                    playerMove += "right";
                 }
                 if (kbs.IsKeyDown(Keys.S))
                 {
-                    playerMove = "down";
+                    playerMove += "down";
                 }
-                if (kbs.IsKeyDown(Keys.W))
+                else if (kbs.IsKeyDown(Keys.W))
                 {
-                    playerMove = "up";
+                    playerMove += "up";
                 }
                 if (camera.isMoving)
                 {
