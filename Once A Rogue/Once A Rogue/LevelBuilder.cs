@@ -537,7 +537,7 @@ namespace Once_A_Rogue
                     Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
 
                     //Build the level to take care of necessary initialization
-                    room.BuildRoom(xCoord, yCoord);
+                    room.BuildRoom(xCoord, yCoord, roomCodeStr);
 
                     //This is where we take potential boss room candidates and flag them for processing
                     if (addToBossList)
