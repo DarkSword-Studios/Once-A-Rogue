@@ -18,9 +18,24 @@ namespace Once_A_Rogue
         private Boolean invalidTag = false;
         private Boolean validTag = false;
 
+        private Boolean occupied = false;
+
         //Each tile gets its own texture (relative location on the tilemap) and relative location in the room to which it belongs
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
+
+        public Boolean Occupied
+        {
+            get
+            {
+                return occupied;
+            }
+
+            set
+            {
+                occupied = value;
+            }
+        }
 
         //Each private tile attribute has a property (just a general get and set)
         public Boolean InvalidTag
