@@ -69,11 +69,12 @@ namespace Once_A_Rogue
         //Declare Minimap Textures
         Texture2D leftuprightdown, down, up, left, right, leftup, leftright, leftdown, upright, updown, rightdown;
         Texture2D leftupright, leftupdown, leftrightdown, uprightdown, blackSlate, whiteSlate, unknown;
+
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
         //Declare HUD Textures
-        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM;
+        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM, mana, health, container;
 
         //Keyboard states
         KeyboardState previousKBS, kbs;
@@ -220,6 +221,9 @@ namespace Once_A_Rogue
             main = Content.Load<Texture2D>("HUDMain.png");
             play = Content.Load<Texture2D>("HUDplay.png");
             exitM = Content.Load<Texture2D>("HUDexit.png");
+            mana = Content.Load<Texture2D>("HUDManaBar.png");
+            health = Content.Load<Texture2D>("HUDHealthBar.png");
+            container = Content.Load<Texture2D>("HUDContainer.png");
 
             //Initialize MiniMap textures and add them to the map texture dictionary
             mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
@@ -542,6 +546,7 @@ namespace Once_A_Rogue
                     }
                 }
 
+                //Draws HUD Elements
                 if (playWepState == PlayWepState.Sword)
                 {
                     spriteBatch.Draw(sword, new Vector2(1699, 868), Color.White);
@@ -558,6 +563,10 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(ranger, new Vector2(1699, 868), Color.White);
                 }
+
+                spriteBatch.Draw(container, new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (300 * (player.CurrHealth / player.MaxHealth)), 31), Color.White);
+                spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (300 * (player.CurrMana / player.TotalMana)), 31), Color.White);
 
                 if (Minimap.Visible)
                 {

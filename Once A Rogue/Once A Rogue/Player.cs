@@ -66,6 +66,22 @@ namespace Once_A_Rogue
             set { currentFrame = value; }
         }
 
+        private int currMana;
+
+        public int CurrMana
+        {
+            get { return currMana; }
+            set { currMana = value; }
+        }
+
+        private int totalMana;
+
+        public int TotalMana
+        {
+            get { return totalMana; }
+            set { totalMana = value; }
+        }
+
         //Keeps track of the current frame of animation for the player
         int timePerFrame = 50;
         int numFrames = 6;
@@ -120,7 +136,9 @@ namespace Once_A_Rogue
             FireResist = 0;
             SnareResist = 0;
             PoisenResist = 0;
-            MaxHealth = 20;
+            MaxHealth = 100;
+            TotalMana = 100;
+            CurrMana = TotalMana;
             CurrHealth = MaxHealth;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];

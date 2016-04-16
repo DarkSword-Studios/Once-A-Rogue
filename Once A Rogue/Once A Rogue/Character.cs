@@ -83,7 +83,7 @@ namespace Once_A_Rogue
                 //Set the current health equal to the value passed in
                 else
                 {
-                    currHealth = value;
+                    maxHealth = value;
                 }
             }
         }
