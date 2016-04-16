@@ -56,7 +56,7 @@ namespace Once_A_Rogue
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
-            range = Math.Sqrt(rangeX * rangeX + rangeY * rangeY);
+            range = Math.Sqrt((x + (rangeX * rangeX)) + (y + (rangeY * rangeY)));
             limitRange = true;
 
             //Adding the projectile to a projectile list in the game class
@@ -66,12 +66,7 @@ namespace Once_A_Rogue
         public void Update(GameTime gameTime)
         {
             float projLength = projPos.Length();
-            if ((projLength < range) && limitRange == true)
-            {
-                projPos += vector;
-            }
-
-            else if(limitRange == false)
+            if ((projLength < range) || !limitRange)
             {
                 projPos += vector;
             }
