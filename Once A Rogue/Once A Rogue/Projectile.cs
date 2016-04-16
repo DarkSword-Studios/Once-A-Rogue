@@ -22,9 +22,9 @@ namespace Once_A_Rogue
             set { projPos = value; }
         }
 
-
+        bool limitRange;
         Vector2 vector;
-        MouseState ms;
+        double range;
         int rowY;
         int numFrames;
         int currentFrame = 0;
@@ -42,20 +42,22 @@ namespace Once_A_Rogue
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
+            limitRange = false;
 
             //Adding the projectile to a projectile list in the game class
             Game1.CurrProjectiles.Add(this);
         }
 
         //Overload Constructor
-        public Projectile(Vector2 vec, MouseState mouseState, int rowY, int numFrames, int height, int width, int x, int y)
+        public Projectile(Vector2 vec, int rangeX, int rangeY, int rowY, int numFrames, int height, int width, int x, int y)
         {
             projPos = new Vector2(x, y);
             vector = vec;
-            ms = mouseState;
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
+            range = Math.Sqrt(rangeX * rangeX + rangeY * rangeY);
+            limitRange = true;
 
             //Adding the projectile to a projectile list in the game class
             Game1.CurrProjectiles.Add(this);
@@ -63,7 +65,21 @@ namespace Once_A_Rogue
 
         public void Update(GameTime gameTime)
         {
-            projPos += vector * 1;
+            float projLength = projPos.Length();
+            if ((projLength < range) && limitRange == true)
+            {
+                projPos += vector;
+            }
+
+            else if(limitRange == false)
+            {
+                projPos += vector;
+            }
+
+            else
+            {
+                Game1.RemoveProj.Add(this);
+            }
 
             timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
             framesElapsed = (int)(timeElapsed / timePerFrame);

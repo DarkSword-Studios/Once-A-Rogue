@@ -23,6 +23,8 @@ namespace Once_A_Rogue
 
         //The tilesize we are working with is 120 pixels
         const int TILESIZE = 120;
+
+        List<Interactable> interactables;
         
         //This variables manages the room's activity state which is important (do we update the room? Do we draw it? Only if it's active)
         private Boolean active;
@@ -116,6 +118,8 @@ namespace Once_A_Rogue
             discovered = false;
             aware = false;
 
+            interactables = new List<Interactable>();
+
             //Fixes a slight consistency error
             if (doorLocals == "ALLDIRECTIONS")
             {
@@ -141,7 +145,7 @@ namespace Once_A_Rogue
             }
         }
         //This method takes care of the initial leg work for initializing a room so that it doesn't have to be done multiple times
-        public void BuildRoom(int xCoord, int yCoord)
+        public void BuildRoom(int xCoord, int yCoord, string roomCodeStr)
         {
             int row = 0;
             int col = 0;
@@ -170,6 +174,146 @@ namespace Once_A_Rogue
                 col = 0;
                 row++;
             }
+
+            if(roomCodeStr != "1234")
+            {
+                return;
+            }
+
+            //This list keeps track of all of the rooms in Content/Rooms/ that would be valid fits for the current room to build
+            List<string> possibleRooms = new List<string>();
+
+            //Read in each file in the Content/Rooms/ folder (where we keep the room.txt files)
+            foreach (string file in Directory.GetFiles(@"..\..\..\Content\InteractableLayer"))
+            {
+                //The purpose of this code is to determine if the file is valid to put in the possible rooms list
+                if (file.Contains(roomCodeStr))
+                {
+                    //Start of file processing by Ian
+                    char[] letterArray = new char[file.Length];
+                    List<int> numberArray = new List<int>();
+                    List<int> roomCodeList = new List<int>();
+
+                    //Store each character in the filename to a character array
+                    for (int x = 0; x < file.Length; x++)
+                    {
+                        letterArray[x] = file[x];
+                    }
+
+                    //Pick out only the digits in the character array
+                    for (int x = 0; x < roomCodeStr.Length; x++)
+                    {
+                        int roomCodeDigit;
+
+                        int.TryParse(roomCodeStr[x].ToString(), out roomCodeDigit);
+
+                        roomCodeList.Add(roomCodeDigit);
+                    }
+
+                    int fileNumber;
+
+                    //Check the length of the room code
+                    foreach (char c in letterArray)
+                    {
+                        string charString = c.ToString();
+                        if (int.TryParse(charString, out fileNumber))
+                        {
+                            numberArray.Add(fileNumber);
+                        }
+                    }
+
+                    //Verify the room code found in the file name against the room code needed
+                    if (numberArray.Count == roomCodeList.Count)
+                    {
+                        int truthCount = 0;
+                        for (int x = 0; x < numberArray.Count; x++)
+                        {
+                            if (numberArray[x] == roomCodeList[x])
+                            {
+                                truthCount += 1;
+                            }
+                        }
+
+                        //If everything checks out, the room is added to the list of possible rooms
+                        if (truthCount == roomCodeStr.Length)
+                        {
+                            possibleRooms.Add(file);
+                        }
+                    }
+                }
+            }
+            //End of file processing by Ian
+
+            Random random = new Random();
+
+            //At this point a room file is chosen from the valid list
+            string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
+
+            //Open the txt room
+            StreamReader reader = new StreamReader(roomPath);
+
+            //Keeps track of placement
+            string line = "";
+            row = 0;
+            col = 0;
+
+            int[,] interactableLayer = new int[9, 16];
+
+            //Read the file until empty
+            while ((line = reader.ReadLine()) != null)
+            {
+                //Separate all values into an array ( ',' is the delimiter)
+                string[] tiles = line.Split(',');
+
+                //For each tile in the array
+                foreach (string tile in tiles)
+                {
+                    //Load the tile code into the room annex array
+                    interactableLayer[row, col] = int.Parse(tile);
+                    col++;
+                }
+
+                col = 0;
+                row++;
+            }
+
+            row = 0;
+            col = 0;
+
+            //Loop through every item in the room annex to deal with assigning tiles
+            while (row < interactableLayer.GetLength(0))
+            {
+                while (col < interactableLayer.GetLength(1))
+                {
+                    if(interactableLayer[row, col] != -1)
+                    {
+                        int tileY = interactableLayer[row, col] / 16;
+                        int tileX = interactableLayer[row, col] % 16;
+
+                        //Locate the specified tile texture, and give it a new location within the room
+                        Rectangle imageLocal = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
+
+                        if(interactableLayer[row, col] == 82)
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, false);
+                        }
+                        //Load the interactable if there is one
+                        else if(interactableLayer[row, col] == 80)
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, true, true);
+                        }
+                        else
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, true);
+                        }
+                        interactables.Add(finalRoomAnnex[row, col].Interactable);
+                        
+                    }
+                    col++;
+                }
+                col = 0;
+                row++;
+            }
         }
 
         //This method draws a room, given the sprite batch, the tilemap, and an x / y coordinate
@@ -189,6 +333,11 @@ namespace Once_A_Rogue
                     //Draw the tile
                     spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
 
+                    if(finalRoomAnnex[row, col].Interactable != null && finalRoomAnnex[row, col].Interactable.DoDraw)
+                    {
+                        spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].Interactable.RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
+                    }
+
                     //Always reset a tile's tags after drawing; if the tile tags should still be true, they will be updated as such in the next update call
                     finalRoomAnnex[row, col].InvalidTag = false;
                     finalRoomAnnex[row, col].ValidTag = false;
@@ -207,6 +356,32 @@ namespace Once_A_Rogue
         //This method handles whether or not the camera should be moved to an adjacent room
         public String UpdateEvents(Player player, Camera camera, String playerMove)
         {
+            Rectangle newPlayerPositionRight = new Rectangle(player.PosX + player.MoveSpeed, player.PosY, player.PosRect.Width, player.PosRect.Height);
+            Rectangle newPlayerPositionLeft = new Rectangle(player.PosX - player.MoveSpeed, player.PosY, player.PosRect.Width, player.PosRect.Height);
+            Rectangle newPlayerPositionUp = new Rectangle(player.PosX, player.PosY + player.MoveSpeed, player.PosRect.Width, player.PosRect.Height);
+            Rectangle newPlayerPositionDown = new Rectangle(player.PosX, player.PosY - player.MoveSpeed, player.PosRect.Width, player.PosRect.Height);
+            foreach (Interactable interactable in interactables)
+            {
+                
+                if (playerMove == "left" && newPlayerPositionLeft.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosX = interactable.RelativeLocation.Right + player.MoveSpeed;
+                }
+                else if (playerMove == "right" && newPlayerPositionRight.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosX = interactable.RelativeLocation.Left - player.PosRect.Width - player.MoveSpeed;
+                }
+                else if (playerMove == "up" && newPlayerPositionUp.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosY = interactable.RelativeLocation.Bottom + player.MoveSpeed;
+                }
+                else if (playerMove == "down" && newPlayerPositionDown.Intersects(interactable.RelativeLocation))
+                {
+                    player.PosY = interactable.RelativeLocation.Top - player.PosRect.Height - player.MoveSpeed;
+                }
+
+            }
+
             //Each of these if statements asks if the player is standing right in front of a door (not on the edges) and moving in the direction of that door
             if(player.PosX == 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
             {

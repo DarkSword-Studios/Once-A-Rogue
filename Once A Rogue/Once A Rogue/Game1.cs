@@ -91,11 +91,18 @@ namespace Once_A_Rogue
 
         //List to keep track of projectiles
         private static List<Projectile> currProjectiles;
+        private static List<Projectile> removeProj;
 
         public static List<Projectile> CurrProjectiles
         {
             get { return currProjectiles; }
             set { currProjectiles = value; }
+        }
+
+        public static List<Projectile> RemoveProj
+        {
+            get { return removeProj; }
+            set { removeProj = value; }
         }
 
         public Game1()
@@ -323,22 +330,24 @@ namespace Once_A_Rogue
                 player.UpdateFrame(gameTime);
                 player.UpdateCooldowns(gameTime);
 
+                playerMove = "";
+
                 //Set W A S D keys to four different directions
                 if (kbs.IsKeyDown(Keys.A))
                 {
-                    playerMove = "left";
+                    playerMove += "left";
                 }
-                if (kbs.IsKeyDown(Keys.D))
+                else if (kbs.IsKeyDown(Keys.D))
                 {
-                    playerMove = "right";
+                    playerMove += "right";
                 }
                 if (kbs.IsKeyDown(Keys.S))
                 {
-                    playerMove = "down";
+                    playerMove += "down";
                 }
-                if (kbs.IsKeyDown(Keys.W))
+                else if (kbs.IsKeyDown(Keys.W))
                 {
-                    playerMove = "up";
+                    playerMove += "up";
                 }
                 if (camera.isMoving)
                 {
@@ -379,7 +388,7 @@ namespace Once_A_Rogue
 
                 if (Game1.CurrProjectiles.Count > 0)
                 {
-                    List<Projectile> removeProj = new List<Projectile>();
+                    removeProj = new List<Projectile>();
 
                     foreach (Projectile project in Game1.CurrProjectiles)
                     {
