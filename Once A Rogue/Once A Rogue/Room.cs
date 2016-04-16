@@ -356,28 +356,12 @@ namespace Once_A_Rogue
         //This method handles whether or not the camera should be moved to an adjacent room
         public String UpdateEvents(Player player, Camera camera, String playerMove)
         {
-            Rectangle newPlayerPositionRight = new Rectangle(player.PosX + player.MoveSpeed, player.PosY, player.PosRect.Width, player.PosRect.Height);
-            Rectangle newPlayerPositionLeft = new Rectangle(player.PosX - player.MoveSpeed, player.PosY, player.PosRect.Width, player.PosRect.Height);
-            Rectangle newPlayerPositionUp = new Rectangle(player.PosX, player.PosY + player.MoveSpeed, player.PosRect.Width, player.PosRect.Height);
-            Rectangle newPlayerPositionDown = new Rectangle(player.PosX, player.PosY - player.MoveSpeed, player.PosRect.Width, player.PosRect.Height);
             foreach (Interactable interactable in interactables)
             {
-                
-                if (playerMove == "left" && newPlayerPositionLeft.Intersects(interactable.RelativeLocation))
+
+                if (player.PosRect.Intersects(interactable.RelativeLocation)
                 {
-                    player.PosX = interactable.RelativeLocation.Right + player.MoveSpeed;
-                }
-                else if (playerMove == "right" && newPlayerPositionRight.Intersects(interactable.RelativeLocation))
-                {
-                    player.PosX = interactable.RelativeLocation.Left - player.PosRect.Width - player.MoveSpeed;
-                }
-                else if (playerMove == "up" && newPlayerPositionUp.Intersects(interactable.RelativeLocation))
-                {
-                    player.PosY = interactable.RelativeLocation.Bottom + player.MoveSpeed;
-                }
-                else if (playerMove == "down" && newPlayerPositionDown.Intersects(interactable.RelativeLocation))
-                {
-                    player.PosY = interactable.RelativeLocation.Top - player.PosRect.Height - player.MoveSpeed;
+
                 }
 
             }
