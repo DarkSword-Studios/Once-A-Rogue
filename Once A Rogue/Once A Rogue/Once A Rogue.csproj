@@ -48,13 +48,10 @@
     <Compile Include="Fireball.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
-<<<<<<< HEAD
     <Compile Include="Ghoul.cs" />
     <Compile Include="Goblin.cs" />
     <Compile Include="Kobold.cs" />
-=======
     <Compile Include="Interactable.cs" />
->>>>>>> origin/master
     <Compile Include="LevelBuilder.cs" />
     <Compile Include="MeleeAttack.cs" />
     <Compile Include="Minimap.cs" />
