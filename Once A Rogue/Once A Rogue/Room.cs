@@ -358,10 +358,25 @@ namespace Once_A_Rogue
         {
             foreach (Interactable interactable in interactables)
             {
-
-                if (player.PosRect.Intersects(interactable.RelativeLocation))
+                if (interactable.Passable)
                 {
+                    continue;
+                }
 
+                
+                if (player.PosY + player.PosRect.Height >= interactable.RelativeLocation.Bottom && player.PosY + player.PosRect.Height <= interactable.RelativeLocation.Top)
+                {
+                    if (player.PosX + player.PosRect.Width > interactable.RelativeLocation.Left)
+                    {
+                        player.PosX -= player.PosX + player.PosRect.Width - interactable.RelativeLocation.Left;
+                    }
+                }
+                else if (player.PosY >= interactable.RelativeLocation.Bottom && player.PosY <= interactable.RelativeLocation.Top)
+                {
+                    if (player.PosX + player.PosRect.Width > interactable.RelativeLocation.Left)
+                    {
+                        player.PosX -= player.PosX + player.PosRect.Width - interactable.RelativeLocation.Left;
+                    }
                 }
 
             }
