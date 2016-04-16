@@ -359,7 +359,7 @@ namespace Once_A_Rogue
             foreach (Interactable interactable in interactables)
             {
 
-                if (player.PosRect.Intersects(interactable.RelativeLocation)
+                if (player.PosRect.Intersects(interactable.RelativeLocation))
                 {
 
                 }
