@@ -48,6 +48,9 @@
     <Compile Include="Fireball.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="Ghoul.cs" />
+    <Compile Include="Goblin.cs" />
+    <Compile Include="Kobold.cs" />
     <Compile Include="LevelBuilder.cs" />
     <Compile Include="MeleeAttack.cs" />
     <Compile Include="Minimap.cs" />
@@ -75,6 +78,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\BlackSlate.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GhoulSpriteSheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GoblinSpriteSheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\KoboldSpriteSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\LEFTUPRIGHTDOWNmap.png">

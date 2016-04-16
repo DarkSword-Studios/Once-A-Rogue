@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
 {
@@ -13,6 +16,7 @@ namespace Once_A_Rogue
 
         //Value for fear level of enemy
         private int fearLevel;
+        private int fearLevelTotal;
 
         //Property for Fear Level
         public int FearLevel
@@ -32,6 +36,12 @@ namespace Once_A_Rogue
                     fearLevel = value;
                 }
             }
+        }
+        public int FearLevelTotal
+        {
+            get { return FearLevelTotal; }
+
+            set { fearLevelTotal = value; }
         }
         //BRAINSTORM: Based on the armor level of enemies, the players will do reduced damage to them
         private int armorLevel;
@@ -115,7 +125,7 @@ namespace Once_A_Rogue
         }
 
         //Overloaded OnDeath method that passes in a Player object
-        protected void OnDeath(Player play)
+        protected virtual void OnDeath(Player play)
         {
             base.OnDeath();
 
@@ -166,10 +176,16 @@ namespace Once_A_Rogue
         }
 
         //Do we even need this constructor?
-        public Enemy(int fearlvl, int armorlvl) : base()//Add code here
+        public Enemy(Player play) : base()//Add code here
         {
-            fearLevel = fearlvl;
-            armorLevel = armorlvl;
+            Level = play.Level;
+            fearLevel = 0;
+            armorLevel = 5;
+        }
+
+        public void Draw(SpriteBatch sprite, Texture2D tex, int frameWidth, int frameHeight)
+        {
+           
         }
 
 

@@ -22,6 +22,15 @@ namespace Once_A_Rogue
 
         //Gameplay Attributes
 
+        private int level;
+
+        public int Level
+        {
+            get { return level; }
+            set { level = value; }
+        }
+
+
         //Health properties
         private int currHealth;
 
