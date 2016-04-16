@@ -362,27 +362,14 @@ namespace Once_A_Rogue
                 {
                     continue;
                 }
-
-                
-                if (player.PosY + player.PosRect.Height >= interactable.RelativeLocation.Bottom && player.PosY + player.PosRect.Height <= interactable.RelativeLocation.Top)
+                else
                 {
-                    if (player.PosX + player.PosRect.Width > interactable.RelativeLocation.Left)
-                    {
-                        player.PosX -= player.PosX + player.PosRect.Width - interactable.RelativeLocation.Left;
-                    }
+                    interactable.HandleCollisions(player);
                 }
-                else if (player.PosY >= interactable.RelativeLocation.Bottom && player.PosY <= interactable.RelativeLocation.Top)
-                {
-                    if (player.PosX + player.PosRect.Width > interactable.RelativeLocation.Left)
-                    {
-                        player.PosX -= player.PosX + player.PosRect.Width - interactable.RelativeLocation.Left;
-                    }
-                }
-
             }
 
             //Each of these if statements asks if the player is standing right in front of a door (not on the edges) and moving in the direction of that door
-            if(player.PosX == 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
+            if(player.PosX == 80 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
             {
                 //If the case is satisfied, it means that the player is trying to go through the door
                 //In this case we call for a new camera move in the approrpriate direction, and then return a direction in string format
@@ -391,13 +378,13 @@ namespace Once_A_Rogue
             }
 
             //Examine the previous if statement to understand how the rest of them work
-            if (player.PosX == camera.screenWidth - player.PosRect.Width - 120 && player.PosY > 440 && player.PosY < 480 && playerMove == "right" && doorLocals.Contains("RIGHT"))
+            if (player.PosX == camera.screenWidth - player.PosRect.Width - 80 && player.PosY > 440 && player.PosY < 480 && playerMove == "right" && doorLocals.Contains("RIGHT"))
             {
                 camera.Move("right");
                 return "right";
             }
 
-            if (player.PosY == 120 && player.PosX > 840 && player.PosX < 880 && playerMove == "up" && doorLocals.Contains("UP"))
+            if (player.PosY == 80 && player.PosX > 840 && player.PosX < 880 && playerMove == "up" && doorLocals.Contains("UP"))
             {
                 camera.Move("up");
                 return "up";

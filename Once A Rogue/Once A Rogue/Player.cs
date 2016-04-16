@@ -232,19 +232,19 @@ namespace Once_A_Rogue
                 PosY = roomHeight - PosRect.Height - 120;
             }
 
-            if (PosY < 120)
+            if (PosY < 80)
             {
-                PosY = 120;
+                PosY = 80;
             }
 
-            if (PosX > (roomWidth - PosRect.Width - 120))
+            if (PosX > (roomWidth - PosRect.Width - 80))
             {
-                PosX = roomWidth - PosRect.Width - 120;
+                PosX = roomWidth - PosRect.Width - 80;
             }
 
-            if (PosX < 120)
+            if (PosX < 80)
             {
-                PosX = 120;
+                PosX = 80;
             }
 
             if(kbs.IsKeyDown(Keys.Z))

@@ -75,5 +75,66 @@ namespace Once_A_Rogue
                 return;
             }
         }
+
+        public void HandleCollisions(Player player)
+        {
+            //Find the collision depth
+            Vector2 depth = FindIntersectionDepth(player.PosRect, this.RelativeLocation);
+
+            //If there has been a collision
+            if (depth != Vector2.Zero)
+            {
+                //Resolve the smallest distance first, then call HanldeCollions()
+                //again to resolve on the next axis
+                if (Math.Abs(depth.X) > Math.Abs(depth.Y))
+                {
+                    player.PosY -= (int) depth.Y;
+                    HandleCollisions(player);
+                }
+                else
+                {
+                    player.PosX -= (int) depth.X;
+                    HandleCollisions(player);
+                }
+            }
+        }
+
+
+        public Vector2 FindIntersectionDepth(Rectangle rec1, Rectangle rec2)
+        {
+            Vector2 depth = new Vector2(0, 0);
+
+            if (rec1.Intersects(rec2))
+            {
+                //Gets the amount of intersection from the left, right, top and bottom of the sprite
+                int x1 = rec1.Left - rec2.Right;
+                int x2 = rec1.Right - rec2.Left;
+                int y1 = rec1.Top - rec2.Bottom;
+                int y2 = rec1.Bottom - rec2.Top;
+
+                //Returns the smallest intersections
+                if(Math.Abs(x1) < Math.Abs(x2))
+                {
+                    depth.X = x1;
+                }
+                else
+                {
+                    depth.X = x2;
+                }
+
+                if(Math.Abs(y1) < Math.Abs(y2))
+                {
+                    depth.Y = y1;
+                }
+                else
+                {
+                    depth.Y = y2;
+                }
+            }
+            return depth;
+        }
+
+
+
     }
 }
