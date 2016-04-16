@@ -22,6 +22,22 @@ namespace Once_A_Rogue
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
 
+        public Boolean Activatable
+        {
+            get
+            {
+                return interactable;
+            }
+        }
+
+        public string Type
+        {
+            get
+            {
+                return type;
+            }
+        }
+
         public Boolean DoDraw
         {
             get
@@ -68,11 +84,19 @@ namespace Once_A_Rogue
             this.relativeLocation = relativeLocation;
         }
 
-        public void Interact()
+        public void Interact(Player player)
         {
             if (!interactable)
             {
                 return;
+            }
+
+            if(type == "Note")
+            {
+                if (player.PosRect.Intersects(this.relativeLocation))
+                {
+                    Notification.Alert("New Journal Entry Added: Unsent Love Letter");
+                }
             }
         }
 

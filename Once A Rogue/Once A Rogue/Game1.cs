@@ -57,6 +57,9 @@ namespace Once_A_Rogue
         //The camera manages the viewport and location of drawn objects
         Camera camera;
 
+        //Declare fonts here
+        SpriteFont alertText;
+
         //Manage room activity to minimize impact on CPU
         bool shifting;
         int oldRow = -1;
@@ -69,6 +72,9 @@ namespace Once_A_Rogue
         //Declare Minimap Textures
         Texture2D leftuprightdown, down, up, left, right, leftup, leftright, leftdown, upright, updown, rightdown;
         Texture2D leftupright, leftupdown, leftrightdown, uprightdown, blackSlate, whiteSlate, unknown;
+
+        //Declare Notification Tool Textures
+        Texture2D diagonalBar;
 
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
@@ -150,6 +156,9 @@ namespace Once_A_Rogue
             //Rig environment port
             Atmosphere.Camera = camera;
 
+            //Rig Notification port
+            Notification.camera = camera;
+
             //Fill the grid with room codes
             gridSystem = builderAlpha.BuildLevel(gridSystem, numRooms);
 
@@ -200,6 +209,15 @@ namespace Once_A_Rogue
             // TODO: use this.Content to load your game content here
 
             //player.Texture = Content.Load<Texture2D>("Player");
+
+            //Load fonts here
+            alertText = Content.Load<SpriteFont>("alertText");
+
+            //Notification Textures
+            diagonalBar = Content.Load<Texture2D>("DiagonalNotificationBar.png");
+
+            Notification.font = alertText;
+            Notification.diagonalBar = diagonalBar;
 
             //Load in tilemap and player spritesheet
             tilemap = Content.Load<Texture2D>("Tileset.png");
@@ -420,6 +438,11 @@ namespace Once_A_Rogue
                 {
                     Minimap.Visible = !Minimap.Visible;
                 }
+
+                if (Notification.Updating)
+                {
+                    Notification.UpdateAlert();
+                }
             }
             
             if(gameState == GameState.GameOver)
@@ -566,10 +589,15 @@ namespace Once_A_Rogue
                 spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (300 * (player.CurrHealth / player.MaxHealth)), 31), Color.White);
                 spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (300 * (player.CurrMana / player.TotalMana)), 31), Color.White);
 
-                if (Minimap.Visible)
+                if (Minimap.Visible && !Notification.Updating)
                 {
                     Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
                 }
+                if (Notification.Updating)
+                {
+                    Notification.DrawAlert(spriteBatch);
+                }
+                
             }
 
             //draws the following if the game is paused

@@ -55,6 +55,7 @@
     <Compile Include="LevelBuilder.cs" />
     <Compile Include="MeleeAttack.cs" />
     <Compile Include="Minimap.cs" />
+    <Compile Include="Notification.cs" />
     <Compile Include="PiercingShot.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
@@ -79,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\BlackSlate.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DiagonalNotificationBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\GhoulSpriteSheet.png">
@@ -221,6 +225,11 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\alertText.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">

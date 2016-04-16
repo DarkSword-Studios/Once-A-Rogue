@@ -295,12 +295,12 @@ namespace Once_A_Rogue
 
                         if(interactableLayer[row, col] == 82)
                         {
-                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, false);
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, false);
                         }
                         //Load the interactable if there is one
                         else if(interactableLayer[row, col] == 80)
                         {
-                            finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, true, true);
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Box", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, false, true);
                         }
                         else
                         {
@@ -358,6 +358,12 @@ namespace Once_A_Rogue
         {
             foreach (Interactable interactable in interactables)
             {
+                if (interactable.Activatable)
+                {
+                    interactable.Interact(player);
+                }
+                
+
                 if (interactable.Passable)
                 {
                     continue;
@@ -366,6 +372,7 @@ namespace Once_A_Rogue
                 {
                     interactable.HandleCollisions(player);
                 }
+
             }
 
             //Each of these if statements asks if the player is standing right in front of a door (not on the edges) and moving in the direction of that door
