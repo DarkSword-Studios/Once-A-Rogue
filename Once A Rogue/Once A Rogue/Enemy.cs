@@ -107,11 +107,7 @@ namespace Once_A_Rogue
                 }
             }
         }
-        //Method to handle enemy attacks
-        public void Attack()
-        {
-            //Add code to handle enemy attacking
-        }
+   
 
         //BRAINSTORM: Only call this method with certain types of enemies that would likely run away when faced with
         // certain death. IE: Kobolds, Goblins, Etc 
