@@ -156,8 +156,11 @@ namespace Once_A_Rogue
             //Figuring out which mouse buttn is being pressed
             MouseState msState = Mouse.GetState();
 
+            //Assume the player is moving, a special case exists to correct idle movement
+            timePerFrame = 50;
+
             //Moving the player based on which key is down
-            if(kbs.IsKeyDown(Keys.A))
+            if (kbs.IsKeyDown(Keys.A))
             {
                 PosX -= MoveSpeed;
                 playerState = PlayerState.WalkingLeft;
@@ -201,6 +204,9 @@ namespace Once_A_Rogue
 
             if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W) && playerState != PlayerState.AttackLeft && playerState != PlayerState.AttackRight)
             {
+                //Correct speedy animation
+                timePerFrame = 100;
+
                 if (playerState == PlayerState.WalkingLeft)
                 {
                     playerState = PlayerState.IdleLeft;
@@ -214,11 +220,13 @@ namespace Once_A_Rogue
 
             if(currentFrame == 6 && playerState == PlayerState.AttackLeft)
             {
+                timePerFrame = 100;
                 playerState = PlayerState.IdleLeft;
             }
 
             if (currentFrame == 6 && playerState == PlayerState.AttackRight)
             {
+                timePerFrame = 100;
                 playerState = PlayerState.IdleRight;
             }
 
