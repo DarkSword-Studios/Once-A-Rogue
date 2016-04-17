@@ -36,6 +36,15 @@ namespace Once_A_Rogue
         private Boolean aware;
         private Boolean boss;
 
+        //Handles Locking and Unlocking animations
+        public Boolean isLocking = false;
+        public Boolean isUnlocking = false;
+
+        //Handles room states
+        public Boolean locked = false;
+
+        List<Tile> doorTiles = new List<Tile>();
+
         public Boolean Boss
         {
             get
@@ -338,6 +347,11 @@ namespace Once_A_Rogue
                         spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].Interactable.RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
                     }
 
+                    if(finalRoomAnnex[row, col].Door != null)
+                    {
+                        spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].Door.RelativeLocation, finalRoomAnnex[row, col].Door.RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
+                    }
+
                     //Always reset a tile's tags after drawing; if the tile tags should still be true, they will be updated as such in the next update call
                     finalRoomAnnex[row, col].InvalidTag = false;
                     finalRoomAnnex[row, col].ValidTag = false;
@@ -375,8 +389,82 @@ namespace Once_A_Rogue
 
             }
 
+            if (isLocking)
+            {
+                foreach (Tile door in doorTiles)
+                {
+                    switch (door.DoorLocal)
+                    {
+                        case 1:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X + 3, door.Door.RelativeLocation.Y, TILESIZE, TILESIZE);
+                            break;
+
+                        case 2:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X, door.Door.RelativeLocation.Y + 3, TILESIZE, TILESIZE);
+                            break;
+
+                        case 3:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X - 3, door.Door.RelativeLocation.Y, TILESIZE, TILESIZE);
+                            break;
+
+                        case 4:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X, door.Door.RelativeLocation.Y - 3, TILESIZE, TILESIZE);
+                            break;
+                    }
+
+                }
+
+                //If one door is done closing, the rest of them should be done as well
+                if (doorTiles[0].RelativeLocation.Equals(doorTiles[0].Door.RelativeLocation))
+                {
+                    isLocking = false;
+                }
+            }
+
+            if (isUnlocking)
+            {
+                foreach (Tile door in doorTiles)
+                {
+                    switch (door.DoorLocal)
+                    {
+                        case 1:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X - 3, door.Door.RelativeLocation.Y, TILESIZE, TILESIZE);
+                            break;
+
+                        case 2:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X, door.Door.RelativeLocation.Y - 3, TILESIZE, TILESIZE);
+                            break;
+
+                        case 3:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X + 3, door.Door.RelativeLocation.Y, TILESIZE, TILESIZE);
+                            break;
+
+                        case 4:
+
+                            door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X, door.Door.RelativeLocation.Y + 3, TILESIZE, TILESIZE);
+                            break;
+                    }
+
+                }
+
+                //If one door is done closing, the rest of them should be done as well
+                if (!doorTiles[0].RelativeLocation.Intersects(doorTiles[0].Door.RelativeLocation))
+                {
+                    doorTiles.Clear();
+                    isUnlocking = false;
+                    locked = false;
+                }
+            }
+
             //Each of these if statements asks if the player is standing right in front of a door (not on the edges) and moving in the direction of that door
-            if(player.PosX == 80 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT"))
+            if (player.PosX == 80 && player.PosY > 440 && player.PosY < 480 && playerMove == "left" && doorLocals.Contains("LEFT") && !locked)
             {
                 //If the case is satisfied, it means that the player is trying to go through the door
                 //In this case we call for a new camera move in the approrpriate direction, and then return a direction in string format
@@ -385,19 +473,19 @@ namespace Once_A_Rogue
             }
 
             //Examine the previous if statement to understand how the rest of them work
-            if (player.PosX == camera.screenWidth - player.PosRect.Width - 80 && player.PosY > 440 && player.PosY < 480 && playerMove == "right" && doorLocals.Contains("RIGHT"))
+            if (player.PosX == camera.screenWidth - player.PosRect.Width - 80 && player.PosY > 440 && player.PosY < 480 && playerMove == "right" && doorLocals.Contains("RIGHT") && !locked)
             {
                 camera.Move("right");
                 return "right";
             }
 
-            if (player.PosY == 80 && player.PosX > 840 && player.PosX < 880 && playerMove == "up" && doorLocals.Contains("UP"))
+            if (player.PosY == 80 && player.PosX > 840 && player.PosX < 880 && playerMove == "up" && doorLocals.Contains("UP") && !locked)
             {
                 camera.Move("up");
                 return "up";
             }
 
-            if (player.PosY == camera.screenHeight - player.PosRect.Height - 120 && player.PosX > 840 && player.PosX < 880 && playerMove == "down" && doorLocals.Contains("DOWN"))
+            if (player.PosY == camera.screenHeight - player.PosRect.Height - 120 && player.PosX > 840 && player.PosX < 880 && playerMove == "down" && doorLocals.Contains("DOWN") && !locked)
             {
                 camera.Move("down");
                 return "down";
@@ -500,6 +588,103 @@ namespace Once_A_Rogue
                     }
                 }
             }
+        }
+
+        public void Lock()
+        {
+            if (locked || isLocking || isUnlocking)
+            {
+                return;
+            }
+
+            isLocking = true;
+            locked = true;
+
+            if (doorLocals.Contains("UP"))
+            {
+                finalRoomAnnex[0, 7].Door = new Tile(new Rectangle(14 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[0, 7].RelativeLocation.X, finalRoomAnnex[0, 7].RelativeLocation.Y - TILESIZE, TILESIZE, TILESIZE));
+                finalRoomAnnex[0, 7].DoorLocal = 2;
+
+                finalRoomAnnex[0, 6].Door = new Tile(new Rectangle(11 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[0, 6].RelativeLocation.X, finalRoomAnnex[0, 6].RelativeLocation.Y - TILESIZE, TILESIZE, TILESIZE));
+                finalRoomAnnex[0, 6].DoorLocal = 2;
+
+                finalRoomAnnex[0, 8].Door = new Tile(new Rectangle(12 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[0, 8].RelativeLocation.X, finalRoomAnnex[0, 8].RelativeLocation.Y - TILESIZE, TILESIZE, TILESIZE));
+                finalRoomAnnex[0, 8].DoorLocal = 2;
+
+                doorTiles.Add(finalRoomAnnex[0, 7]);
+                doorTiles.Add(finalRoomAnnex[0, 6]);
+                doorTiles.Add(finalRoomAnnex[0, 8]);
+
+            }
+
+            if (doorLocals.Contains("LEFT"))
+            {
+                finalRoomAnnex[3, 0].Door = new Tile(new Rectangle(8 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[3, 0].RelativeLocation.X - TILESIZE, finalRoomAnnex[3, 0].RelativeLocation.Y, TILESIZE, TILESIZE));
+                finalRoomAnnex[3, 0].DoorLocal = 1;
+
+                finalRoomAnnex[4, 0].Door = new Tile(new Rectangle(15 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[4, 0].RelativeLocation.X - TILESIZE, finalRoomAnnex[4, 0].RelativeLocation.Y, TILESIZE, TILESIZE));
+                finalRoomAnnex[4, 0].DoorLocal = 1;
+
+                finalRoomAnnex[5, 0].Door = new Tile(new Rectangle(7 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[5, 0].RelativeLocation.X - TILESIZE, finalRoomAnnex[5, 0].RelativeLocation.Y, TILESIZE, TILESIZE));
+                finalRoomAnnex[5, 0].DoorLocal = 1;
+
+                doorTiles.Add(finalRoomAnnex[3, 0]);
+                doorTiles.Add(finalRoomAnnex[4, 0]);
+                doorTiles.Add(finalRoomAnnex[5, 0]);
+
+            }
+
+            if (doorLocals.Contains("RIGHT"))
+            {
+                finalRoomAnnex[3, 15].Door = new Tile(new Rectangle(10 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[3, 15].RelativeLocation.X + TILESIZE, finalRoomAnnex[3, 15].RelativeLocation.Y, TILESIZE, TILESIZE));
+                finalRoomAnnex[3, 15].DoorLocal = 3;
+
+                finalRoomAnnex[4, 15].Door = new Tile(new Rectangle(0 * TILESIZE, 2 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[4, 15].RelativeLocation.X + TILESIZE, finalRoomAnnex[4, 15].RelativeLocation.Y, TILESIZE, TILESIZE));
+                finalRoomAnnex[4, 15].DoorLocal = 3;
+
+                finalRoomAnnex[5, 15].Door = new Tile(new Rectangle(9 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[5, 15].RelativeLocation.X + TILESIZE, finalRoomAnnex[5, 15].RelativeLocation.Y, TILESIZE, TILESIZE));
+                finalRoomAnnex[5, 15].DoorLocal = 3;
+
+                doorTiles.Add(finalRoomAnnex[3, 15]);
+                doorTiles.Add(finalRoomAnnex[4, 15]);
+                doorTiles.Add(finalRoomAnnex[5, 15]);
+
+            }
+
+            if (doorLocals.Contains("DOWN"))
+            {
+                finalRoomAnnex[8, 7].Door = new Tile(new Rectangle(13 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[8, 7].RelativeLocation.X, finalRoomAnnex[8, 7].RelativeLocation.Y + TILESIZE, TILESIZE, TILESIZE));
+                finalRoomAnnex[8, 7].DoorLocal = 4;
+
+                finalRoomAnnex[8, 6].Door = new Tile(new Rectangle(5 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[8, 6].RelativeLocation.X, finalRoomAnnex[8, 6].RelativeLocation.Y + TILESIZE, TILESIZE, TILESIZE));
+                finalRoomAnnex[8, 6].DoorLocal = 4;
+
+                finalRoomAnnex[8, 8].Door = new Tile(new Rectangle(6 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[8, 8].RelativeLocation.X, finalRoomAnnex[8, 8].RelativeLocation.Y + TILESIZE, TILESIZE, TILESIZE));
+                finalRoomAnnex[8, 8].DoorLocal = 4;
+
+                doorTiles.Add(finalRoomAnnex[8, 7]);
+                doorTiles.Add(finalRoomAnnex[8, 6]);
+                doorTiles.Add(finalRoomAnnex[8, 8]);
+
+            }
+
+        }
+
+        public void RequestUnlock()
+        {
+            //Put room clearing code here... e.g. have all of the enemies been killed yet? 
+            Unlock();
+        }
+
+        private void Unlock()
+        {
+            if(isLocking || !locked || isUnlocking)
+            {
+                return;
+            }
+
+            isUnlocking = true;
+            Notification.Alert("Room Cleared!", Color.Green);
         }
 
     }

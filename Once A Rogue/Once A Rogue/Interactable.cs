@@ -95,7 +95,8 @@ namespace Once_A_Rogue
             {
                 if (player.PosRect.Intersects(this.relativeLocation))
                 {
-                    Notification.Alert("New Journal Entry Added: Unsent Love Letter");
+                    Notification.Alert("New Journal Entry Added: Unsent Love Letter", Color.Black);
+                    this.interactable = false;
                 }
             }
         }

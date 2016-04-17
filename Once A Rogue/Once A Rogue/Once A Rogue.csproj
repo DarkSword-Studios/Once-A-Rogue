@@ -39,6 +39,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Alert.cs" />
     <Compile Include="Atmosphere.cs" />
     <Compile Include="Boss.cs" />
     <Compile Include="Camera.cs" />

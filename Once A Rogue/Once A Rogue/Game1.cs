@@ -42,6 +42,10 @@ namespace Once_A_Rogue
         const int SCREEN_WIDTH = 1920;
         const int SCREEN_HEIGHT = 1080;
 
+        //Stage locking a room
+        Boolean lockRoom = false;
+        Boolean unlockRoom = false;
+
         //Declare a number of rooms for a level
         int numRooms;
 
@@ -439,10 +443,20 @@ namespace Once_A_Rogue
                     Minimap.Visible = !Minimap.Visible;
                 }
 
-                if (Notification.Updating)
+                //---- FOR DEBUGGING USE ONLY (Remove) ----
+                if (SingleKeyPress(Keys.L))
                 {
-                    Notification.UpdateAlert();
+                    lockRoom = true;
                 }
+
+                if (SingleKeyPress(Keys.U))
+                {
+                    unlockRoom = true;
+                }
+                //---- END OF DEBUG CODE!!!! ----
+
+                Notification.UpdateAlert();
+
             }
             
             if(gameState == GameState.GameOver)
@@ -691,6 +705,18 @@ namespace Once_A_Rogue
                             //Cannot run check if the frame is shifting
                             if (!shifting)
                             {
+                                //Debugger requested a locked room!
+                                if (lockRoom)
+                                {
+                                    levelAnnex[columnIndex, rowIndex].Lock();
+                                    lockRoom = false;
+                                }
+                                else if (unlockRoom)
+                                {
+                                    levelAnnex[columnIndex, rowIndex].RequestUnlock();
+                                    unlockRoom = false;
+                                }
+
                                 //Update song to be either boss music or roaming music
                                 if (levelAnnex[columnIndex, rowIndex].Boss && currentSong != "bossMusic")
                                 {

@@ -23,6 +23,10 @@ namespace Once_A_Rogue
         private static string note;
         private static Rectangle barPosition;
         private static string displayMessage;
+        private static Color color;
+
+        private static Queue<Alert> alerts = new Queue<Alert>();
+        private static Alert currentAlert;
 
         public static Boolean Updating
         {
@@ -33,24 +37,29 @@ namespace Once_A_Rogue
         }
 
 
-        public static void Alert(string message)
+        public static void Alert(string message, Color newColor)
         {
-            if(!updating)
-            {
-                note = message;
-                displayMessage = "";
-                updating = true;
-                barPosition = new Rectangle(0, camera.screenHeight, camera.screenWidth, camera.screenHeight);
-                ticksOnScreen = 120;
-            }       
+            Alert alert = new Alert(message, newColor);
+            alerts.Enqueue(alert);   
         }
 
         public static void UpdateAlert()
         {
-            if(!updating)
+            if(!updating && alerts.Count != 0)
+            {
+                currentAlert = alerts.Dequeue();
+                color = currentAlert.color;
+                note = currentAlert.message;
+                displayMessage = "";
+                updating = true;
+                barPosition = new Rectangle(0, camera.screenHeight, camera.screenWidth, camera.screenHeight);
+                ticksOnScreen = 120;
+            }
+            else if(!updating)
             {
                 return;
             }
+
             if(ticksOnScreen <= 0)
             {           
                 barPosition.Y += Math.Min((int)((barPosition.Y) * 0.1), -1);
@@ -91,7 +100,7 @@ namespace Once_A_Rogue
             {
                 return;
             }
-            spriteBatch.Draw(diagonalBar, barPosition, Color.White);
+            spriteBatch.Draw(diagonalBar, barPosition, color);
 
             float angle = (float) 24f;
             float radians = (float) (-((angle / (float) 180) * Math.PI));
@@ -102,8 +111,6 @@ namespace Once_A_Rogue
             Vector2 measuredString = font.MeasureString(displayMessage);
             Vector2 position = new Vector2(messageX, messageY);
             Vector2 origin = measuredString * 0.5f;
-
-            
 
             spriteBatch.DrawString(font, displayMessage, position, Color.White, radians, origin, 1, SpriteEffects.None, 1);
         }

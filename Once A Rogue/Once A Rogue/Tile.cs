@@ -24,6 +24,35 @@ namespace Once_A_Rogue
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
 
+        private Tile door;
+        private int doorLocal;
+
+        public int DoorLocal
+        {
+            get
+            {
+                return doorLocal;
+            }
+
+            set
+            {
+                doorLocal = value;
+            }
+        }
+
+        public Tile Door
+        {
+            get
+            {
+                return door;
+            }
+
+            set
+            {
+                door = value;
+            }
+        }
+
         public Interactable Interactable
         {
             get
