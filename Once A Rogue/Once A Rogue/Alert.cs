@@ -16,11 +16,15 @@ namespace Once_A_Rogue
     {
         public string message;
         public Color color;
+        public int stationaryTicks;
+        public Boolean invert;
 
-        public Alert(string message, Color color)
+        public Alert(string message, Color color, int stationaryTicks, Boolean invert)
         {
             this.message = message;
             this.color = color;
+            this.stationaryTicks = stationaryTicks;
+            this.invert = invert;
         }
     }
 }

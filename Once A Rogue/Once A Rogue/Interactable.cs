@@ -17,10 +17,24 @@ namespace Once_A_Rogue
         private Boolean interactable;
         private Boolean passable;
         private Boolean doDraw;
+        private Boolean functioning;
         private string type;
 
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
+
+        public Boolean Functioning
+        {
+            get
+            {
+                return functioning;
+            }
+
+            set
+            {
+                functioning = value;
+            }
+        }
 
         public Boolean Activatable
         {
@@ -84,7 +98,7 @@ namespace Once_A_Rogue
             this.relativeLocation = relativeLocation;
         }
 
-        public void Interact(Player player)
+        public void Interact(Player player, Camera camera)
         {
             if (!interactable)
             {
@@ -93,33 +107,45 @@ namespace Once_A_Rogue
 
             if(type == "Note")
             {
-                if (player.PosRect.Intersects(this.relativeLocation))
+                //We need REAL modulo, not remainders
+                int xCoord = this.relativeLocation.X;
+                int yCoord = this.relativeLocation.Y;
+                xCoord = ((xCoord %= camera.screenWidth) < 0) ? xCoord + camera.screenWidth : xCoord;
+                yCoord = ((yCoord %= camera.screenHeight) < 0) ? yCoord + camera.screenHeight : yCoord;
+                Rectangle adjustedLocal = new Rectangle(xCoord, yCoord, this.relativeLocation.Width, this.relativeLocation.Height);
+                if (player.PosRect.Intersects(adjustedLocal))
                 {
-                    Notification.Alert("New Journal Entry Added: Unsent Love Letter", Color.Black);
+                    Notification.Alert("New Journal Entry Added: Unsent Love Letter", Color.Black, 120, false);
                     this.interactable = false;
                 }
             }
         }
 
-        public void HandleCollisions(Player player)
+        public void HandleCollisions(Player player, Camera camera)
         {
             //Find the collision depth
-            Vector2 depth = FindIntersectionDepth(player.PosRect, this.RelativeLocation);
+            //We need REAL modulo, not remainders
+            int xCoord = this.relativeLocation.X;
+            int yCoord = this.relativeLocation.Y;
+            xCoord = ((xCoord %= camera.screenWidth) < 0) ? xCoord + camera.screenWidth : xCoord;
+            yCoord = ((yCoord %= camera.screenHeight) < 0) ? yCoord + camera.screenHeight : yCoord;
+            Rectangle adjustedLocal = new Rectangle(xCoord, yCoord, this.relativeLocation.Width, this.relativeLocation.Height);
+            Vector2 depth = FindIntersectionDepth(player.PosRect, adjustedLocal);
 
             //If there has been a collision
             if (depth != Vector2.Zero)
             {
-                //Resolve the smallest distance first, then call HanldeCollions()
+                //Resolve the smallest distance first, then call HandleCollions()
                 //again to resolve on the next axis
                 if (Math.Abs(depth.X) > Math.Abs(depth.Y))
                 {
                     player.PosY -= (int) depth.Y;
-                    HandleCollisions(player);
+                    HandleCollisions(player, camera);
                 }
                 else
                 {
                     player.PosX -= (int) depth.X;
-                    HandleCollisions(player);
+                    HandleCollisions(player, camera);
                 }
             }
         }

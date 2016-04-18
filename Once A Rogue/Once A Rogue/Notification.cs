@@ -20,6 +20,8 @@ namespace Once_A_Rogue
         private static Boolean updating = false;
         private static int ticksOnScreen;
 
+        private static Boolean flip;
+
         private static string note;
         private static Rectangle barPosition;
         private static string displayMessage;
@@ -37,9 +39,9 @@ namespace Once_A_Rogue
         }
 
 
-        public static void Alert(string message, Color newColor)
+        public static void Alert(string message, Color newColor, int stationaryTicks, Boolean invert)
         {
-            Alert alert = new Alert(message, newColor);
+            Alert alert = new Alert(message, newColor, stationaryTicks, invert);
             alerts.Enqueue(alert);   
         }
 
@@ -53,7 +55,8 @@ namespace Once_A_Rogue
                 displayMessage = "";
                 updating = true;
                 barPosition = new Rectangle(0, camera.screenHeight, camera.screenWidth, camera.screenHeight);
-                ticksOnScreen = 120;
+                ticksOnScreen = currentAlert.stationaryTicks;
+                flip = currentAlert.invert;
             }
             else if(!updating)
             {
@@ -100,10 +103,9 @@ namespace Once_A_Rogue
             {
                 return;
             }
-            spriteBatch.Draw(diagonalBar, barPosition, color);
 
-            float angle = (float) 24f;
-            float radians = (float) (-((angle / (float) 180) * Math.PI));
+            float angle = (float)24f;
+            float radians = (float)(-((angle / (float)180) * Math.PI));
 
             int messageX = camera.screenWidth / 2;
             int messageY = (camera.screenHeight / 2 + 18) + barPosition.Y;
@@ -112,7 +114,19 @@ namespace Once_A_Rogue
             Vector2 position = new Vector2(messageX, messageY);
             Vector2 origin = measuredString * 0.5f;
 
-            spriteBatch.DrawString(font, displayMessage, position, Color.White, radians, origin, 1, SpriteEffects.None, 1);
+            if (!flip)
+            {
+                spriteBatch.Draw(diagonalBar, barPosition, color);
+
+                spriteBatch.DrawString(font, displayMessage, position, Color.White, radians, origin, 1, SpriteEffects.None, 1);
+            }
+            else
+            {
+                spriteBatch.Draw(diagonalBar, barPosition, null, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
+
+                spriteBatch.DrawString(font, displayMessage, position, Color.White, -radians, origin, 1, SpriteEffects.None, 1);
+            }
+            
         }
     }
 }

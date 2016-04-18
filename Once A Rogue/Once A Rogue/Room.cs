@@ -44,6 +44,9 @@ namespace Once_A_Rogue
         public Boolean locked = false;
 
         List<Tile> doorTiles = new List<Tile>();
+        List<Tile> spawnTiles = new List<Tile>();
+
+        Boolean clear = false;
 
         public Boolean Boss
         {
@@ -305,6 +308,7 @@ namespace Once_A_Rogue
                         if(interactableLayer[row, col] == 82)
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, false);
+                            spawnTiles.Add(finalRoomAnnex[row, col]);
                         }
                         //Load the interactable if there is one
                         else if(interactableLayer[row, col] == 80)
@@ -374,7 +378,7 @@ namespace Once_A_Rogue
             {
                 if (interactable.Activatable)
                 {
-                    interactable.Interact(player);
+                    interactable.Interact(player, camera);
                 }
                 
 
@@ -384,7 +388,7 @@ namespace Once_A_Rogue
                 }
                 else
                 {
-                    interactable.HandleCollisions(player);
+                    interactable.HandleCollisions(player, camera);
                 }
 
             }
@@ -684,7 +688,16 @@ namespace Once_A_Rogue
             }
 
             isUnlocking = true;
-            Notification.Alert("Room Cleared!", Color.Green);
+            if (boss)
+            {
+                Notification.Alert("Boss cleared!", Color.Purple, 60, false);
+                Notification.Alert("Next Level Unlocked!", Color.OrangeRed, 60, true);
+            }
+            else
+            {
+                Notification.Alert("Room Cleared!", Color.Green, 60, false);
+            }
+            
         }
 
     }

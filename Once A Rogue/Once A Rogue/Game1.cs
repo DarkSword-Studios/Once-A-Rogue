@@ -138,8 +138,8 @@ namespace Once_A_Rogue
             //Allow the game to run in windowed borderless
             this.IsMouseVisible = true;
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+            graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             Window.IsBorderless = true;
             Window.Position = new Point(0, 0);
             graphics.ApplyChanges();
@@ -617,7 +617,7 @@ namespace Once_A_Rogue
 
                 if (Minimap.Visible && !Notification.Updating)
                 {
-                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
+                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, true);
                 }
                 if (Notification.Updating)
                 {
