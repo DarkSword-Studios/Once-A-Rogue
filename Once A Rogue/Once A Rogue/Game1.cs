@@ -284,8 +284,8 @@ namespace Once_A_Rogue
 
             currentSong = "mainMusic";
 
-            manaBarWidth = 300 * player.PercentMP;
-            healthBarWidth = 300 * player.PercentHP;
+            manaBarWidth = 300f * player.PercentMP;
+            healthBarWidth = 300f * player.PercentHP;
         }
 
         /// <summary>
@@ -360,7 +360,6 @@ namespace Once_A_Rogue
             
                 
                 player.UpdateFrame(gameTime);
-                player.UpdateCooldowns(gameTime);
 
                 //Set W A S D keys to four different directions
                 if (kbs.IsKeyDown(Keys.A))
@@ -414,10 +413,10 @@ namespace Once_A_Rogue
                 //}
 
                 //Updating the player position
-                player.Update(camera.screenWidth, camera.screenHeight, camera);
+                player.Update(camera.screenWidth, camera.screenHeight, camera, gameTime);
 
-                manaBarWidth = 300 * player.PercentMP;
-                healthBarWidth = 300 * player.PercentHP;
+                manaBarWidth = 300f * player.PercentMP;
+                healthBarWidth = 300f * player.PercentHP;
 
                 if (Game1.CurrProjectiles.Count > 0)
                 {
