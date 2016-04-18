@@ -82,6 +82,21 @@ namespace Once_A_Rogue
             set { totalMana = value; }
         }
 
+
+        private float percentHP;
+
+        public float PercentHP
+        {
+            get { return percentHP; }
+        }
+
+        private float percentMP;
+
+        public float PercentMP
+        {
+            get { return percentMP; }
+        }
+
         //Keeps track of the current frame of animation for the player
         int timePerFrame = 50;
         int numFrames = 6;
@@ -136,10 +151,10 @@ namespace Once_A_Rogue
             FireResist = 0;
             SnareResist = 0;
             PoisenResist = 0;
-            MaxHealth = 100;
+            TotalHealth = 100;
             TotalMana = 100;
-            CurrMana = TotalMana;
-            CurrHealth = MaxHealth;
+            CurrMana = 100;
+            CurrHealth = 100;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];
             currSkillList = warriorSkillList;
@@ -374,7 +389,20 @@ namespace Once_A_Rogue
         public void Update(int roomWidth, int roomHeight, Camera cam)
         {
             base.Update();
-            
+
+            if (CurrMana < TotalMana)
+            {
+                CurrMana += 1;
+            }
+
+            else if(CurrMana > TotalMana)
+            {
+                CurrMana = TotalMana;
+            }
+
+            percentMP = CurrMana / TotalMana;
+            percentHP = CurrHealth / TotalHealth;
+
             //If the camera is not moving, process the player input
             if(!cam.isMoving)
             {
