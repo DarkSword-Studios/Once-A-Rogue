@@ -37,17 +37,17 @@ namespace Once_A_Rogue
             int chance = rand.Next(0, 11);
             if (chance >= 7 || chance <= 9)
             {
-                if (pay.CurrHealth <= pay.MaxHealth / 4)
+                if (pay.CurrHealth <= pay.TotalHealth / 4)
                 {
                     pay.Souls = pay.Souls - 4;
-                    pay.CurrHealth = pay.CurrHealth - pay.MaxHealth / 10;
+                    pay.CurrHealth = pay.CurrHealth - pay.TotalHealth / 10;
                     ghoulSouls++;
                 }
             }
 
             if (chance == 10)
             {
-                pay.CurrHealth = pay.CurrHealth - pay.MaxHealth / 5;
+                pay.CurrHealth = pay.CurrHealth - pay.TotalHealth / 5;
             }
 
         }

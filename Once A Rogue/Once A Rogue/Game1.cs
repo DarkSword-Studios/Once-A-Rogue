@@ -48,7 +48,7 @@ namespace Once_A_Rogue
 
         //Declare a number of rooms for a level
         int numRooms;
-
+        
         //Track room structure via the grid system
         Room[,] levelAnnex;
 
@@ -115,6 +115,9 @@ namespace Once_A_Rogue
             get { return removeProj; }
             set { removeProj = value; }
         }
+
+        float manaBarWidth;
+        float healthBarWidth;
 
         public Game1()
         {
@@ -280,6 +283,9 @@ namespace Once_A_Rogue
             MediaPlayer.IsRepeating = true;
 
             currentSong = "mainMusic";
+
+            manaBarWidth = 300 * player.PercentMP;
+            healthBarWidth = 300 * player.PercentHP;
         }
 
         /// <summary>
@@ -409,6 +415,9 @@ namespace Once_A_Rogue
 
                 //Updating the player position
                 player.Update(camera.screenWidth, camera.screenHeight, camera);
+
+                manaBarWidth = 300 * player.PercentMP;
+                healthBarWidth = 300 * player.PercentHP;
 
                 if (Game1.CurrProjectiles.Count > 0)
                 {
@@ -600,8 +609,8 @@ namespace Once_A_Rogue
                 }
 
                 spriteBatch.Draw(container, new Vector2(0, 0), Color.White);
-                spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (300 * (player.CurrHealth / player.MaxHealth)), 31), Color.White);
-                spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (300 * (player.CurrMana / player.TotalMana)), 31), Color.White);
+                spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (int)(healthBarWidth), 31), Color.White);
+                spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (int)(manaBarWidth), 31), Color.White);
 
                 if (Minimap.Visible && !Notification.Updating)
                 {

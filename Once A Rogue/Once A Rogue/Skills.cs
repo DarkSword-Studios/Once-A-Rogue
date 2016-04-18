@@ -78,6 +78,15 @@ namespace Once_A_Rogue
             }
         }
 
+        private int cost;
+
+        public int Cost
+        {
+            get { return cost; }
+            set { cost = value; }
+        }
+
+
         //A method for when the skill is used
         virtual public Boolean OnActivated(Player player)
         {

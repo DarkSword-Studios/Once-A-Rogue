@@ -139,7 +139,7 @@ namespace Once_A_Rogue
         public void Retreat()
         {
             //If loop for if enemy is at 1/5th of its maximum health
-            if(CurrHealth == MaxHealth / 5)
+            if(CurrHealth == TotalHealth / 5)
             {
                 //Automatically give enemy "IsFeared" attribute
                 IsFeared = true;
@@ -148,7 +148,7 @@ namespace Once_A_Rogue
 
             //If loop for if enemy is at 1/7th of its maximum health. At this point it stops running away and goes
             // into "last stand" mode which increases it's attack but drastically lowers it's defense
-            if (CurrHealth == MaxHealth / 7)
+            if (CurrHealth == TotalHealth / 7)
             {
                 //Automatically set IsFeared to false since enemy is in "last stand" mode
                 IsFeared = false;

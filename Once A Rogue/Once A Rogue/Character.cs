@@ -67,7 +67,7 @@ namespace Once_A_Rogue
         //Int to handle maximum amount of health that the character can have
         private int maxHealth;
 
-        public int MaxHealth
+        public int TotalHealth
         {
             get { return maxHealth; }
             set

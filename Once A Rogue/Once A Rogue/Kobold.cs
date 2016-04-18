@@ -28,13 +28,13 @@ namespace Once_A_Rogue
 
         public void CandleBoost(Player pay)
         {
-            if (pay.CurrHealth == pay.MaxHealth)
+            if (pay.CurrHealth == pay.TotalHealth)
             {
                 FearLevel = FearLevel / 2;
                 ArmorLevel = ArmorLevel * 2;
                 MoveSpeed = MoveSpeed * 2;
             }
-            if (pay.CurrHealth <= pay.MaxHealth / 2)
+            if (pay.CurrHealth <= pay.TotalHealth / 2)
             {
                 FearLevel = FearLevel * 2;
                 ArmorLevel = ArmorLevel / 2;
@@ -43,7 +43,7 @@ namespace Once_A_Rogue
         }
         public void PreyOnWeakness(Player pay)
         {
-            if (pay.CurrHealth <= pay.MaxHealth / 5)
+            if (pay.CurrHealth <= pay.TotalHealth / 5)
             {
                 ArmorLevel = ArmorLevel * 2;
                 SnareResist = SnareResist * 2;
@@ -57,7 +57,7 @@ namespace Once_A_Rogue
         }
         public void Frenzied(Player pay)
         {
-            if (CurrHealth == MaxHealth / 6)
+            if (CurrHealth == TotalHealth / 6)
             {
                 IsStunned = false;
                 IsSnared = false;
