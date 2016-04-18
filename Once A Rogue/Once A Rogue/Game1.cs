@@ -135,7 +135,7 @@ namespace Once_A_Rogue
         {
             // TODO: Add your initialization logic here
 
-            //Allow the game to run in fullscreen
+            //Allow the game to run in windowed borderless
             this.IsMouseVisible = true;
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
