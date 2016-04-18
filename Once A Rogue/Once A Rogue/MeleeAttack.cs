@@ -32,7 +32,7 @@ namespace Once_A_Rogue
         }
 
         //Method for when the skill is activated
-        public override Boolean OnActivated(Player player)
+        public override void OnActivated(Player player)
         {
             //Setting the attacks damage and total cooldown based on the weapon currently equipped.
             if (player.CurrWeapon == "Sword")
@@ -63,8 +63,6 @@ namespace Once_A_Rogue
             {
                 base.OnActivated(player);
             }
-
-            return false;
         }
     }
 }

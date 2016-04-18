@@ -88,7 +88,7 @@ namespace Once_A_Rogue
 
 
         //A method for when the skill is used
-        virtual public Boolean OnActivated(Player player)
+        virtual public void OnActivated(Player player)
         {
             //Getting position of the mouse
             MouseState msState = Mouse.GetState();
@@ -101,7 +101,6 @@ namespace Once_A_Rogue
                 player.framesElapsed = 0;
                 player.timeElapsed = 0;
                 Cooldown = CooldownTotal;
-                return true;
             }
 
             else
@@ -111,7 +110,6 @@ namespace Once_A_Rogue
                 player.framesElapsed = 0;
                 player.timeElapsed = 0;
                 Cooldown = CooldownTotal;
-                return false;
             }
         }
     }

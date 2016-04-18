@@ -19,13 +19,15 @@ namespace Once_A_Rogue
             BurstRadius = 0;
         }
 
-        public override Boolean OnActivated(Player player)
+        public override void OnActivated(Player player)
         {
             if (Cooldown == 0)
             {
                 MouseState ms = Mouse.GetState();
 
-                if (base.OnActivated(player))
+                base.OnActivated(player);
+
+                if (player.PlayerStates == Player.PlayerState.AttackLeft)
                 {
                     Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
                     if (target != Vector2.Zero)
@@ -34,7 +36,6 @@ namespace Once_A_Rogue
                     }
 
                     Game1.CurrProjectiles.Add(new Projectile(target, 1, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
-                    return true;
                 }
 
                 else
@@ -46,11 +47,8 @@ namespace Once_A_Rogue
                     }
 
                     Game1.CurrProjectiles.Add(new Projectile(target, 1, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
-                    return false;
                 }
             }
-
-            return false;
         }
     }
 }

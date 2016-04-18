@@ -24,7 +24,7 @@ namespace Once_A_Rogue
 
         bool limitRange;
         Vector2 vector;
-        double range;
+        Vector2 vecDist;
         int rowY;
         int numFrames;
         int currentFrame = 0;
@@ -33,12 +33,18 @@ namespace Once_A_Rogue
         int timePerFrame = 100;
         const int FRAMEWIDTH = 40;
         const int FRAMEHEIGHT = 40;
+        double playerX;
+        double playerY;
+        int speed;
 
         //Parameterized Constructor
         public Projectile(Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
         {
-            projPos = new Vector2(x, y);
+            ProjPos = new Vector2(x, y);
             vector = vec;
+            playerX = x;
+            playerY = y;
+            speed = 5;
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
@@ -49,14 +55,17 @@ namespace Once_A_Rogue
         }
 
         //Overload Constructor
-        public Projectile(Vector2 vec, int rangeX, int rangeY, int rowY, int numFrames, int height, int width, int x, int y)
+        public Projectile(Vector2 vec, Vector2 destination, int rowY, int numFrames, int height, int width, int x, int y)
         {
-            projPos = new Vector2(x, y);
+            ProjPos = new Vector2(x, y);
             vector = vec;
+            playerX = x;
+            playerY = y;
+            speed = 5;
+            vecDist = destination;
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
-            range = Math.Sqrt((x + (rangeX * rangeX)) + (y + (rangeY * rangeY)));
             limitRange = true;
 
             //Adding the projectile to a projectile list in the game class
@@ -65,11 +74,12 @@ namespace Once_A_Rogue
 
         public void Update(GameTime gameTime)
         {
-            float projLength = projPos.Length();
-            if ((projLength < range) || !limitRange)
+            float projLength = projPos.Length() - (float)(Math.Sqrt((playerX * playerX + playerY * playerY)));
+
+            if ((projLength < vecDist.Length()) || !limitRange)
             {
-                projPos.X += vector.X;
-                projPos.Y += vector.Y;
+                projPos.X += vector.X * speed;
+                projPos.Y += vector.Y * speed;
             }
 
             else
