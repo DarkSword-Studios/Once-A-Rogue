@@ -22,14 +22,17 @@ namespace Once_A_Rogue
             BurstRadius = 0;
             RangeX = 5;
             RangeY = 5;
+            Cost = 20;
         }
 
         //Overide OnActivated method
         public override Boolean OnActivated(Player player)
         {
-            if (Cooldown == 0)
+            if (Cooldown == 0 && player.CurrMana > Cost)
             {
                 MouseState ms = Mouse.GetState();
+
+                player.CurrMana -= Cost;
 
                 if (base.OnActivated(player))
                 {
@@ -54,6 +57,8 @@ namespace Once_A_Rogue
                     Game1.CurrProjectiles.Add(new Projectile(target, RangeX * 120, RangeY * 120, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     return false;
                 }
+
+                
             }
 
             return false;
