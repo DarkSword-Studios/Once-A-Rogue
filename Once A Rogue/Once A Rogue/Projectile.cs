@@ -68,8 +68,8 @@ namespace Once_A_Rogue
             float projLength = projPos.Length();
             if ((projLength < range) || !limitRange)
             {
-                projPos.X += (vector.X + ProjPos.X) * 5;
-                projPos.Y += (vector.Y + ProjPos.Y) * 5;
+                projPos.X += vector.X;
+                projPos.Y += vector.Y;
             }
 
             else

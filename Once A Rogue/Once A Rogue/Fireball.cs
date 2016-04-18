@@ -28,7 +28,7 @@ namespace Once_A_Rogue
         //Overide OnActivated method
         public override Boolean OnActivated(Player player)
         {
-            if (Cooldown == 0 && player.CurrMana > Cost)
+            if (Cooldown == 0 && player.CurrMana >= Cost)
             {
                 MouseState ms = Mouse.GetState();
 
@@ -58,7 +58,6 @@ namespace Once_A_Rogue
                     return false;
                 }
 
-                
             }
 
             return false;

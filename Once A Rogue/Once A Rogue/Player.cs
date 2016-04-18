@@ -97,13 +97,21 @@ namespace Once_A_Rogue
             get { return percentMP; }
         }
 
+        private int manaRegen;
+
+        public int ManaRegen
+        {
+            get { return manaRegen; }
+            set { manaRegen = value; }
+        }
+
         //Keeps track of the current frame of animation for the player
         int timePerFrame = 50;
         int numFrames = 6;
         public int framesElapsed;
         public int timeElapsed;
 
-
+        int timePassed;
 
         public enum PlayerState { IdleLeft, IdleRight, WalkingLeft, WalkingRight, AttackLeft, AttackRight };
 
@@ -155,6 +163,8 @@ namespace Once_A_Rogue
             TotalMana = 100;
             CurrMana = 100;
             CurrHealth = 100;
+            ManaRegen = 5;
+            timePassed = 0;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];
             currSkillList = warriorSkillList;
@@ -233,7 +243,7 @@ namespace Once_A_Rogue
 
             }
 
-            if(currentFrame == 6 && playerState == PlayerState.AttackLeft)
+            if (currentFrame == 6 && playerState == PlayerState.AttackLeft)
             {
                 timePerFrame = 100;
                 playerState = PlayerState.IdleLeft;
@@ -270,7 +280,7 @@ namespace Once_A_Rogue
                 PosX = 80;
             }
 
-            if(kbs.IsKeyDown(Keys.Z))
+            if (kbs.IsKeyDown(Keys.Z))
             {
                 CurrWeapon = weaponArray[0];
                 currSkillList = warriorSkillList;
@@ -382,41 +392,44 @@ namespace Once_A_Rogue
             timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
             framesElapsed = (int)(timeElapsed / timePerFrame);
             currentFrame = framesElapsed % numFrames + 1;
-        
+
         }
         //End of things added by Stasha
 
-        public void Update(int roomWidth, int roomHeight, Camera cam)
+        public void Update(int roomWidth, int roomHeight, Camera cam, GameTime gameTime)
         {
             base.Update();
 
-            if (CurrMana < TotalMana)
+            timePassed += gameTime.ElapsedGameTime.Milliseconds;
+
+            if (CurrMana < TotalMana && timePassed >= 300)
             {
-                CurrMana += 1;
+                CurrMana += ManaRegen;
+                timePassed = 0;
             }
 
-            else if(CurrMana > TotalMana)
+            else if (CurrMana > TotalMana)
             {
                 CurrMana = TotalMana;
             }
 
-            percentMP = CurrMana / TotalMana;
-            percentHP = CurrHealth / TotalHealth;
+            percentMP = (float)CurrMana / (float)TotalMana;
+            percentHP = (float)CurrHealth / (float)TotalHealth;
 
             //If the camera is not moving, process the player input
-            if(!cam.isMoving)
+            if (!cam.isMoving)
             {
                 ProcessInput(roomWidth, roomHeight);
             }
 
             //If the camera is moving, player input is not processed
-            else if(cam.isMoving)
+            else if (cam.isMoving)
             {
                 //Adjusting the player motion based on the camera movement direction
-                switch(cam.direction)
+                switch (cam.direction)
                 {
                     case "right":
-                        if(cam.progress <= (1080/2))
+                        if (cam.progress <= (1080 / 2))
                         {
                             PosX -= cam.panSpeed - 8;
                         }
@@ -482,18 +495,16 @@ namespace Once_A_Rogue
                         break;
                 }
             }
-        }
 
-        public void UpdateCooldowns(GameTime gameTime)
-        {
-            foreach(Skills skill in warriorSkillList)
+            //Updating cooldowns
+            foreach (Skills skill in warriorSkillList)
             {
-                if(skill.Cooldown > 0)
+                if (skill.Cooldown > 0)
                 {
                     skill.Cooldown -= gameTime.ElapsedGameTime.Milliseconds;
                 }
 
-                if(skill.Cooldown < 0)
+                if (skill.Cooldown < 0)
                 {
                     skill.Cooldown = 0;
                 }
