@@ -26,7 +26,7 @@ namespace Once_A_Rogue
         }
 
         //Overide OnActivated method
-        public override Boolean OnActivated(Player player)
+        public override void OnActivated(Player player)
         {
             if (Cooldown == 0 && player.CurrMana >= Cost)
             {
@@ -34,16 +34,18 @@ namespace Once_A_Rogue
 
                 player.CurrMana -= Cost;
 
-                if (base.OnActivated(player))
+                base.OnActivated(player);
+
+                if (player.PlayerStates == Player.PlayerState.AttackLeft)
                 {
                     Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
+
                     if (target != Vector2.Zero)
                     {
                         target.Normalize();
                     }
 
                     Game1.CurrProjectiles.Add(new Projectile(target, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
-                    return true;
                 }
 
                 else
@@ -54,13 +56,13 @@ namespace Once_A_Rogue
                         target.Normalize();
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(target, RangeX * 120, RangeY * 120, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
-                    return false;
+                    Vector2 vectorLength = target;
+                    vectorLength.X = vectorLength.X * RangeX * 120;
+                    vectorLength.Y = vectorLength.Y * RangeY * 120;
+
+                    Game1.CurrProjectiles.Add(new Projectile(target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                 }
-
             }
-
-            return false;
         }
     }
 }
