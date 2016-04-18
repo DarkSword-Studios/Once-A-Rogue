@@ -122,7 +122,7 @@ namespace Once_A_Rogue
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";            
+            Content.RootDirectory = "Content";
         }
 
         /// <summary>
@@ -137,7 +137,11 @@ namespace Once_A_Rogue
 
             //Allow the game to run in fullscreen
             this.IsMouseVisible = true;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+            graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+            Window.IsBorderless = true;
+            Window.Position = new Point(0, 0);
             graphics.ApplyChanges();
 
             currProjectiles = new List<Projectile>();
