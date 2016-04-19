@@ -64,8 +64,8 @@ namespace Once_A_Rogue
                     Vector2 vectorLength = target;
 
                     //stretching the normal vector to the desired range
-                    vectorLength.X = vectorLength.X * RangeX * 180;
-                    vectorLength.Y = vectorLength.Y * RangeY * 180;
+                    vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
+                    vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
 
                     Game1.CurrProjectiles.Add(new Projectile(target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                 }
