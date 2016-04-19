@@ -46,19 +46,26 @@ namespace Once_A_Rogue
                     }
 
                     Game1.CurrProjectiles.Add(new Projectile(target, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
+
                 }
 
                 else
                 {
+                    //Getting vector from the player position to the mouse position
                     Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
+
+                    //Normalizing the vector
                     if (target != Vector2.Zero)
                     {
                         target.Normalize();
                     }
 
+                    //Creating a vector equal to the normal vector
                     Vector2 vectorLength = target;
-                    vectorLength.X = vectorLength.X * RangeX * 120;
-                    vectorLength.Y = vectorLength.Y * RangeY * 120;
+
+                    //stretching the normal vector to the desired range
+                    vectorLength.X = vectorLength.X * RangeX * 180;
+                    vectorLength.Y = vectorLength.Y * RangeY * 180;
 
                     Game1.CurrProjectiles.Add(new Projectile(target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                 }
