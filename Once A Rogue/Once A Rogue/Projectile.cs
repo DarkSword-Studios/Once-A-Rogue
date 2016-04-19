@@ -22,9 +22,16 @@ namespace Once_A_Rogue
             set { projPos = value; }
         }
 
+        //Checking to see whether or not to limit the range
         bool limitRange;
+        
+        //Normalized Vector
         Vector2 vector;
+
+        //Vector from player to end point
         Vector2 vecDist;
+
+        //Animation handling
         int rowY;
         int numFrames;
         int currentFrame = 0;
@@ -33,17 +40,27 @@ namespace Once_A_Rogue
         int timePerFrame = 100;
         const int FRAMEWIDTH = 40;
         const int FRAMEHEIGHT = 40;
-        double playerX;
-        double playerY;
+
+        //Starting X and Y cordinates.
+        double startX;
+        double startY;
+
+        //Projectile speed
         int speed;
 
-        //Parameterized Constructor
+        //Distance the projectile has travelled
+        float distTravelled;
+
+        //Distance the projectile needs to travel
+        float distTravel;
+
+        //Parameterized Constructor if range is not an issue
         public Projectile(Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
         {
             ProjPos = new Vector2(x, y);
             vector = vec;
-            playerX = x;
-            playerY = y;
+            startX = x;
+            startY = y;
             speed = 5;
             this.rowY = rowY;
             this.numFrames = numFrames;
@@ -54,19 +71,21 @@ namespace Once_A_Rogue
             Game1.CurrProjectiles.Add(this);
         }
 
-        //Overload Constructor
+        //Overload Constructor if range is an issue
         public Projectile(Vector2 vec, Vector2 destination, int rowY, int numFrames, int height, int width, int x, int y)
         {
             ProjPos = new Vector2(x, y);
             vector = vec;
-            playerX = x;
-            playerY = y;
+            startX = x;
+            startY = y;
             speed = 5;
             vecDist = destination;
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
             limitRange = true;
+            distTravelled = 0;
+            distTravel = vecDist.Length();
 
             //Adding the projectile to a projectile list in the game class
             Game1.CurrProjectiles.Add(this);
@@ -74,12 +93,11 @@ namespace Once_A_Rogue
 
         public void Update(GameTime gameTime)
         {
-            float projLength = projPos.Length() - (float)(Math.Sqrt((playerX * playerX + playerY * playerY)));
-
-            if ((projLength < vecDist.Length()) || !limitRange)
+            if ((distTravelled < distTravel) || !limitRange)
             {
                 projPos.X += vector.X * speed;
                 projPos.Y += vector.Y * speed;
+                distTravelled += vector.Length() * speed;
             }
 
             else
