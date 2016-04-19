@@ -317,7 +317,6 @@ namespace Once_A_Rogue
             {
                 //Extremely important call to update all active rooms
                 UpdateRooms();
-            
                 
                 player.UpdateFrame(gameTime);
 
@@ -438,6 +437,12 @@ namespace Once_A_Rogue
 
             }
             
+            //if(gameState == GameState.Playing && !this.IsActive)
+            //{
+            //    gameState = GameState.paused;
+            //    arrowState = ArrowState.pos1;
+            //}
+
             if(gameState == GameState.GameOver)
             {
 
@@ -594,7 +599,7 @@ namespace Once_A_Rogue
             }
 
             //draws the following if the game is paused
-            if(gameState == GameState.paused)
+            if(gameState == GameState.paused && this.IsActive)
             {
                 spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
                 spriteBatch.Draw(resume, new Vector2(100, 351), Color.White);
