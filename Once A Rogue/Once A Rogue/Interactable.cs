@@ -18,10 +18,19 @@ namespace Once_A_Rogue
         private Boolean passable;
         private Boolean doDraw;
         private Boolean functioning;
+        private Boolean levelTrigger;
         private string type;
 
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
+
+        public Boolean LevelTrigger
+        {
+            get
+            {
+                return levelTrigger;
+            }
+        }
 
         public Boolean Functioning
         {
@@ -118,6 +127,20 @@ namespace Once_A_Rogue
                     Notification.Alert("New Journal Entry Added: Unsent Love Letter", Color.Black, 120, false);
                     this.interactable = false;
                 }
+            }
+            else if(type == "Ladder")
+            {
+                //We need REAL modulo, not remainders
+                int xCoord = this.relativeLocation.X;
+                int yCoord = this.relativeLocation.Y;
+                xCoord = ((xCoord %= camera.screenWidth) < 0) ? xCoord + camera.screenWidth : xCoord;
+                yCoord = ((yCoord %= camera.screenHeight) < 0) ? yCoord + camera.screenHeight : yCoord;
+                Rectangle adjustedLocal = new Rectangle(xCoord, yCoord, this.relativeLocation.Width, this.relativeLocation.Height);
+                if (player.PosRect.Intersects(adjustedLocal))
+                {
+                    levelTrigger = true;
+                }
+                
             }
         }
 

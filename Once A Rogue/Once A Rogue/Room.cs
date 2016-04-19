@@ -35,6 +35,7 @@ namespace Once_A_Rogue
         private Boolean discovered;
         private Boolean aware;
         private Boolean boss;
+        private Boolean levelTrigger;
 
         //Handles Locking and Unlocking animations
         public Boolean isLocking = false;
@@ -47,6 +48,14 @@ namespace Once_A_Rogue
         List<Tile> spawnTiles = new List<Tile>();
 
         Boolean clear = false;
+
+        public Boolean LevelTrigger
+        {
+            get
+            {
+                return levelTrigger;
+            }
+        }
 
         public Boolean Boss
         {
@@ -379,9 +388,12 @@ namespace Once_A_Rogue
                 if (interactable.Activatable)
                 {
                     interactable.Interact(player, camera);
-                }
-                
 
+                    if (interactable.LevelTrigger)
+                    {
+                        this.levelTrigger = true;
+                    }
+                }
                 if (interactable.Passable)
                 {
                     continue;
@@ -674,13 +686,13 @@ namespace Once_A_Rogue
 
         }
 
-        public void RequestUnlock()
+        public void RequestUnlock(Player player, Camera camera)
         {
             //Put room clearing code here... e.g. have all of the enemies been killed yet? 
-            Unlock();
+            Unlock(player, camera);
         }
 
-        private void Unlock()
+        private void Unlock(Player player, Camera camera)
         {
             if(isLocking || !locked || isUnlocking)
             {
@@ -692,6 +704,19 @@ namespace Once_A_Rogue
             {
                 Notification.Alert("Boss cleared!", Color.Purple, 60, false);
                 Notification.Alert("Next Level Unlocked!", Color.OrangeRed, 60, true);
+
+                if(player.PosX <= camera.screenWidth / 2)
+                {
+                    Rectangle ladderImage = new Rectangle(3 * TILESIZE, 5 * TILESIZE, TILESIZE, TILESIZE);
+                    finalRoomAnnex[2, 13].Interactable = new Interactable("Ladder", finalRoomAnnex[2, 13].RelativeLocation, ladderImage, true, true, true);
+                    interactables.Add(finalRoomAnnex[2, 13].Interactable);
+                }
+                else
+                {
+                    Rectangle ladderImage = new Rectangle(3 * TILESIZE, 5 * TILESIZE, TILESIZE, TILESIZE);
+                    finalRoomAnnex[2, 2].Interactable = new Interactable("Ladder", finalRoomAnnex[2, 2].RelativeLocation, ladderImage, true, true, true);
+                    interactables.Add(finalRoomAnnex[2, 2].Interactable);
+                }
             }
             else
             {

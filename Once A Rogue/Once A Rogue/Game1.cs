@@ -70,6 +70,9 @@ namespace Once_A_Rogue
         int oldCol = -1;
         string playerMove = "none";
 
+        //Keep track of whether or not we need to generate a new level (cannot be done immediately upon assignment)
+        private Boolean levelTrigger;
+
         //Declare Room Textures
         Texture2D tilemap, playerTextures, projectileTextures;
 
@@ -151,56 +154,8 @@ namespace Once_A_Rogue
             arrowState = ArrowState.menu1;
             playWepState = PlayWepState.Sword;
 
-            //Run Level Builder! Generate the first level
-            gridSystem = new string[COLUMNS, ROWS];
-
-            //Level annex is like the grid system except that it keeps track of the actual initialized rooms
-            levelAnnex = new Room[COLUMNS, ROWS];
-
-            builderAlpha = new LevelBuilder();
-
-            numRooms = 999;
-
-            //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
-            camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
-
-            //Rig environment port
-            Atmosphere.Camera = camera;
-
-            //Rig Notification port
-            Notification.camera = camera;
-
-            //Fill the grid with room codes
-            gridSystem = builderAlpha.BuildLevel(gridSystem, numRooms);
-
-            int rowIndex = 0;
-            int columnIndex = 0;
-
-            possibleBossRooms = new List<Room>();
-
-            //For each space in the grid
-            while (rowIndex < ROWS)
-            {
-                while (columnIndex < COLUMNS)
-                {
-                    //Attempt to build the room with the specified room code and put it into the level annex
-                    levelAnnex = builderAlpha.BuildRoom(gridSystem, levelAnnex, possibleBossRooms, camera, rowIndex, columnIndex);
-                    columnIndex++;
-                }
-                //Reset column index after running through each column
-                columnIndex = 0;
-                rowIndex++;
-            }
-
-            //Pick a boss room
-            Random random = new Random();
-            possibleBossRooms[random.Next(0, possibleBossRooms.Count)].Boss = true;
-
-            //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
-            Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
-
-            //Initializing the player
-            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
+            //Starting level please!
+            NewLevelGen();
 
             //Initializing the Cursor
             cur = new Cursor();          
@@ -332,6 +287,7 @@ namespace Once_A_Rogue
                     if (SingleKeyPress(Keys.Enter))
                     {
                         gameState = GameState.Playing;
+                        NewLevelGen();
                     }
                 }
                 if (arrowState == ArrowState.menu1)
@@ -455,6 +411,11 @@ namespace Once_A_Rogue
                     Minimap.Visible = !Minimap.Visible;
                 }
 
+                if (SingleKeyPress(Keys.R))
+                {
+                    levelTrigger = true;
+                }
+
                 //---- FOR DEBUGGING USE ONLY (Remove) ----
                 if (SingleKeyPress(Keys.L))
                 {
@@ -468,6 +429,12 @@ namespace Once_A_Rogue
                 //---- END OF DEBUG CODE!!!! ----
 
                 Notification.UpdateAlert();
+
+                if (levelTrigger)
+                {
+                    NewLevelGen();
+                    levelTrigger = false;
+                }
 
             }
             
@@ -725,7 +692,7 @@ namespace Once_A_Rogue
                                 }
                                 else if (unlockRoom)
                                 {
-                                    levelAnnex[columnIndex, rowIndex].RequestUnlock();
+                                    levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
                                     unlockRoom = false;
                                 }
 
@@ -740,6 +707,11 @@ namespace Once_A_Rogue
                                 {
                                     MediaPlayer.Play(mainMusic);
                                     currentSong = "mainMusic";
+                                }
+
+                                if(levelAnnex[columnIndex, rowIndex].LevelTrigger)
+                                {
+                                    levelTrigger = true;
                                 }
 
                                 //Update the cursor, which will in turn update tile detection
@@ -834,6 +806,59 @@ namespace Once_A_Rogue
                 columnIndex = 0;
                 rowIndex++;
             }
+        }
+        private void NewLevelGen()
+        {
+            //Run Level Builder! Generate the first level
+            gridSystem = new string[COLUMNS, ROWS];
+
+            //Level annex is like the grid system except that it keeps track of the actual initialized rooms
+            levelAnnex = new Room[COLUMNS, ROWS];
+
+            builderAlpha = new LevelBuilder();
+
+            numRooms = 35;
+
+            //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
+            camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
+
+            //Rig environment port
+            Atmosphere.Camera = camera;
+
+            //Rig Notification port
+            Notification.camera = camera;
+
+            //Fill the grid with room codes
+            gridSystem = builderAlpha.BuildLevel(gridSystem, numRooms);
+
+            int rowIndex = 0;
+            int columnIndex = 0;
+
+            possibleBossRooms = new List<Room>();
+
+            //For each space in the grid
+            while (rowIndex < ROWS)
+            {
+                while (columnIndex < COLUMNS)
+                {
+                    //Attempt to build the room with the specified room code and put it into the level annex
+                    levelAnnex = builderAlpha.BuildRoom(gridSystem, levelAnnex, possibleBossRooms, camera, rowIndex, columnIndex);
+                    columnIndex++;
+                }
+                //Reset column index after running through each column
+                columnIndex = 0;
+                rowIndex++;
+            }
+
+            //Pick a boss room
+            Random random = new Random();
+            possibleBossRooms[random.Next(0, possibleBossRooms.Count)].Boss = true;
+
+            //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
+            Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
+
+            //Initializing the player
+            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
         }
     }
 }
