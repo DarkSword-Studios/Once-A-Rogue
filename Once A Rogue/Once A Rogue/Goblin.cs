@@ -17,6 +17,8 @@ namespace Once_A_Rogue
             ArmorLevel = 2 * Level;
             FearLevelTotal = 2 * Level;
             FearLevel = 0;
+            MoveSpeedTotal = 5;
+            MoveSpeed = MoveSpeedTotal;
         }
 
         public override void Draw(SpriteBatch spritebatch)

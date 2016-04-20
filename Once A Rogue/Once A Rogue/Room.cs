@@ -19,7 +19,7 @@ namespace Once_A_Rogue
         int[,] unformattedRoomAnnex = new int[9,16];
 
         //This array stores all of the tiles which have been converted from codes
-        Tile[,] finalRoomAnnex = new Tile[9,16];
+        public Tile[,] finalRoomAnnex = new Tile[9,16];
 
         //The tilesize we are working with is 120 pixels
         const int TILESIZE = 120;
@@ -46,7 +46,8 @@ namespace Once_A_Rogue
 
         List<Tile> doorTiles = new List<Tile>();
         public List<Tile> spawnTiles = new List<Tile>();
-        List<Enemy> enemyList = new List<Enemy>();
+        public List<Tile> checkPoints = new List<Tile>();
+        public List<Enemy> enemyList = new List<Enemy>();
 
         Boolean clear = false;
 
@@ -325,6 +326,15 @@ namespace Once_A_Rogue
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("Box", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, false, true);
                         }
+                        else if(interactableLayer[row, col] == 84)
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("CheckPoint", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+                            checkPoints.Add(finalRoomAnnex[row, col]);
+                            finalRoomAnnex[row, col].localX = col;
+                            finalRoomAnnex[row, col].localY = row;
+
+
+                        }
                         else
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, true);
@@ -423,10 +433,6 @@ namespace Once_A_Rogue
                 }
 
 
-            }
-            foreach(Enemy enemy in enemyList)
-            {
-                enemy.UpdateFrame(gameTime);
             }
 
             if (isLocking)

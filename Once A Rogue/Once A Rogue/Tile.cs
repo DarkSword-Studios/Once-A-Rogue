@@ -24,6 +24,9 @@ namespace Once_A_Rogue
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
 
+        public int localX;
+        public int localY;
+
         private Tile door;
         private int doorLocal;
 

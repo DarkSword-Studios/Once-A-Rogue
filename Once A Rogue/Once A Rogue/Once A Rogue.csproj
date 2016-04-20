@@ -57,6 +57,8 @@
     <Compile Include="MeleeAttack.cs" />
     <Compile Include="Minimap.cs" />
     <Compile Include="Notification.cs" />
+    <Compile Include="PathFinder.cs" />
+    <Compile Include="PathFinderNode.cs" />
     <Compile Include="PiercingShot.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

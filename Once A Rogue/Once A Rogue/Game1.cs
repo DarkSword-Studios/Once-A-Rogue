@@ -698,6 +698,9 @@ namespace Once_A_Rogue
                             //Cannot run check if the frame is shifting
                             if (!shifting)
                             {
+                                
+                                
+
                                 //Debugger requested a locked room!
                                 if (lockRoom)
                                 {
@@ -776,6 +779,33 @@ namespace Once_A_Rogue
                                         oldRow = rowIndex;
                                         oldCol = columnIndex;
                                         break;
+                                }
+
+                                foreach (Enemy enemy in levelAnnex[columnIndex, rowIndex].enemyList)
+                                {
+                                    enemy.UpdateFrame(gameTime);
+                                    PathFinderNode node = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                    Vector2 travel = new Vector2(node.x, node.y);
+                                    if(travel != Vector2.Zero)
+                                    {
+                                        travel.Normalize();
+                                    }
+
+                                    int travelX = (int)(travel.X * enemy.MoveSpeed);
+                                    int travelY = (int)(travel.Y * enemy.MoveSpeed);
+
+                                    enemy.PosX += travelX;
+                                    enemy.PosY += travelY;
+
+                                    //foreach(Enemy enemyMoving in levelAnnex[columnIndex, rowIndex].enemyList)
+                                    //{
+                                    //    if(enemyMoving != enemy && enemy.PosRect.Intersects(enemyMoving.PosRect))
+                                    //    {
+                                    //        travelX = 0;
+                                    //        travelY = 0;
+                                    //    }
+                                    //}
+
                                 }
                             }
                         }
