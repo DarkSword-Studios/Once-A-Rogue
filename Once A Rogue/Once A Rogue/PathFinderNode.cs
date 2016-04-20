@@ -22,8 +22,8 @@ namespace Once_A_Rogue
             this.heuristic = heuristic;
             this.x = x;
             this.y = y;
-            movementCost = (int)(new Vector2(this.x - parent.x, this.y - parent.y).Length() * 10);
-            weight = heuristic + movementCost;
+            //movementCost = (int)(new Vector2(this.x - parent.x, this.y - parent.y).Length() * 10);
+            //weight = heuristic + movementCost;
         }
     }
 }
