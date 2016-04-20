@@ -25,6 +25,9 @@ namespace Once_A_Rogue
         public int timeElapsed;
         public int currentFrame;
 
+        public int relativeCamX;
+        public int relativeCamY;
+
         enum enemyState { IdleRight, IdleLeft, WalkingRight, WalkingLeft, AttackRight, AttackLeft  };
         enemyState eState;
 
@@ -186,8 +189,10 @@ namespace Once_A_Rogue
         }
 
         //Do we even need this constructor?
-        public Enemy(Texture2D tex, Player play,int x, int y, int width, int height) : base()//Add code here
+        public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
         {
+            relativeCamX = camera.xMod;
+            relativeCamY = camera.yMod;
             Texture = tex;
             PosRect = new Rectangle(x, y, width, height);
             eState = enemyState.IdleLeft;

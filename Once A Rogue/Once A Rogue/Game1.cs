@@ -689,9 +689,9 @@ namespace Once_A_Rogue
                             {
                                 currProjectiles.Clear();
                             }
-                            while(levelAnnex[columnIndex, rowIndex].spawnTiles.Count != 0)
+                            while (levelAnnex[columnIndex, rowIndex].spawnTiles.Count != 0)
                             {
-                                levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy);
+                                levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy, camera);
                             }
 
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary

@@ -377,8 +377,17 @@ namespace Once_A_Rogue
             foreach(Enemy enemy in enemyList)
             {
                 
-                enemy.PosRect = new Rectangle(enemy.PosX + xCoord, enemy.PosY + yCoord, 140, 140);
-                
+                if(camera.xMod != enemy.relativeCamX)
+                {
+                    enemy.PosX += camera.xMod - enemy.relativeCamX;
+                    enemy.relativeCamX = camera.xMod;
+                }
+                if (camera.yMod != enemy.relativeCamY)
+                {
+                    enemy.PosY += camera.yMod - enemy.relativeCamY;
+                    enemy.relativeCamY = camera.yMod;
+                }
+
                 enemy.Draw(spriteBatch, 140, 140);
 
             }
@@ -419,6 +428,7 @@ namespace Once_A_Rogue
             {
                 enemy.UpdateFrame(gameTime);
             }
+
             if (isLocking)
             {
                 foreach (Tile door in doorTiles)
@@ -738,13 +748,13 @@ namespace Once_A_Rogue
             }
             
         }
-        public void SpawnGoblin(Player play, Texture2D tex)
+        public void SpawnGoblin(Player play, Texture2D tex, Camera camera)
         {
 
             Random randy = new Random();
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
-            Goblin goblin = new Goblin(play, spawn.RelativeLocation.X / 2, spawn.RelativeLocation.Y / 2, 140, 140, tex);
+            Goblin goblin = new Goblin(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
             enemyList.Add(goblin);
             
          
