@@ -10,7 +10,7 @@ namespace Once_A_Rogue
 {
     class Goblin : Enemy
     {
-        public Goblin(Player play) : base(play)
+        public Goblin(Player play, int x, int y, int width, int height, Texture2D tex) : base(tex,play, x, y, width, height)
         {
             Random randy = new Random();   
             Level = randy.Next(-2, 2) + play.Level;

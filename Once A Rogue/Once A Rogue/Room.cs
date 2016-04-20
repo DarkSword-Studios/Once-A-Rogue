@@ -45,7 +45,8 @@ namespace Once_A_Rogue
         public Boolean locked = false;
 
         List<Tile> doorTiles = new List<Tile>();
-        List<Tile> spawnTiles = new List<Tile>();
+        public List<Tile> spawnTiles = new List<Tile>();
+        List<Enemy> enemyList = new List<Enemy>();
 
         Boolean clear = false;
 
@@ -339,7 +340,7 @@ namespace Once_A_Rogue
         }
 
         //This method draws a room, given the sprite batch, the tilemap, and an x / y coordinate
-        public void DrawRoom(SpriteBatch spriteBatch, Texture2D tilemap, int xCoord, int yCoord)
+        public void DrawRoom(SpriteBatch spriteBatch, Texture2D tilemap, int xCoord, int yCoord, Camera camera)
         {
             int row = 0;
             int col = 0;
@@ -373,15 +374,24 @@ namespace Once_A_Rogue
                 col = 0;
                 row++;
             }
+            foreach(Enemy enemy in enemyList)
+            {
+                
+                enemy.PosRect = new Rectangle(enemy.PosX + xCoord, enemy.PosY + yCoord, 140, 140);
+                
+                enemy.Draw(spriteBatch, 140, 140);
+
+            }
 
             if (boss)
             {
                 Atmosphere.BossFilter(spriteBatch, xCoord, yCoord);
             }
+
             
         }
         //This method handles whether or not the camera should be moved to an adjacent room
-        public String UpdateEvents(Player player, Camera camera, String playerMove)
+        public String UpdateEvents(Player player, Camera camera, String playerMove, GameTime gameTime)
         {
             foreach (Interactable interactable in interactables)
             {
@@ -403,8 +413,12 @@ namespace Once_A_Rogue
                     interactable.HandleCollisions(player, camera);
                 }
 
-            }
 
+            }
+            foreach(Enemy enemy in enemyList)
+            {
+                enemy.UpdateFrame(gameTime);
+            }
             if (isLocking)
             {
                 foreach (Tile door in doorTiles)
@@ -724,6 +738,16 @@ namespace Once_A_Rogue
             }
             
         }
+        public void SpawnGoblin(Player play, Texture2D tex)
+        {
 
+            Random randy = new Random();
+            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
+            spawnTiles.Remove(spawn);
+            Goblin goblin = new Goblin(play, spawn.RelativeLocation.X / 2, spawn.RelativeLocation.Y / 2, 140, 140, tex);
+            enemyList.Add(goblin);
+            
+         
+        }
     }
 }

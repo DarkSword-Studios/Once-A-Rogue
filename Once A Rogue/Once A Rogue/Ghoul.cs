@@ -20,7 +20,7 @@ namespace Once_A_Rogue
             get { return ghoulSouls; }
             set { ghoulSouls = value; }
         }
-        public Ghoul(Player play, int ghSouls) : base(play)
+        public Ghoul(Player play, int ghSouls, int x, int y, int width, int height, Texture2D tex) : base(tex,play, x, y, width, height)
         {
             MoveSpeedTotal = 6;
             MoveSpeed = 6;

@@ -17,6 +17,16 @@ namespace Once_A_Rogue
         //Value for fear level of enemy
         private int fearLevel;
         private int fearLevelTotal;
+        
+
+        int timePerFrame = 100;
+        int numFrames = 6;
+        public int framesElapsed;
+        public int timeElapsed;
+        public int currentFrame;
+
+        enum enemyState { IdleRight, IdleLeft, WalkingRight, WalkingLeft, AttackRight, AttackLeft  };
+        enemyState eState;
 
         //Property for Fear Level
         public int FearLevel
@@ -176,19 +186,69 @@ namespace Once_A_Rogue
         }
 
         //Do we even need this constructor?
-        public Enemy(Player play) : base()//Add code here
+        public Enemy(Texture2D tex, Player play,int x, int y, int width, int height) : base()//Add code here
         {
+            Texture = tex;
+            PosRect = new Rectangle(x, y, width, height);
+            eState = enemyState.IdleLeft;
             Level = play.Level;
             fearLevel = 0;
             armorLevel = 5;
         }
 
-        public void Draw(SpriteBatch sprite, Texture2D tex, int frameWidth, int frameHeight)
+        public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
         {
-           
+            Rectangle frame;
+
+            switch (eState)
+            {
+                case enemyState.IdleRight:
+
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    break;
+
+                case enemyState.IdleLeft:
+
+                    frame = new Rectangle(currentFrame * 140,  280, frameWidth, frameHeight);
+                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
+
+                case enemyState.WalkingRight:
+
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    break;
+
+                case enemyState.WalkingLeft:
+
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
+
+                case enemyState.AttackLeft:
+
+                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
+                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
+
+                case enemyState.AttackRight:
+
+                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
+                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    break;
+            }
+            
+
+        }
+        public void UpdateFrame(GameTime gameTime)
+        {
+            timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
+            framesElapsed = (int)(timeElapsed / timePerFrame);
+            currentFrame = framesElapsed % numFrames + 1;
         }
 
 
 
+        }
     }
-}

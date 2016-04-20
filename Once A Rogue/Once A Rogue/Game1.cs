@@ -83,6 +83,9 @@ namespace Once_A_Rogue
         //Declare Notification Tool Textures
         Texture2D diagonalBar;
 
+        //Enemy textures
+        Texture2D goblinEnemy;
+
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
@@ -227,7 +230,9 @@ namespace Once_A_Rogue
             mapTextures.Add("LEFTUPDOWN", leftupdown = Content.Load<Texture2D>("LEFTUPDOWNmap.png"));
             mapTextures.Add("LEFTRIGHTDOWN", leftrightdown = Content.Load<Texture2D>("LEFTRIGHTDOWNmap.png"));
             mapTextures.Add("UPRIGHTDOWN", uprightdown = Content.Load<Texture2D>("UPRIGHTDOWNmap.png"));
-            
+
+            //Enemy textures
+            goblinEnemy = Content.Load<Texture2D>("GoblinSpriteSheet.png");
             //Rig environment filter
             whiteSlate = Content.Load<Texture2D>("whiteSlate.png");
             mapTextures.Add("whiteSlate", whiteSlate);
@@ -316,7 +321,7 @@ namespace Once_A_Rogue
             if(gameState == GameState.Playing && this.IsActive)
             {
                 //Extremely important call to update all active rooms
-                UpdateRooms();
+                UpdateRooms(gameTime);
                 
                 player.UpdateFrame(gameTime);
 
@@ -651,7 +656,7 @@ namespace Once_A_Rogue
             }
         }
 
-        public void UpdateRooms()
+        public void UpdateRooms(GameTime gameTime)
         {
             //Start at the beginning of the grid
             int rowIndex = 0;
@@ -683,6 +688,10 @@ namespace Once_A_Rogue
                             if (shifting)
                             {
                                 currProjectiles.Clear();
+                            }
+                            while(levelAnnex[columnIndex, rowIndex].spawnTiles.Count != 0)
+                            {
+                                levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy);
                             }
 
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary
@@ -723,7 +732,7 @@ namespace Once_A_Rogue
                                 cur.Update(levelAnnex[columnIndex, rowIndex], player);
 
                                 //Check to see if the player is trying to move to another room
-                                switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove))
+                                switch (levelAnnex[columnIndex, rowIndex].UpdateEvents(player, camera, playerMove, gameTime))
                                 {
                                     //If the player has indicated that they want to switch to an adjacent room
                                     case ("right"):
@@ -802,7 +811,7 @@ namespace Once_A_Rogue
                         yCoord += ((rowIndex - 4) * 1080);
 
                         //Call the room's draw method which will map out each individual tile
-                        levelAnnex[columnIndex, rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord);
+                        levelAnnex[columnIndex, rowIndex].DrawRoom(spriteBatch, tilemap, xCoord, yCoord, camera);
                     }
                     columnIndex++;
 
