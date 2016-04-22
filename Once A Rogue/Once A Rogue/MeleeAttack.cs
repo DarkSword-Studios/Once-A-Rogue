@@ -25,34 +25,54 @@ namespace Once_A_Rogue
         //Method for when the skill is activated
         public override void OnActivated(Player player)
         {
-            //Setting the attacks damage and total cooldown based on the weapon currently equipped.
-            if (player.CurrWeapon == "Sword")
+            base.OnActivated(player);
+        }
+
+        public void OnActivated()
+        {
+            if (Owner is Player)
             {
-                CooldownTotal = 1000;
-                Damage = 10;
+                Player currentP = (Player)Owner;
+
+                //Setting the attacks damage and total cooldown based on the weapon currently equipped.
+                if (currentP.CurrWeapon == "Sword")
+                {
+                    CooldownTotal = 1000;
+                    Damage = 10;
+                }
+
+                if (currentP.CurrWeapon == "Daggers")
+                {
+                    CooldownTotal = 500;
+                    Damage = 5;
+                }
+
+                if (currentP.CurrWeapon == "Bow")
+                {
+                    CooldownTotal = 1000;
+                    Damage = 7;
+                }
+
+                if (currentP.CurrWeapon == "Staff")
+                {
+                    CooldownTotal = 1500;
+                    Damage = 5;
+                }
+
+                if (Cooldown == 0)
+                {
+                    
+                }
             }
 
-            if (player.CurrWeapon == "Daggers")
+            else
             {
-                CooldownTotal = 500;
-                Damage = 5;
-            }
+                Enemy currentE = (Enemy)Owner;
 
-            if (player.CurrWeapon == "Bow")
-            {
-                CooldownTotal = 1000;
-                Damage = 7;
-            }
-
-            if (player.CurrWeapon == "Staff")
-            {
-                CooldownTotal = 1500;
-                Damage = 5;
-            }
-
-            if (Cooldown == 0)
-            {
-                base.OnActivated(player);
+                if (Cooldown == 0)
+                {
+                    
+                }
             }
         }
     }

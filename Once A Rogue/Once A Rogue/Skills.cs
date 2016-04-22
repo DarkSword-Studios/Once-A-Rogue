@@ -96,6 +96,7 @@ namespace Once_A_Rogue
             set { owner = value; }
         }
 
+
         public int Damage
         {
             get { return damage; }

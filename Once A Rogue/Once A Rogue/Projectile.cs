@@ -159,7 +159,22 @@ namespace Once_A_Rogue
         {
             Game1.RemoveProj.Add(this);
 
-            
+            target.CurrHealth -= Damage;
+
+            switch(tag)
+            {
+                case "fire":
+                    target.FireDur = 4;
+                    target.FireDmg = 2;
+                    break;
+                case "poisen":
+                    target.PoisenDur = 4;
+                    target.PoisenDmg = 2;
+                    break;
+                case "stun":
+                    target.StunDur = 4;
+                    break;
+            }
         }
     }
 }
