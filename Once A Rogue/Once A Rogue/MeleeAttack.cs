@@ -13,16 +13,7 @@ namespace Once_A_Rogue
     //3/15/2016
     //This class represents a melee attack by the player
     {
-        //Attributes
-        private int damage;
-
-        public int Damage
-        {
-            get { return damage; }
-            set { damage = value; }
-        }
-
-        public MeleeAttack(Player player)
+        public MeleeAttack(Character own): base(own)
         {
             //Setting default values
             Cooldown = 0;
@@ -38,25 +29,25 @@ namespace Once_A_Rogue
             if (player.CurrWeapon == "Sword")
             {
                 CooldownTotal = 1000;
-                damage = 10;
+                Damage = 10;
             }
 
             if (player.CurrWeapon == "Daggers")
             {
                 CooldownTotal = 500;
-                damage = 5;
+                Damage = 5;
             }
 
             if (player.CurrWeapon == "Bow")
             {
                 CooldownTotal = 1000;
-                damage = 7;
+                Damage = 7;
             }
 
             if (player.CurrWeapon == "Staff")
             {
                 CooldownTotal = 1500;
-                damage = 5;
+                Damage = 5;
             }
 
             if (Cooldown == 0)

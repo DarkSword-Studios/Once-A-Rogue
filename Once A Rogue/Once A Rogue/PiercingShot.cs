@@ -10,7 +10,7 @@ namespace Once_A_Rogue
 {
     class PiercingShot:Skills
     {
-        public PiercingShot()
+        public PiercingShot(int dam, Character own):base(dam,own)
         {
             CooldownTotal = 3000;
             Cooldown = 0;
@@ -35,7 +35,7 @@ namespace Once_A_Rogue
                         target.Normalize();
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(target, 1, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, target, 1, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
                 }
 
                 else
@@ -46,7 +46,7 @@ namespace Once_A_Rogue
                         target.Normalize();
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(target, 1, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, target, 1, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                 }
             }
         }

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
 {
+
     class Enemy : Character
     {   //Julian Januszka
         //3/15/16
