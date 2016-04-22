@@ -792,7 +792,7 @@ namespace Once_A_Rogue
             spawnTiles.Remove(spawn);
             Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
             enemyList.Add(kobold);
-
+            
 
         }
     }
