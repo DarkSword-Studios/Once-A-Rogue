@@ -20,9 +20,23 @@ namespace Once_A_Rogue
         private Boolean functioning;
         private Boolean levelTrigger;
         private string type;
+        private string subType;
 
         private Rectangle relativeImageLocal;
         private Rectangle relativeLocation;
+
+        public string SubType
+        {
+            get
+            {
+                return subType;
+            }
+
+            set
+            {
+                subType = value;
+            }
+        }
 
         public Boolean LevelTrigger
         {
@@ -208,6 +222,76 @@ namespace Once_A_Rogue
             return depth;
         }
 
+        public void AssignSubType(int tileLocal)
+        {
+            switch (tileLocal)
+            {
+                case 82:
+
+                    subType = "All";
+                    break;
+
+                case 85:
+
+                    subType = "up";
+                    break;
+
+                case 86:
+
+                    subType = "left";
+                    break;
+
+                case 87:
+
+                    subType = "right";
+                    break;
+
+                case 88:
+
+                    subType = "down";
+                    break;
+
+                case 96:
+
+                    subType = "up";
+                    break;
+
+                case 97:
+
+                    subType = "left";
+                    break;
+
+                case 98:
+
+                    subType = "right";
+                    break;
+
+                case 99:
+
+                    subType = "down";
+                    break;
+
+                case 100:
+
+                    subType = "upleft";
+                    break;
+
+                case 101:
+
+                    subType = "upright";
+                    break;
+
+                case 102:
+
+                    subType = "downleft";
+                    break;
+
+                case 103:
+
+                    subType = "downright";
+                    break;
+            }
+        }
 
 
     }

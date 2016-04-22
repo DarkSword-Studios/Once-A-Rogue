@@ -316,17 +316,26 @@ namespace Once_A_Rogue
                         //Locate the specified tile texture, and give it a new location within the room
                         Rectangle imageLocal = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
 
-                        if(interactableLayer[row, col] == 82)
+                        int tileTag = interactableLayer[row, col];
+
+                        if (tileTag == 82 || (tileTag >= 85 && tileTag < 89))
                         {
-                            finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, false);
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+                            finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
+                            spawnTiles.Add(finalRoomAnnex[row, col]);
+                        }
+                        if(tileTag >= 96 && tileTag < 104)
+                        {
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Post", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+                            finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
                             spawnTiles.Add(finalRoomAnnex[row, col]);
                         }
                         //Load the interactable if there is one
-                        else if(interactableLayer[row, col] == 80)
+                        else if(tileTag == 80)
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("Box", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, false, true);
                         }
-                        else if(interactableLayer[row, col] == 84)
+                        else if(tileTag == 84)
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("CheckPoint", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
                             checkPoints.Add(finalRoomAnnex[row, col]);
