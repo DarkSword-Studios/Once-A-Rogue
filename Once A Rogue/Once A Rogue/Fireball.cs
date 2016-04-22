@@ -14,9 +14,13 @@ namespace Once_A_Rogue
     //3/20/2016
     //This class represents a fireball skill that the Player will be a able to use
     {
+        Character owner;
+
         //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts castable
-        public Fireball()
+        public Fireball(int dam, Character own)
         {
+            owner = own;
+            Damage = dam;
             Cooldown = 0;
             CooldownTotal = 1000;
             BurstRadius = 0;

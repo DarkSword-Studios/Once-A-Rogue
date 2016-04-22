@@ -54,9 +54,41 @@ namespace Once_A_Rogue
         //Distance the projectile needs to travel
         float distTravel;
 
-        //Parameterized Constructor if range is not an issue
-        public Projectile(Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
+
+        //Damage dealt by the projectile
+        private int damage;
+
+        public int Damage
         {
+            get { return damage; }
+            set { damage = value; }
+        }
+
+        private string tag;
+
+        public string Tag
+        {
+            get { return tag; }
+            set { tag = value; }
+        }
+
+
+        //Owner of the projectile
+        private Character owner;
+
+        public Character Owner
+        {
+            get { return owner; }
+            set { owner = value; }
+        }
+
+
+
+        //Parameterized Constructor if range is not an issue
+        public Projectile(int dam, Character own, Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
+        {
+            Damage = dam;
+            owner = own;
             ProjPos = new Vector2(x, y);
             vector = vec;
             startX = x;
@@ -72,8 +104,10 @@ namespace Once_A_Rogue
         }
 
         //Overload Constructor if range is an issue
-        public Projectile(Vector2 vec, Vector2 destination, int rowY, int numFrames, int height, int width, int x, int y)
+        public Projectile(int dam, Character own, Vector2 vec, Vector2 destination, int rowY, int numFrames, int height, int width, int x, int y)
         {
+            Damage = dam;
+            owner = own;
             ProjPos = new Vector2(x, y);
             vector = vec;
             startX = x;
@@ -116,6 +150,11 @@ namespace Once_A_Rogue
 
             Rectangle frame = new Rectangle(currentFrame * FRAMEWIDTH, FRAMEHEIGHT * rowY, FRAMEWIDTH, FRAMEHEIGHT);
             spriteBatch.Draw(texture, projPos, frame, Color.White);
+        }
+
+        public void OnCollision(Character target)
+        {
+            Game1.RemoveProj.Add(this);
         }
     }
 }

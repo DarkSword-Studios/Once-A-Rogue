@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Once_A_Rogue
 {
-    class Character:GameObject
+    public class Character:GameObject
     //Ian Moon
     //03/9/2016
     //This is the base class for all interactable characters in the game

@@ -53,7 +53,7 @@ namespace Once_A_Rogue
         Room[,] levelAnnex;
 
         //Track active rooms
-        List<Room> activeRooms;
+        Room activeRoom;
 
         //Track potential boss rooms
         List<Room> possibleBossRooms;
@@ -394,13 +394,27 @@ namespace Once_A_Rogue
 
                     foreach (Projectile project in Game1.CurrProjectiles)
                     {
-                        if((project.ProjPos.X >= 120 && project.ProjPos.X <= camera.screenWidth - 120) && (project.ProjPos.Y > 120 && project.ProjPos.Y < camera.screenHeight - 120))
+                        if ((project.ProjPos.X >= 120 && project.ProjPos.X <= camera.screenWidth - 120) && (project.ProjPos.Y > 120 && project.ProjPos.Y < camera.screenHeight - 120))
                         {
                             project.Update(gameTime);
                         }
+
                         else
                         {
                             removeProj.Add(project);
+                        }
+
+                        if (project.PosRect.Intersects(player.PosRect) && project.Owner != player)
+                        {
+                            project.OnCollision(player);
+                        }
+
+                        foreach (Enemy enemy in activeRoom.enemyList)
+                        {
+                            if (project.PosRect.Intersects(enemy.PosRect) && project.Owner != enemy)
+                            {
+                                project.OnCollision(enemy);
+                            }
                         }
                     }
 
@@ -690,6 +704,7 @@ namespace Once_A_Rogue
                         //If the current room is active it should be updated
                         if (levelAnnex[columnIndex, rowIndex].Active)
                         {
+                            activeRoom = levelAnnex[columnIndex, rowIndex];
 
                             if (shifting)
                             {

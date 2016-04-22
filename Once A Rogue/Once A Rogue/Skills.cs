@@ -86,6 +86,14 @@ namespace Once_A_Rogue
             set { cost = value; }
         }
 
+        private int damage;
+
+        public int Damage
+        {
+            get { return damage; }
+            set { damage = value; }
+        }
+
 
         //A method for when the skill is used
         virtual public void OnActivated(Player player)
