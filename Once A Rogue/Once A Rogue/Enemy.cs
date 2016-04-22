@@ -37,6 +37,9 @@ namespace Once_A_Rogue
         public int relativeCamX;
         public int relativeCamY;
 
+        public int pathSpeedX;
+        public int pathSpeedY;
+
         enum enemyState { IdleRight, IdleLeft, WalkingRight, WalkingLeft, AttackRight, AttackLeft  };
         enemyState eState;
 
@@ -263,7 +266,83 @@ namespace Once_A_Rogue
             currentFrame = framesElapsed % numFrames + 1;
         }
 
+        public void UpdatePathDirection(string direction)
+        {
+            if (direction.Contains("up"))
+            {
+                pathSpeedY = -MoveSpeed;
+            }
+            else if (direction.Contains("down"))
+            {
+                pathSpeedY = MoveSpeed;
+            }
 
+            if (direction.Contains("left"))
+            {
+                pathSpeedX = -MoveSpeed;
+            }
+            else if (direction.Contains("right"))
+            {
+                pathSpeedX = MoveSpeed;
+            }
 
+            switch (direction)
+            {
+                case "up":
+
+                    pathSpeedY = -MoveSpeed;
+                    pathSpeedX = 0;
+                    break;
+
+                case "down":
+
+                    pathSpeedY = MoveSpeed;
+                    pathSpeedX = 0;
+                    break;
+
+                case "left":
+
+                    pathSpeedY = 0;
+                    pathSpeedX = -MoveSpeed;
+                    break;
+
+                case "right":
+
+                    pathSpeedY = 0;
+                    pathSpeedX = MoveSpeed;
+                    break;
+
+                case "upright":
+
+                    pathSpeedY = -MoveSpeed;
+                    pathSpeedX = MoveSpeed;
+                    break;
+
+                case "upleft":
+
+                    pathSpeedY = -MoveSpeed;
+                    pathSpeedX = -MoveSpeed;
+                    break;
+
+                case "downleft":
+
+                    pathSpeedY = -MoveSpeed;
+                    pathSpeedX = MoveSpeed;
+                    break;
+
+                case "downright":
+
+                    pathSpeedY = MoveSpeed;
+                    pathSpeedX = MoveSpeed;
+                    break;
+            }
         }
+
+        public void UpdatePathPosition()
+        {
+            PosX += pathSpeedX;
+            PosY += pathSpeedY;
+        }
+
     }
+}
