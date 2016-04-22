@@ -85,6 +85,8 @@ namespace Once_A_Rogue
 
         //Enemy textures
         Texture2D goblinEnemy;
+        Texture2D koboldEnemy;
+        Texture2D ghoulEnemy;
 
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
@@ -233,6 +235,10 @@ namespace Once_A_Rogue
 
             //Enemy textures
             goblinEnemy = Content.Load<Texture2D>("GoblinSpriteSheet.png");
+            koboldEnemy = Content.Load<Texture2D>("KoboldSpriteSheet.png");
+            ghoulEnemy = Content.Load<Texture2D>("GhoulSpriteSheet.png");
+
+
             //Rig environment filter
             whiteSlate = Content.Load<Texture2D>("whiteSlate.png");
             mapTextures.Add("whiteSlate", whiteSlate);
