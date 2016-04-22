@@ -12,13 +12,19 @@ namespace Once_A_Rogue
     {
         public Goblin(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex) : base(tex, play, camera, x, y, width, height)
         {
-            Random randy = new Random();   
+            Random randy = new Random();
+
+            SkillList = new List<Skills>();
+            SkillList.Add(new Fireball());
+            
             Level = randy.Next(-2, 2) + play.Level;
-            ArmorLevel = 2 * Level;
-            FearLevelTotal = 2 * Level;
+            ArmorLevel = 2 + Level * 2;
+            FearLevelTotal = 2 + Level;
             FearLevel = 0;
             MoveSpeedTotal = 5;
             MoveSpeed = MoveSpeedTotal;
+            TotalHealth = 25 + Level * 5;
+            CurrHealth = TotalHealth;
         }
 
         public override void Draw(SpriteBatch spritebatch)
@@ -27,44 +33,11 @@ namespace Once_A_Rogue
         }
 
         //Default ranged attack for goblin
-        public int RockToss()
-        {
-            int cooldown = 2000;
-            int rangeX = 8;
-            int rangeY = 8;
-
-            if (cooldown == 0)
-            {
-                Vector2 rock = new Vector2(rangeX, rangeY);
-                //Add code to see if it hits target
-                return 10;
-
-            }
-            else
-            {
-                return 0;
-            }
-        }
+      
         public void Update(Player play, GameTime gt)
         {
             base.Update();
 
-            if (PosX > play.PosX + play.PosRect.Width + 40)
-            {
-                PosX -= MoveSpeed;
-            }
-            if (PosY > play.PosY + play.PosRect.Height + 40)
-            {
-                PosY -= MoveSpeed;
-            }
-            if (PosX < play.PosX + play.PosRect.Width + 40)
-            {
-                PosX += MoveSpeed;
-            }
-            if (PosY < play.PosY + play.PosRect.Height + 40)
-            {
-                PosY = MoveSpeed;
-            }
         }
 
 

@@ -22,14 +22,20 @@ namespace Once_A_Rogue
         }
         public Ghoul(Player play, Camera camera, int ghSouls, int x, int y, int width, int height, Texture2D tex) : base(tex, play, camera, x, y, width, height)
         {
+
+            SkillList = new List<Skills>();
+            
+
             MoveSpeedTotal = 6;
             MoveSpeed = 6;
             ghoulSouls = ghSouls;
             Random randy = new Random();
             Level = randy.Next(-2, 2) + play.Level;
-            ArmorLevel = 2 * Level;
+            ArmorLevel = 2 + Level;
             FearLevelTotal = 0;
             FearLevel = 0;
+            TotalHealth = 30 + Level * 5;
+            CurrHealth = TotalHealth;
         }
 
         public void SiphonSoul(Player pay)
@@ -78,24 +84,8 @@ namespace Once_A_Rogue
             base.Update();
 
 
-            if(PosX > play.PosX + play.PosRect.Width + 40)
-            {
-                PosX -= MoveSpeed;
-            }
-            if(PosY > play.PosY + play.PosRect.Height + 40)
-            {
-                PosY -= MoveSpeed;
-            }
-            if(PosX < play.PosX + play.PosRect.Width + 40)
-            {
-                PosX += MoveSpeed;
-            }
-            if(PosY < play.PosY + play.PosRect.Height + 40)
-            {
-                PosY = MoveSpeed;
-            }
+
+
         }
-
-
     }
 }

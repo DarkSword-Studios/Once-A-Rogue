@@ -765,5 +765,26 @@ namespace Once_A_Rogue
             
          
         }
+
+        public void SpawnGhoul(Player play, Texture2D tex, Camera camera)
+        {
+            Random randy = new Random();
+            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
+            spawnTiles.Remove(spawn);
+            Ghoul ghoul = new Ghoul(play, camera, 0, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            enemyList.Add(ghoul);
+        }
+        
+        public void SpawnKobold(Player play, Texture2D tex, Camera camera)
+        {
+
+            Random randy = new Random();
+            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
+            spawnTiles.Remove(spawn);
+            Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            enemyList.Add(kobold);
+
+
+        }
     }
 }

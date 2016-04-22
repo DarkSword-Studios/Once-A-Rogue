@@ -14,6 +14,14 @@ namespace Once_A_Rogue
         //Inherited class of Character to handle enemies 
 
 
+        private List<Skills> skillList;
+
+        public List<Skills> SkillList
+        {
+            get { return skillList; }
+            set { skillList = value; }
+        }
+
         //Value for fear level of enemy
         private int fearLevel;
         private int fearLevelTotal;
@@ -41,6 +49,7 @@ namespace Once_A_Rogue
                 //If FearLevel is over 100, Player IsFeared and fearLevel is set to 100 
                 if (fearLevel > 100)
                 {
+                    
                     IsFeared = true;
                     fearLevel = 100;
                 }

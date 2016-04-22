@@ -17,9 +17,11 @@ namespace Once_A_Rogue
         {
             Random randy = new Random();
             Level = randy.Next(-2, 2) + play.Level;
-            ArmorLevel = 3 * Level;
-            FearLevelTotal = 3 * Level;
+            ArmorLevel = 3 + Level / 2;
+            FearLevelTotal = 3 + Level;
             FearLevel = 0;
+            TotalHealth = 20 + Level * 3;
+            CurrHealth = TotalHealth;
         }
         public override void Draw(SpriteBatch spritebatch)
         {
@@ -70,23 +72,6 @@ namespace Once_A_Rogue
         public void Update(Player play, GameTime gt)
         {
             base.Update();
-
-            if (PosX > play.PosX + play.PosRect.Width + 40)
-            {
-                PosX -= MoveSpeed;
-            }
-            if (PosY > play.PosY + play.PosRect.Height + 40)
-            {
-                PosY -= MoveSpeed;
-            }
-            if (PosX < play.PosX + play.PosRect.Width + 40)
-            {
-                PosX += MoveSpeed;
-            }
-            if (PosY < play.PosY + play.PosRect.Height + 40)
-            {
-                PosY = MoveSpeed;
-            }
 
 
 
