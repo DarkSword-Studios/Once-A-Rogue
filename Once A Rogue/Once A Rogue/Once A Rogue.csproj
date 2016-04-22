@@ -50,6 +50,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Ghoul.cs" />
+    <Compile Include="GhoulSiphon.cs" />
     <Compile Include="Goblin.cs" />
     <Compile Include="Kobold.cs" />
     <Compile Include="Interactable.cs" />

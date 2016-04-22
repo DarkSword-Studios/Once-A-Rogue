@@ -25,7 +25,8 @@ namespace Once_A_Rogue
         const int TILESIZE = 120;
 
         List<Interactable> interactables;
-        
+        public List<Interactable> posts = new List<Interactable>();
+
         //This variables manages the room's activity state which is important (do we update the room? Do we draw it? Only if it's active)
         private Boolean active;
 
@@ -324,7 +325,7 @@ namespace Once_A_Rogue
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
                             spawnTiles.Add(finalRoomAnnex[row, col]);
                         }
-                        if(tileTag >= 96 && tileTag < 104)
+                        else if(tileTag >= 96 && tileTag < 104)
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("Post", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
@@ -341,8 +342,6 @@ namespace Once_A_Rogue
                             checkPoints.Add(finalRoomAnnex[row, col]);
                             finalRoomAnnex[row, col].localX = col;
                             finalRoomAnnex[row, col].localY = row;
-
-
                         }
                         else
                         {
@@ -792,7 +791,7 @@ namespace Once_A_Rogue
             spawnTiles.Remove(spawn);
             Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
             enemyList.Add(kobold);
-
+            
 
         }
     }
