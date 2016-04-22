@@ -95,13 +95,37 @@
     <Content Include="Content\GoblinSpriteSheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDContainer.png">
+    <Content Include="Content\HUDStuff\HUDContainer.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDHealthBar.png">
+    <Content Include="Content\HUDStuff\HUDHealthBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDManaBar.png">
+    <Content Include="Content\HUDStuff\HUDManaBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDcontext_lore_switch.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDskillmage.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDskillranger.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDskillrogue.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDcontext_skills.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDcontext_skills_switch.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDskillwarrior.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDcontext_lore.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\KoboldSpriteSheet.png">
@@ -113,46 +137,46 @@
     <Content Include="Content\Music\music.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDback.png">
+    <Content Include="Content\HUDStuff\HUDback.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDcontextmenubutton.png">
+    <Content Include="Content\HUDStuff\HUDcontextmenubutton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\DOWNmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDcontrol.png">
+    <Content Include="Content\HUDStuff\HUDcontrol.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDcontrols.png">
+    <Content Include="Content\HUDStuff\HUDcontrols.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDexit.png">
+    <Content Include="Content\HUDStuff\HUDexit.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDexittowindowsbutton.png">
+    <Content Include="Content\HUDStuff\HUDexittowindowsbutton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDmage.png">
+    <Content Include="Content\HUDStuff\HUDmage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDMain.png">
+    <Content Include="Content\HUDStuff\HUDMain.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDplay.png">
+    <Content Include="Content\HUDStuff\HUDplay.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDranger.png">
+    <Content Include="Content\HUDStuff\HUDranger.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDrogue.png">
+    <Content Include="Content\HUDStuff\HUDrogue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDselect.png">
+    <Content Include="Content\HUDStuff\HUDselect.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDsword.png">
+    <Content Include="Content\HUDStuff\HUDsword.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\LEFTmap.png">
@@ -176,7 +200,7 @@
     <Content Include="Content\LEFTUPRIGHTmap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDpause.png">
+    <Content Include="Content\HUDStuff\HUDpause.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Music\RogueRequiem.wav">
@@ -188,7 +212,7 @@
     <Content Include="Content\PlayerAnims.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDresume.png">
+    <Content Include="Content\HUDStuff\HUDresume.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Projectile Spritesheet.png">
