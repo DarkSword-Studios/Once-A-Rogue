@@ -85,8 +85,9 @@ namespace Once_A_Rogue
 
 
         //Parameterized Constructor if range is not an issue
-        public Projectile(int dam, Character own, Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
+        public Projectile(int dam, string tg, Character own, Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
         {
+            Tag = tg;
             Damage = dam;
             owner = own;
             ProjPos = new Vector2(x, y);
@@ -104,8 +105,9 @@ namespace Once_A_Rogue
         }
 
         //Overload Constructor if range is an issue
-        public Projectile(int dam, Character own, Vector2 vec, Vector2 destination, int rowY, int numFrames, int height, int width, int x, int y)
+        public Projectile(int dam, string tg, Character own, Vector2 vec, Vector2 destination, int rowY, int numFrames, int height, int width, int x, int y)
         {
+            Tag = tg;
             Damage = dam;
             owner = own;
             ProjPos = new Vector2(x, y);
@@ -132,6 +134,7 @@ namespace Once_A_Rogue
                 projPos.X += vector.X * speed;
                 projPos.Y += vector.Y * speed;
                 distTravelled += vector.Length() * speed;
+                PosRect = new Rectangle((int)projPos.X, (int)projPos.Y, 40, 40);
             }
 
             else
@@ -155,6 +158,8 @@ namespace Once_A_Rogue
         public void OnCollision(Character target)
         {
             Game1.RemoveProj.Add(this);
+
+            
         }
     }
 }

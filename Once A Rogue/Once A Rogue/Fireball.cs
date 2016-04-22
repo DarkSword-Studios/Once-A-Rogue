@@ -17,10 +17,8 @@ namespace Once_A_Rogue
         Character owner;
 
         //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts castable
-        public Fireball(int dam, Character own)
+        public Fireball(int dam, Character own): base(dam, own)
         {
-            owner = own;
-            Damage = dam;
             Cooldown = 0;
             CooldownTotal = 1000;
             BurstRadius = 0;
@@ -49,7 +47,7 @@ namespace Once_A_Rogue
                         target.Normalize();
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(target, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
 
                 }
 
@@ -71,7 +69,7 @@ namespace Once_A_Rogue
                     vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
                     vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
 
-                    Game1.CurrProjectiles.Add(new Projectile(target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                 }
             }
         }

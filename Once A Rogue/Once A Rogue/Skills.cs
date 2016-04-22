@@ -88,12 +88,30 @@ namespace Once_A_Rogue
 
         private int damage;
 
+        private Character owner;
+
+        public Character Owner
+        {
+            get { return owner; }
+            set { owner = value; }
+        }
+
         public int Damage
         {
             get { return damage; }
             set { damage = value; }
         }
 
+        public Skills(int dam, Character own)
+        {
+            Damage = dam;
+            owner = own;
+        }
+
+        public Skills(Character own)
+        {
+            owner = own;
+        }
 
         //A method for when the skill is used
         virtual public void OnActivated(Player player)
