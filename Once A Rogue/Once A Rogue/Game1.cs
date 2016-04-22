@@ -22,7 +22,7 @@ namespace Once_A_Rogue
         Player player;
 
         //Enums for game state
-        enum GameState { MainMenu, Playing, GameOver, paused, howTo }
+        enum GameState { MainMenu, Playing, GameOver, paused, howTo, Context }
         GameState gameState;
 
         //Enums for selector arrow
@@ -32,6 +32,10 @@ namespace Once_A_Rogue
         //Enums for player weapon state
         enum PlayWepState { Sword, Rogue, Mage, Ranger }
         PlayWepState playWepState;
+
+        //Enums for context menu state
+        enum ContextState { Skills, Lore }
+        ContextState contextState;
 
         //Declare a grid to keep track of level space
         string [,] gridSystem;       
@@ -93,9 +97,13 @@ namespace Once_A_Rogue
 
         //Declare HUD Textures
         Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM, mana, health, container;
+        Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger;
 
         //Keyboard states
         KeyboardState previousKBS, kbs;
+
+        //Mouse states
+        MouseState previouseMS, mouseState;
 
         //Level builder to create and connect rooms
         LevelBuilder builderAlpha;
@@ -158,6 +166,7 @@ namespace Once_A_Rogue
             gameState = GameState.MainMenu;
             arrowState = ArrowState.menu1;
             playWepState = PlayWepState.Sword;
+            contextState = ContextState.Skills;
 
             //Starting level please!
             NewLevelGen();
@@ -196,23 +205,31 @@ namespace Once_A_Rogue
             projectileTextures = Content.Load<Texture2D>("Projectile Spritesheet.png");
 
             //Initialize HUD textures
-            pause = Content.Load<Texture2D>("HUDpause.png");
-            exit = Content.Load<Texture2D>("HUDexittowindowsbutton.png");
-            select = Content.Load<Texture2D>("HUDselect.png");
-            resume = Content.Load<Texture2D>("HUDresume.png");
-            control = Content.Load<Texture2D>("HUDcontrol.png");
-            controls = Content.Load<Texture2D>("HUDcontrols.png");
-            sword = Content.Load<Texture2D>("HUDsword.png");
-            rogue = Content.Load<Texture2D>("HUDrogue.png");
-            mage = Content.Load<Texture2D>("HUDmage.png");
-            ranger = Content.Load<Texture2D>("HUDranger.png");
-            back = Content.Load<Texture2D>("HUDback.png");
-            main = Content.Load<Texture2D>("HUDMain.png");
-            play = Content.Load<Texture2D>("HUDplay.png");
-            exitM = Content.Load<Texture2D>("HUDexit.png");
-            mana = Content.Load<Texture2D>("HUDManaBar.png");
-            health = Content.Load<Texture2D>("HUDHealthBar.png");
-            container = Content.Load<Texture2D>("HUDContainer.png");
+            pause = Content.Load<Texture2D>("HUDStuff/HUDpause.png");
+            exit = Content.Load<Texture2D>("HUDStuff/HUDexittowindowsbutton.png");
+            select = Content.Load<Texture2D>("HUDStuff/HUDselect.png");
+            resume = Content.Load<Texture2D>("HUDStuff/HUDresume.png");
+            control = Content.Load<Texture2D>("HUDStuff/HUDcontrol.png");
+            controls = Content.Load<Texture2D>("HUDStuff/HUDcontrols.png");
+            sword = Content.Load<Texture2D>("HUDStuff/HUDsword.png");
+            rogue = Content.Load<Texture2D>("HUDStuff/HUDrogue.png");
+            mage = Content.Load<Texture2D>("HUDStuff/HUDmage.png");
+            ranger = Content.Load<Texture2D>("HUDStuff/HUDranger.png");
+            back = Content.Load<Texture2D>("HUDStuff/HUDback.png");
+            main = Content.Load<Texture2D>("HUDStuff/HUDMain.png");
+            play = Content.Load<Texture2D>("HUDStuff/HUDplay.png");
+            exitM = Content.Load<Texture2D>("HUDStuff/HUDexit.png");
+            mana = Content.Load<Texture2D>("HUDStuff/HUDManaBar.png");
+            health = Content.Load<Texture2D>("HUDStuff/HUDHealthBar.png");
+            container = Content.Load<Texture2D>("HUDStuff/HUDContainer.png");
+            contextSkill = Content.Load<Texture2D>("HUDStuff/HUDcontext_skills.png");
+            contextLore = Content.Load<Texture2D>("HUDStuff/HUDcontext_lore.png");
+            skillSwitch = Content.Load<Texture2D>("HUDStuff/HUDcontext_skills_switch");
+            loreSwitch = Content.Load<Texture2D>("HUDStuff/HUDcontext_lore_switch");
+            skillMage = Content.Load<Texture2D>("HUDStuff/HUDskillmage");
+            skillRanger = Content.Load<Texture2D>("HUDStuff/HUDskillranger");
+            skillWarrior = Content.Load<Texture2D>("HUDStuff/HUDskillwarrior");
+            skillRogue = Content.Load<Texture2D>("HUDStuff/HUDskillrogue");
 
             //Initialize MiniMap textures and add them to the map texture dictionary
             mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
@@ -430,6 +447,11 @@ namespace Once_A_Rogue
                     arrowState = ArrowState.pos1;
                 }
 
+                if(SingleKeyPress(Keys.Tab))
+                {
+                    gameState = GameState.Context;
+                }
+
                 if (SingleKeyPress(Keys.M))
                 {
                     Minimap.Visible = !Minimap.Visible;
@@ -473,7 +495,33 @@ namespace Once_A_Rogue
 
             }
 
-            if(gameState == GameState.howTo)
+            if (gameState == GameState.Context)
+            {
+                if(SingleKeyPress(Keys.Tab))
+                {
+                    gameState = GameState.Playing;
+                }
+
+                /*
+                if (contextState == ContextState.Skills)
+                {
+                    if ((SingleMouseClick()) && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565))
+                    {
+                        contextState = ContextState.Lore;
+                    }
+                }
+
+                if (contextState == ContextState.Lore)
+                {
+                    if ((SingleMouseClick()) && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
+                    {
+                        contextState = ContextState.Skills;
+                    }
+                }
+                */
+            }
+
+            if (gameState == GameState.howTo)
             {
                 if (SingleKeyPress(Keys.Escape))
                 {
@@ -655,6 +703,21 @@ namespace Once_A_Rogue
 
             }
 
+            if (gameState == GameState.Context)
+            {
+                if(contextState == ContextState.Skills)
+                {
+                    spriteBatch.Draw(contextSkill, new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(loreSwitch, new Vector2(313, 474), Color.White);
+                }
+                if(contextState == ContextState.Lore)
+                {
+                    spriteBatch.Draw(contextLore, new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(skillSwitch, new Vector2(313, 350), Color.White);
+                }
+
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -667,6 +730,22 @@ namespace Once_A_Rogue
             {
                 previousKBS = kbs;
                 kbs = Keyboard.GetState();
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+
+        //checks for a single left click
+        public bool SingleMouseClick()
+        {
+            if (mouseState.LeftButton == ButtonState.Pressed && previouseMS.LeftButton == ButtonState.Released)
+            {
+                previouseMS = mouseState;
+                mouseState = Mouse.GetState();
                 return true;
             }
 
