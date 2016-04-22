@@ -28,21 +28,7 @@ namespace Once_A_Rogue
             base.Draw(spritebatch);
         }
 
-        public void CandleBoost(Player pay)
-        {
-            if (pay.CurrHealth == pay.TotalHealth)
-            {
-                FearLevel = FearLevel / 2;
-                ArmorLevel = ArmorLevel * 2;
-                MoveSpeed = MoveSpeed * 2;
-            }
-            if (pay.CurrHealth <= pay.TotalHealth / 2)
-            {
-                FearLevel = FearLevel * 2;
-                ArmorLevel = ArmorLevel / 2;
-
-            }
-        }
+        
         public void PreyOnWeakness(Player pay)
         {
             if (pay.CurrHealth <= pay.TotalHealth / 5)
