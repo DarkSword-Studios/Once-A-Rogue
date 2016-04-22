@@ -329,7 +329,7 @@ namespace Once_A_Rogue
                         {
                             finalRoomAnnex[row, col].Interactable = new Interactable("Post", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
-                            spawnTiles.Add(finalRoomAnnex[row, col]);
+                            posts.Add(finalRoomAnnex[row, col].Interactable);
                         }
                         //Load the interactable if there is one
                         else if(tileTag == 80)
@@ -769,9 +769,9 @@ namespace Once_A_Rogue
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
             Goblin goblin = new Goblin(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            goblin.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(goblin);
-            
-         
+                 
         }
 
         public void SpawnGhoul(Player play, Texture2D tex, Camera camera)
@@ -780,6 +780,7 @@ namespace Once_A_Rogue
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
             Ghoul ghoul = new Ghoul(play, camera, 0, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            ghoul.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(ghoul);
         }
         
@@ -790,6 +791,7 @@ namespace Once_A_Rogue
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
             Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            kobold.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(kobold);
             
 

@@ -268,23 +268,6 @@ namespace Once_A_Rogue
 
         public void UpdatePathDirection(string direction)
         {
-            if (direction.Contains("up"))
-            {
-                pathSpeedY = -MoveSpeed;
-            }
-            else if (direction.Contains("down"))
-            {
-                pathSpeedY = MoveSpeed;
-            }
-
-            if (direction.Contains("left"))
-            {
-                pathSpeedX = -MoveSpeed;
-            }
-            else if (direction.Contains("right"))
-            {
-                pathSpeedX = MoveSpeed;
-            }
 
             switch (direction)
             {

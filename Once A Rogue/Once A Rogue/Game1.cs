@@ -884,6 +884,16 @@ namespace Once_A_Rogue
                                 foreach (Enemy enemy in levelAnnex[columnIndex, rowIndex].enemyList)
                                 {
                                     enemy.UpdateFrame(gameTime);
+
+                                    foreach(Interactable post in levelAnnex[columnIndex, rowIndex].posts)
+                                    {
+                                        if (enemy.PosRect.Intersects(post.RelativeLocation))
+                                        {
+                                            enemy.UpdatePathDirection(post.SubType);
+                                        }
+                                    }
+
+                                    enemy.UpdatePathPosition();
                                     //PathFinderNode node = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
                                     //Vector2 travel = new Vector2(node.x, node.y);
                                     //if(travel != Vector2.Zero)
