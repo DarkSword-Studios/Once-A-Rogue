@@ -15,7 +15,7 @@ namespace Once_A_Rogue
             Random randy = new Random();
 
             SkillList = new List<Skills>();
-            SkillList.Add(new Fireball());
+            SkillList.Add(new Fireball(10, this));
             
             Level = randy.Next(-2, 2) + play.Level;
             ArmorLevel = 2 + Level * 2;
