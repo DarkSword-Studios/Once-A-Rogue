@@ -131,9 +131,6 @@ namespace Once_A_Rogue
             }
         }
 
-        //Bool to test if the player is alive
-        private bool IsAlive;
-
         //Bools to test if the character is afflicted by a status effect
 
         protected bool IsStunned;

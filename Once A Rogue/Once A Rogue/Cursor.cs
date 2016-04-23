@@ -29,7 +29,7 @@ namespace Once_A_Rogue
             if (msState.LeftButton == ButtonState.Pressed && prevMsState.LeftButton == ButtonState.Released)
             {
                 //Activating the player's current skill
-                player.CurrSkill.OnActivated(player);
+                player.CurrSkill.OnActivated();
             }
         }
     }

@@ -73,7 +73,8 @@ namespace Once_A_Rogue
                         vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
 
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                        //Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     }
                 }
             }
