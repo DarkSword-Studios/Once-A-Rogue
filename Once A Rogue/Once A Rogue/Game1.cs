@@ -310,34 +310,24 @@ namespace Once_A_Rogue
             // TODO: Add your update logic here 
             if (gameState == GameState.MainMenu)
             {
-                if (arrowState == ArrowState.menu1)
+                mouseState = Mouse.GetState();
+
+                if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))))
                 {
-                    if (SingleKeyPress(Keys.Enter))
-                    {
-                        gameState = GameState.Playing;
-                        NewLevelGen();
-                    }
+                    gameState = GameState.Playing;
+                    NewLevelGen();
                 }
-                if (arrowState == ArrowState.menu1)
+                if ((arrowState == ArrowState.menu1) && kbs.IsKeyDown(Keys.S) || (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728))
                 {
-                    if (kbs.IsKeyDown(Keys.S))
-                    {
-                        arrowState = ArrowState.menu2;
-                    }
+                    arrowState = ArrowState.menu2;
                 }
-                if (arrowState == ArrowState.menu2)
+                if (((arrowState == ArrowState.menu2) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728))))
                 {
-                    if (SingleKeyPress(Keys.Enter))
-                    {
-                        Exit();
-                    }
+                    Exit();
                 }
-                if (arrowState == ArrowState.menu2)
+                if ((arrowState == ArrowState.menu2) && kbs.IsKeyDown(Keys.W) || (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))
                 {
-                    if (kbs.IsKeyDown(Keys.W))
-                    {
-                        arrowState = ArrowState.menu1;
-                    }
+                    arrowState = ArrowState.menu1;   
                 }
             }
 
@@ -502,10 +492,12 @@ namespace Once_A_Rogue
                     gameState = GameState.Playing;
                 }
 
-                /*
+                
                 if (contextState == ContextState.Skills)
                 {
-                    if ((SingleMouseClick()) && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565))
+                    mouseState = Mouse.GetState();
+
+                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565))
                     {
                         contextState = ContextState.Lore;
                     }
@@ -513,12 +505,14 @@ namespace Once_A_Rogue
 
                 if (contextState == ContextState.Lore)
                 {
-                    if ((SingleMouseClick()) && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
+                    mouseState = Mouse.GetState();
+
+                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
                     {
                         contextState = ContextState.Skills;
                     }
                 }
-                */
+                
             }
 
             if (gameState == GameState.howTo)
@@ -531,27 +525,21 @@ namespace Once_A_Rogue
 
             if(gameState == GameState.paused)
             {
-                //These will check for player input in the menu and adjust accordingly
+                mouseState = Mouse.GetState();
+
                 if (SingleKeyPress(Keys.Escape))
                 {
                     gameState = GameState.Playing;
                 }
 
-                if (arrowState == ArrowState.pos1)
+                if ((arrowState == ArrowState.pos1) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 405))))
                 {
-                    if (kbs.IsKeyDown(Keys.Enter))
-                    {
-                        gameState = GameState.Playing;
-                    }
+                    gameState = GameState.Playing;
                 }
-                if (arrowState == ArrowState.pos1)
+                if ((arrowState == ArrowState.pos1) && (SingleKeyPress(Keys.S)) || (((mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))))
                 {
-                    if (SingleKeyPress(Keys.S))
-                    {
-                        arrowState = ArrowState.pos2;
-                    }
+                    arrowState = ArrowState.pos2;
                 }
-
                 if(arrowState == ArrowState.pos2)
                 {
                     if (SingleKeyPress(Keys.W))
@@ -563,28 +551,30 @@ namespace Once_A_Rogue
                         arrowState = ArrowState.pos3;
                     }
                 }
-                if(arrowState == ArrowState.pos2)
+                if((arrowState == ArrowState.pos2) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))))
                 {
-                    if (kbs.IsKeyDown(Keys.Enter))
-                    {
-                        gameState = GameState.howTo;
-                    }
+                    gameState = GameState.howTo;
+                }
+                if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))))
+                {
+                    Exit();
+                }
+                if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)))
+                {
+                    arrowState = ArrowState.pos2;
                 }
 
-                if (arrowState == ArrowState.pos3)
+                if((mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 398))
                 {
-                    if (kbs.IsKeyDown(Keys.Enter))
-                    {
-                        Exit();
-                    }
+                    arrowState = ArrowState.pos1;
                 }
-
-                if (arrowState == ArrowState.pos3)
+                if((mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))
                 {
-                    if (SingleKeyPress(Keys.W))
-                    {
-                        arrowState = ArrowState.pos2;
-                    }
+                    arrowState = ArrowState.pos2;
+                }
+                if((mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))
+                {
+                    arrowState = ArrowState.pos3;
                 }
             }
 
@@ -730,22 +720,6 @@ namespace Once_A_Rogue
             {
                 previousKBS = kbs;
                 kbs = Keyboard.GetState();
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
-        }
-
-        //checks for a single left click
-        public bool SingleMouseClick()
-        {
-            if (mouseState.LeftButton == ButtonState.Pressed && previouseMS.LeftButton == ButtonState.Released)
-            {
-                previouseMS = mouseState;
-                mouseState = Mouse.GetState();
                 return true;
             }
 
