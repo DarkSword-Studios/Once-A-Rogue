@@ -395,36 +395,78 @@ namespace Once_A_Rogue
             }
             foreach(Enemy enemy in enemyList)
             {
+                if (camera.direction == "right")
+                {
+                    if (enemy.justSpawned)
+                    {
+                        enemy.PosX += camera.screenWidth;
+                        enemy.justSpawned = false;
+                    }
+                    else
+                    {
+                        enemy.PosX -= Math.Abs(Math.Abs(camera.xMod) - Math.Abs(enemy.relativeCamX));
+                        enemy.relativeCamX = camera.xMod;
+                    }
+                }
+                else if (camera.direction == "left")
+                {
+                    if (enemy.justSpawned)
+                    {
+                        enemy.PosX -= camera.screenWidth;
+                        enemy.justSpawned = false;
+                    }
+                    else
+                    {
+                        enemy.PosX += Math.Abs(Math.Abs(camera.xMod) - Math.Abs(enemy.relativeCamX));
+                        enemy.relativeCamX = camera.xMod;
+                    }
+                }
+                else if (camera.direction == "up")
+                {
+                    if (enemy.justSpawned)
+                    {
+                        enemy.PosY -= camera.screenHeight;
+                        enemy.justSpawned = false;
+                    }
+                    else
+                    {
+                        enemy.PosY += Math.Abs(Math.Abs(camera.yMod) - Math.Abs(enemy.relativeCamY));
+                        enemy.relativeCamY = camera.yMod;
+                    }
+                }
+                else if (camera.direction == "down")
+                {
+                    if (enemy.justSpawned)
+                    {
+                        enemy.PosY += camera.screenHeight;
+                        enemy.justSpawned = false;
+                    }
+                    else
+                    {
+                        enemy.PosY -= Math.Abs(Math.Abs(camera.yMod) - Math.Abs(enemy.relativeCamY));
+                        enemy.relativeCamY = camera.yMod;
+                    }
+                }
 
-                if (camera.xMod > enemy.relativeCamX)
+                if (!camera.isMoving)
                 {
-                    enemy.PosX += camera.xMod - enemy.relativeCamX;
-                    enemy.relativeCamX = camera.xMod;
+                    if (enemy.justSpawned)
+                    {
+                        enemy.justSpawned = false;
+                    }
                 }
-                //This needs to be repaired
-                else if (camera.xMod < enemy.relativeCamX)
-                {
-                    enemy.PosX += camera.xMod - enemy.relativeCamX;
-                    enemy.relativeCamX = camera.xMod;
-                }
-                if (camera.yMod > enemy.relativeCamY)
-                {
-                    enemy.PosY += camera.yMod - enemy.relativeCamY;
-                    enemy.relativeCamY = camera.yMod;
-                }
-                else if (camera.yMod < enemy.relativeCamY)
-                {
-                    enemy.PosY += enemy.relativeCamY - camera.yMod;
-                    enemy.relativeCamY = camera.yMod;
-                }
+
 
                 if (enemy.CurrHealth == 0)
                 {
                     enemiesToRemove.Add(enemy);
                 }
-                
-                enemy.Draw(spriteBatch, 140, 140);
 
+                if (!enemy.justSpawned)
+                {
+                    enemy.Draw(spriteBatch, 140, 140);
+                }
+                
             }
 
             foreach(Enemy enemy in enemiesToRemove)
@@ -797,7 +839,12 @@ namespace Once_A_Rogue
             Random randy = new Random();
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
-            Goblin goblin = new Goblin(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
+            int x = spawn.RelativeLocation.X;
+            int y = spawn.RelativeLocation.Y;
+            x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+            y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+            Goblin goblin = new Goblin(play, camera, x, y, 140, 140, tex, false);
+            goblin.justSpawned = true;
             goblin.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(goblin);
                  
