@@ -763,17 +763,26 @@ namespace Once_A_Rogue
                             {
                                 currProjectiles.Clear();
                             }
+                            Boolean done = false;
                             while (levelAnnex[columnIndex, rowIndex].spawnTiles.Count != 0)
                             {
                                 levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy, camera);
+                                done = true;
                             }
+                            if (done)
+                            {
+                                levelAnnex[columnIndex, rowIndex].Lock();
+                                done = false;
+                            }
+
+                            levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
 
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary
                             //Cannot run check if the frame is shifting
                             if (!shifting)
                             {
-                                
-                                
+                                levelAnnex[columnIndex, rowIndex].FinalizeEnemies();
+
 
                                 //Debugger requested a locked room!
                                 if (lockRoom)

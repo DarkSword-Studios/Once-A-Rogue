@@ -743,7 +743,11 @@ namespace Once_A_Rogue
         public void RequestUnlock(Player player, Camera camera)
         {
             //Put room clearing code here... e.g. have all of the enemies been killed yet? 
-            Unlock(player, camera);
+            if(enemyList.Count == 0)
+            {
+                Unlock(player, camera);
+            }
+            
         }
 
         private void Unlock(Player player, Camera camera)
