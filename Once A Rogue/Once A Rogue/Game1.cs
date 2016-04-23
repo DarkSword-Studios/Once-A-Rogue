@@ -502,10 +502,12 @@ namespace Once_A_Rogue
                     gameState = GameState.Playing;
                 }
 
-                /*
+                
                 if (contextState == ContextState.Skills)
                 {
-                    if ((SingleMouseClick()) && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565))
+                    mouseState = Mouse.GetState();
+
+                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565))
                     {
                         contextState = ContextState.Lore;
                     }
@@ -513,12 +515,14 @@ namespace Once_A_Rogue
 
                 if (contextState == ContextState.Lore)
                 {
-                    if ((SingleMouseClick()) && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
+                    mouseState = Mouse.GetState();
+
+                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
                     {
                         contextState = ContextState.Skills;
                     }
                 }
-                */
+                
             }
 
             if (gameState == GameState.howTo)
