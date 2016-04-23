@@ -127,6 +127,8 @@ namespace Once_A_Rogue
 
         public Player(int x, int y, int width, int height)
         {
+
+
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
             mageSkillList = new List<Skills>();
@@ -140,8 +142,9 @@ namespace Once_A_Rogue
             rangerSkillList.Add(new MeleeAttack(this));
             rangerSkillList.Add(new PiercingShot(5, this));
 
+            Fireball test = new Fireball(5, this);
 
-            mageSkillList.Add(new Fireball(5, this));
+            mageSkillList.Add(test);
 
             //Initializing the weapon array
             weaponArray = new string[4];

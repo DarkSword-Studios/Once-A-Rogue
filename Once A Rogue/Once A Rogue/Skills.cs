@@ -112,6 +112,7 @@ namespace Once_A_Rogue
         public Skills(Character own)
         {
             owner = own;
+            
         }
 
         //A method for when the skill is used
