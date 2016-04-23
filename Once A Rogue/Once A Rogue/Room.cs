@@ -768,7 +768,7 @@ namespace Once_A_Rogue
             Random randy = new Random();
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
-            Goblin goblin = new Goblin(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            Goblin goblin = new Goblin(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
             goblin.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(goblin);
                  
@@ -779,7 +779,7 @@ namespace Once_A_Rogue
             Random randy = new Random();
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
-            Ghoul ghoul = new Ghoul(play, camera, 0, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            Ghoul ghoul = new Ghoul(play, camera, 0, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
             ghoul.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(ghoul);
         }
@@ -790,7 +790,7 @@ namespace Once_A_Rogue
             Random randy = new Random();
             Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
             spawnTiles.Remove(spawn);
-            Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex);
+            Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
             kobold.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(kobold);
             
