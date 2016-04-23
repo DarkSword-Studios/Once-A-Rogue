@@ -778,7 +778,6 @@ namespace Once_A_Rogue
                             //Cannot run check if the frame is shifting
                             if (!shifting)
                             {
-                                levelAnnex[columnIndex, rowIndex].FinalizeEnemies();
 
                                 if (done)
                                 {
@@ -794,6 +793,7 @@ namespace Once_A_Rogue
                                 }
                                 else if (unlockRoom)
                                 {
+                                    levelAnnex[columnIndex, rowIndex].enemyList.Clear();
                                     levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
                                     unlockRoom = false;
                                 }
@@ -872,7 +872,11 @@ namespace Once_A_Rogue
 
                                     foreach(Interactable post in levelAnnex[columnIndex, rowIndex].posts)
                                     {
-                                        if (enemy.PosX == post.RelativeLocation.X && enemy.PosY == post.RelativeLocation.Y)
+                                        int x = post.RelativeLocation.X;
+                                        int y = post.RelativeLocation.Y;
+                                        x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+                                        y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+                                        if (enemy.PosX == x && enemy.PosY == y)
                                         {
                                             enemy.UpdatePathDirection(post.SubType);
                                         }

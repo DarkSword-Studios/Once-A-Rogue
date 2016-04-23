@@ -37,7 +37,6 @@ namespace Once_A_Rogue
 
         public int relativeCamX;
         public int relativeCamY;
-        public Boolean justSpawned = false;
 
         public int pathSpeedX;
         public int pathSpeedY;
