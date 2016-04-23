@@ -35,7 +35,7 @@ namespace Once_A_Rogue
                         target.Normalize();
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, target, 1, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, target, 1, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
                 }
 
                 else

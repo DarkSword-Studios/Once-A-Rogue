@@ -257,7 +257,7 @@ namespace Once_A_Rogue
 
             if (msState.LeftButton == ButtonState.Pressed)
             {
-                CurrSkill.OnActivated(this);
+                CurrSkill.OnActivated();
             }
 
             if (PosY > (roomHeight - PosRect.Height - 120))

@@ -139,5 +139,10 @@ namespace Once_A_Rogue
                 Cooldown = CooldownTotal;
             }
         }
+
+        virtual public void OnActivated()
+        {
+
+        }
     }
 }

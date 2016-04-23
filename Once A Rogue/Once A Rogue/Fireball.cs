@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 namespace Once_A_Rogue
 {
     //Class to define specific Fireball skill 
-    class Fireball:Skills
+    class Fireball : Skills
     //Ian Moon
     //3/20/2016
     //This class represents a fireball skill that the Player will be a able to use
@@ -17,7 +17,7 @@ namespace Once_A_Rogue
         Character owner;
 
         //Constructor that takes player object. Has no burst and a cooldown of 5, although it starts castable
-        public Fireball(int dam, Character own): base(dam, own)
+        public Fireball(int dam, Character own) : base(dam, own)
         {
             Cooldown = 0;
             CooldownTotal = 1000;
@@ -27,49 +27,54 @@ namespace Once_A_Rogue
             Cost = 20;
         }
 
-        //Overide OnActivated method
-        public override void OnActivated(Player player)
+        public override void OnActivated()
         {
-            if (Cooldown == 0 && player.CurrMana >= Cost)
+            if (Owner is Player)
             {
-                MouseState ms = Mouse.GetState();
+                Player player = (Player)Owner;
 
-                player.CurrMana -= Cost;
-
-                base.OnActivated(player);
-
-                if (player.PlayerStates == Player.PlayerState.AttackLeft)
+                if (Cooldown == 0 && player.CurrMana >= Cost)
                 {
-                    Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
+                    base.OnActivated(player);
 
-                    if (target != Vector2.Zero)
+                    MouseState ms = Mouse.GetState();
+
+                    player.CurrMana -= Cost;
+
+                    base.OnActivated(player);
+
+                    if (player.PlayerStates == Player.PlayerState.AttackLeft)
                     {
-                        target.Normalize();
+                        Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+
+                        if (target != Vector2.Zero)
+                        {
+                            target.Normalize();
+                        }
+
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
-
-                }
-
-                else
-                {
-                    //Getting vector from the player position to the mouse position
-                    Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
-
-                    //Normalizing the vector
-                    if (target != Vector2.Zero)
+                    else
                     {
-                        target.Normalize();
+                        //Getting vector from the player position to the mouse position
+                        Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
+
+                        //Normalizing the vector
+                        if (target != Vector2.Zero)
+                        {
+                            target.Normalize();
+                        }
+
+                        //Creating a vector equal to the normal vector
+                        Vector2 vectorLength = target;
+
+                        //stretching the normal vector to the desired range
+                        vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
+                        vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
+
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     }
-
-                    //Creating a vector equal to the normal vector
-                    Vector2 vectorLength = target;
-
-                    //stretching the normal vector to the desired range
-                    vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
-                    vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
-
-                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                 }
             }
         }
