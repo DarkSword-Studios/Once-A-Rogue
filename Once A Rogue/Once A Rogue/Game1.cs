@@ -887,7 +887,7 @@ namespace Once_A_Rogue
 
                                     foreach(Interactable post in levelAnnex[columnIndex, rowIndex].posts)
                                     {
-                                        if (enemy.PosRect.Intersects(post.RelativeLocation))
+                                        if (enemy.PosX == post.RelativeLocation.X && enemy.PosY == post.RelativeLocation.Y)
                                         {
                                             enemy.UpdatePathDirection(post.SubType);
                                         }
