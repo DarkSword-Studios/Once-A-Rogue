@@ -542,11 +542,11 @@ namespace Once_A_Rogue
                 }
                 if(arrowState == ArrowState.pos2)
                 {
-                    if (SingleKeyPress(Keys.W))
+                    if (SingleKeyPress(Keys.W) || (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 398))
                     {
                         arrowState = ArrowState.pos1;
                     }
-                    if (SingleKeyPress(Keys.S))
+                    if (SingleKeyPress(Keys.S) || (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))
                     {
                         arrowState = ArrowState.pos3;
                     }
@@ -559,7 +559,7 @@ namespace Once_A_Rogue
                 {
                     Exit();
                 }
-                if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)))
+                if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))
                 {
                     arrowState = ArrowState.pos2;
                 }
