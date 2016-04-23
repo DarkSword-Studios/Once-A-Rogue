@@ -58,7 +58,7 @@ namespace Once_A_Rogue
 
         }
 
-        protected override void OnDeath(Player pay)
+        public override void OnDeath(Player pay)
         {
             base.OnDeath();
 

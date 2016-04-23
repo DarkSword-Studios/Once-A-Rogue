@@ -37,6 +37,7 @@ namespace Once_A_Rogue
 
         public int relativeCamX;
         public int relativeCamY;
+        public Boolean justSpawned = false;
 
         public int pathSpeedX;
         public int pathSpeedY;
@@ -145,14 +146,14 @@ namespace Once_A_Rogue
 
          
         //Non overloaded OnDeath method from base
-        protected override void OnDeath()
+        public override void OnDeath()
         {
             base.OnDeath();
 
         }
 
         //Overloaded OnDeath method that passes in a Player object
-        protected virtual void OnDeath(Player play)
+        public virtual void OnDeath(Player play)
         {
             base.OnDeath();
 

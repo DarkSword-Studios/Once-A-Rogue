@@ -49,6 +49,7 @@ namespace Once_A_Rogue
         public List<Tile> spawnTiles = new List<Tile>();
         public List<Tile> checkPoints = new List<Tile>();
         public List<Enemy> enemyList = new List<Enemy>();
+        List<Enemy> enemiesToRemove = new List<Enemy>();
 
         Boolean clear = false;
 
@@ -199,7 +200,7 @@ namespace Once_A_Rogue
                 row++;
             }
 
-            if(roomCodeStr != "1234")
+            if(roomCodeStr != "1234" && roomCodeStr != "14")
             {
                 return;
             }
@@ -394,21 +395,36 @@ namespace Once_A_Rogue
             }
             foreach(Enemy enemy in enemyList)
             {
-                
-                if(camera.xMod != enemy.relativeCamX)
+                if (!enemy.justSpawned)
                 {
-                    enemy.PosX += camera.xMod - enemy.relativeCamX;
-                    enemy.relativeCamX = camera.xMod;
-                }
-                if (camera.yMod != enemy.relativeCamY)
-                {
-                    enemy.PosY += camera.yMod - enemy.relativeCamY;
-                    enemy.relativeCamY = camera.yMod;
+                    if (camera.xMod != enemy.relativeCamX)
+                    {
+                        enemy.PosX += camera.xMod - enemy.relativeCamX;
+                        enemy.relativeCamX = camera.xMod;
+                    }
+                    if (camera.yMod != enemy.relativeCamY)
+                    {
+                        enemy.PosY += camera.yMod - enemy.relativeCamY;
+                        enemy.relativeCamY = camera.yMod;
+                    }
                 }
 
+                if(enemy.CurrHealth == 0)
+                {
+                    enemiesToRemove.Add(enemy);
+                }
+                
                 enemy.Draw(spriteBatch, 140, 140);
 
             }
+
+            foreach(Enemy enemy in enemiesToRemove)
+            {
+                enemyList.Remove(enemy);
+                enemy.OnDeath();
+            }
+
+            enemiesToRemove.Clear();
 
             if (boss)
             {
@@ -770,6 +786,7 @@ namespace Once_A_Rogue
             spawnTiles.Remove(spawn);
             Goblin goblin = new Goblin(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
             goblin.UpdatePathDirection(spawn.Interactable.SubType);
+            goblin.justSpawned = true;
             enemyList.Add(goblin);
                  
         }
@@ -781,6 +798,7 @@ namespace Once_A_Rogue
             spawnTiles.Remove(spawn);
             Ghoul ghoul = new Ghoul(play, camera, 0, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
             ghoul.UpdatePathDirection(spawn.Interactable.SubType);
+            ghoul.justSpawned = true;
             enemyList.Add(ghoul);
         }
         
@@ -792,9 +810,17 @@ namespace Once_A_Rogue
             spawnTiles.Remove(spawn);
             Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
             kobold.UpdatePathDirection(spawn.Interactable.SubType);
+            kobold.justSpawned = true;
             enemyList.Add(kobold);
             
+        }
 
+        public void FinalizeEnemies()
+        {
+            foreach(Enemy enemy in enemyList)
+            {
+                enemy.justSpawned = false;
+            }
         }
     }
 }

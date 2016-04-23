@@ -441,7 +441,7 @@ namespace Once_A_Rogue
         }
 
         //Method for events that occur when the character dies
-        virtual protected void OnDeath()
+        virtual public void OnDeath()
         {
             //Resetting the status effects
             IsRooted = false;
