@@ -10,7 +10,7 @@ namespace Once_A_Rogue
 {
     class Goblin : Enemy
     {
-        public Goblin(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex) : base(tex, play, camera, x, y, width, height)
+        public Goblin(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex, bool host) : base(tex, play, camera, x, y, width, height, host)
         {
             Random randy = new Random();
 

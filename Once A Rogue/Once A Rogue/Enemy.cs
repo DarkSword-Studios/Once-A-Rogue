@@ -26,7 +26,8 @@ namespace Once_A_Rogue
         //Value for fear level of enemy
         private int fearLevel;
         private int fearLevelTotal;
-        
+
+        bool isHostile;
 
         int timePerFrame = 100;
         int numFrames = 6;
@@ -202,7 +203,7 @@ namespace Once_A_Rogue
         }
 
         //Do we even need this constructor?
-        public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
+        public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height, bool host) : base()//Add code here
         {
             relativeCamX = camera.xMod;
             relativeCamY = camera.yMod;
@@ -212,6 +213,8 @@ namespace Once_A_Rogue
             Level = play.Level;
             fearLevel = 0;
             armorLevel = 5;
+            isHostile = host;
+            isHostile = false;
         }
 
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)

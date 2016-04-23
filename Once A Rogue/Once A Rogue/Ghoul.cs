@@ -20,7 +20,7 @@ namespace Once_A_Rogue
             get { return ghoulSouls; }
             set { ghoulSouls = value; }
         }
-        public Ghoul(Player play, Camera camera, int ghSouls, int x, int y, int width, int height, Texture2D tex) : base(tex, play, camera, x, y, width, height)
+        public Ghoul(Player play, Camera camera, int ghSouls, int x, int y, int width, int height, Texture2D tex, bool host) : base(tex, play, camera, x, y, width, height, host)
         {
 
             SkillList = new List<Skills>();
