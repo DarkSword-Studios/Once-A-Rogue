@@ -660,6 +660,11 @@ namespace Once_A_Rogue
                 {
                     Notification.DrawAlert(spriteBatch);
                 }
+
+                if(gameState == GameState.Playing)
+                {
+                    spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
+                }
                 
             }
 

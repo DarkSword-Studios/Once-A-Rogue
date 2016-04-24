@@ -131,16 +131,23 @@ namespace Once_A_Rogue
 
         public void Update(GameTime gameTime)
         {
+            //If the distance is meant to be limited and the distance meant to travelled hasn't been hit yet
             if ((distTravelled < distTravel) || !limitRange)
             {
+                //Adjust the vectors
                 projPos.X += vector.X * speed;
                 projPos.Y += vector.Y * speed;
+
+                //Increment the distance travelled
                 distTravelled += vector.Length() * speed;
+
+                //Adjust the position rectangle
                 PosRect = new Rectangle((int)projPos.X, (int)projPos.Y, 40, 40);
             }
 
             else
             {
+                //Removing the projectile
                 Game1.RemoveProj.Add(this);
             }
 

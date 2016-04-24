@@ -20,6 +20,7 @@ namespace Once_A_Rogue
             RangeX = 1;
             RangeY = 0;
             BurstRadius = 0;
+            Name = "Swing";
         }
 
         public override void OnActivated()

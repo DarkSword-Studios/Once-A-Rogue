@@ -25,6 +25,7 @@ namespace Once_A_Rogue
             RangeX = 5;
             RangeY = 5;
             Cost = 15;
+            Name = "Fireball";
         }
 
         public override void OnActivated()

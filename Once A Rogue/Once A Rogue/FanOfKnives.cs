@@ -23,6 +23,7 @@ namespace Once_A_Rogue
             BurstRadius = 0;
             Cost = 10;
             Damage = 5;
+            Name = "Fan of Knives";
         }
 
         public override void OnActivated()
@@ -87,9 +88,9 @@ namespace Once_A_Rogue
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - (60 * RangeY);
 
                         //Add the projectiles to the list
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     }
                 }
             }

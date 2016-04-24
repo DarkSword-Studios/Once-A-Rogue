@@ -15,6 +15,15 @@ namespace Once_A_Rogue
     //This class is the foundation for the skills in the game
     {
         //Attributes
+        private string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+
         //Cooldown handling
         private double cooldown;
 
@@ -144,6 +153,11 @@ namespace Once_A_Rogue
         virtual public void OnActivated()
         {
 
+        }
+
+        public override string ToString()
+        {
+            return name;
         }
     }
 }

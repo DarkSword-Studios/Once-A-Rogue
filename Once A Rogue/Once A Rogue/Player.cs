@@ -284,34 +284,54 @@ namespace Once_A_Rogue
                 PosX = 80;
             }
 
+            //Switch to sword
             if (kbs.IsKeyDown(Keys.Z))
             {
-                CurrWeapon = weaponArray[0];
-                currSkillList = warriorSkillList;
-                CurrSkill = currSkillList[0];
+                //If the weapon is not the one you are trying to switch to
+                if(CurrWeapon != "Sword")
+                {
+                    //Switch to the weapon and restore defaults
+                    CurrWeapon = weaponArray[0];
+                    currSkillList = warriorSkillList;
+                    CurrSkill = currSkillList[0];
+                }
             }
 
+            //Switch to Daggers
             if (kbs.IsKeyDown(Keys.X))
             {
-                CurrWeapon = weaponArray[1];
-                currSkillList = rogueSkillList;
-                CurrSkill = currSkillList[0];
+                if(CurrWeapon != "Daggers")
+                {
+                    CurrWeapon = weaponArray[1];
+                    currSkillList = rogueSkillList;
+                    CurrSkill = currSkillList[0];
+                }
             }
 
+            //Switch to Bow
             if (kbs.IsKeyDown(Keys.C))
             {
-                CurrWeapon = weaponArray[2];
-                currSkillList = rangerSkillList;
-                CurrSkill = currSkillList[0];
+                if(CurrWeapon != "Bow")
+                {
+                    CurrWeapon = weaponArray[2];
+                    currSkillList = rangerSkillList;
+                    CurrSkill = currSkillList[0];
+                }
             }
 
+            //Switch to Staff
             if (kbs.IsKeyDown(Keys.V))
             {
-                CurrWeapon = weaponArray[3];
-                currSkillList = mageSkillList;
-                CurrSkill = currSkillList[0];
+                if(CurrWeapon != "Staff")
+                {
+                    CurrWeapon = weaponArray[3];
+                    currSkillList = mageSkillList;
+                    CurrSkill = currSkillList[0];
+                }
             }
 
+
+            //Handling skill switching
             if (kbs.IsKeyDown(Keys.D1))
             {
                 CurrSkill = currSkillList[0];
@@ -321,12 +341,16 @@ namespace Once_A_Rogue
             {
                 Skills prevSkill = currSkill;
 
+                //Try to switch to the skill
                 try
                 {
                     CurrSkill = currSkillList[1];
                 }
+
+                //If there is no skill to switch to
                 catch
                 {
+                    //Don't switch
                     currSkill = prevSkill;
                 }
             }
@@ -338,6 +362,48 @@ namespace Once_A_Rogue
                 try
                 {
                     CurrSkill = currSkillList[2];
+                }
+                catch
+                {
+                    currSkill = prevSkill;
+                }
+            }
+
+            if (kbs.IsKeyDown(Keys.D4))
+            {
+                Skills prevSkill = currSkill;
+
+                try
+                {
+                    CurrSkill = currSkillList[3];
+                }
+                catch
+                {
+                    currSkill = prevSkill;
+                }
+            }
+
+            if (kbs.IsKeyDown(Keys.D5))
+            {
+                Skills prevSkill = currSkill;
+
+                try
+                {
+                    CurrSkill = currSkillList[4];
+                }
+                catch
+                {
+                    currSkill = prevSkill;
+                }
+            }
+
+            if (kbs.IsKeyDown(Keys.D6))
+            {
+                Skills prevSkill = currSkill;
+
+                try
+                {
+                    CurrSkill = currSkillList[5];
                 }
                 catch
                 {
