@@ -37,9 +37,9 @@ namespace Once_A_Rogue
                 SnareResist = SnareResist * 2;
                 StunResist = StunResist * 2;
                 FireResist = FireResist * 2;
-                IsFeared = false;
-                IsSnared = false;
-                IsStunned = false;
+                isFeared = false;
+                isSnared = false;
+                isStunned = false;
 
             }
         }
@@ -47,12 +47,12 @@ namespace Once_A_Rogue
         {
             if (CurrHealth == TotalHealth / 6)
             {
-                IsStunned = false;
-                IsSnared = false;
-                IsFeared = false;
-                IsOnFire = false;
-                IsPoisoned = false;
-                IsExplosive = false;
+                isStunned = false;
+                isSnared = false;
+                isFeared = false;
+                isOnFire = false;
+                isPoisoned = false;
+                isExplosive = false;
             }
         }
         public void Update(Player play, GameTime gt)

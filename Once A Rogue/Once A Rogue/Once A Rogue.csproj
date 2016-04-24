@@ -46,6 +46,7 @@
     <Compile Include="Character.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="FanOfKnives.cs" />
     <Compile Include="Fireball.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />

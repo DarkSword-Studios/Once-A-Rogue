@@ -64,6 +64,7 @@ namespace Once_A_Rogue
             set { damage = value; }
         }
 
+        //Tag for combo system
         private string tag;
 
         public string Tag
@@ -72,6 +73,9 @@ namespace Once_A_Rogue
             set { tag = value; }
         }
 
+        //Character attributes used for single hit detection
+        Character prevChar = null;
+        Character currChar = null;
 
         //Owner of the projectile
         private Character owner;
@@ -81,8 +85,6 @@ namespace Once_A_Rogue
             get { return owner; }
             set { owner = value; }
         }
-
-
 
         //Parameterized Constructor if range is not an issue
         public Projectile(int dam, string tg, Character own, Vector2 vec, int rowY, int numFrames, int height, int width, int x, int y)
@@ -157,22 +159,47 @@ namespace Once_A_Rogue
 
         public void OnCollision(Character target)
         {
-            Game1.RemoveProj.Add(this);
+            //If the tag is not to pass through
+            if (Tag != "pass")
+            {
+                //Subtract damage and remove
+                target.CurrHealth -= Damage;
+                Game1.RemoveProj.Add(this);
+            }
 
-            target.CurrHealth -= Damage;
+            //Otherwise
+            else
+            {
+                //Make sure the projectile only hits that target once
+                currChar = target;
+                if(prevChar != currChar)
+                {
+                    //Deal damage and remember that character
+                    prevChar = currChar;
+                    target.CurrHealth -= Damage;
+                }
+            }
 
-            switch(tag)
+            //Setting up combo situations
+            switch(Tag)
             {
                 case "fire":
                     target.FireDur = 4;
-                    target.FireDmg = 2;
+                    target.FireDmg = 4;
                     break;
                 case "poisen":
                     target.PoisenDur = 4;
-                    target.PoisenDmg = 2;
+                    target.PoisenDmg = 4;
                     break;
                 case "stun":
                     target.StunDur = 4;
+                    break;
+                case "snare":
+                    target.MoveSpeed -= 1;
+                    if(target.MoveSpeed <= 0)
+                    {
+                        target.MoveSpeed = 0;
+                    }
                     break;
             }
         }

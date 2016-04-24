@@ -139,6 +139,7 @@ namespace Once_A_Rogue
             warriorSkillList.Add(new MeleeAttack(this));
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
+            rogueSkillList.Add(new FanOfKnives(this));
             rangerSkillList.Add(new MeleeAttack(this));
             rangerSkillList.Add(new PiercingShot(5, this));
 

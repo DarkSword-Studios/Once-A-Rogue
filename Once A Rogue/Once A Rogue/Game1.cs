@@ -883,6 +883,7 @@ namespace Once_A_Rogue
                                     }
 
                                     enemy.UpdatePathPosition();
+                                    enemy.Update();
                                     //PathFinderNode node = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
                                     //Vector2 travel = new Vector2(node.x, node.y);
                                     //if(travel != Vector2.Zero)

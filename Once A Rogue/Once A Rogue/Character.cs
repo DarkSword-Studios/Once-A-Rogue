@@ -110,7 +110,7 @@ namespace Once_A_Rogue
                 if(value < 0)
                 {
                     moveSpeed = 0;
-                    IsRooted = true;
+                    isRooted = true;
                 }
 
                 //If the value is greater than the total move speed, set movespeed to moverSpeedTotal
@@ -126,20 +126,61 @@ namespace Once_A_Rogue
 
                 if((moveSpeed < moveSpeedTotal) && (moveSpeed != 0))
                 {
-                    IsSnared = true;
+                    isSnared = true;
                 }
             }
         }
 
         //Bools to test if the character is afflicted by a status effect
+        protected bool isStunned;
 
-        protected bool IsStunned;
-        protected bool IsRooted;
-        protected bool IsSnared;
-        protected bool IsOnFire;
-        protected bool IsPoisoned;
-        protected bool IsExplosive;
-        protected bool IsFeared;
+        public bool IsStunned
+        {
+            get { return isStunned; }
+            set { isStunned = value; }
+        }
+
+        protected bool isRooted;
+        public bool IsRooted
+        {
+            get { return isRooted; }
+            set { isRooted = value; }
+        }
+
+        protected bool isSnared;
+        public bool IsSnared
+        {
+            get { return isSnared; }
+            set { isSnared = value; }
+        }
+
+        protected bool isOnFire;
+        public bool IsOnFire
+        {
+            get { return isOnFire; }
+            set { isOnFire = value; }
+        }
+
+        protected bool isPoisoned;
+        public bool IsPoisened
+        {
+            get { return isPoisoned; }
+            set { isPoisoned = value; }
+        }
+
+        protected bool isExplosive;
+        public bool IsExplosive
+        {
+            get { return isExplosive; }
+            set { isExplosive = value; }
+        }
+
+        protected bool isFeared;
+        public bool IsFeared
+        {
+            get { return isOnFire; }
+            set { isOnFire = value; }
+        }
 
         //Variables of the status effects
         private int stunDur;
@@ -157,18 +198,44 @@ namespace Once_A_Rogue
             get { return stunDur; }
 
             //Duration of the status is reduced by a percentage based upon resistence of the character
-            set { stunDur = (int)(value * (1-stunResist)); }
+            set
+            {
+                stunDur = (int)(value * (1-stunResist));
+
+                if (stunDur < 0)
+                {
+                    stunDur = 0;
+                }
+
+                if (stunDur != 0)
+                {
+                    isStunned = true;
+                }
+            }
         }
 
         public int RootDur
         {
             get { return rootDur; }
-            set { rootDur = (int)(value * (1 - rootResist)); }
+            set
+            {
+                rootDur = (int)(value * (1 - rootResist));
+
+                if (rootDur < 0)
+                {
+                    rootDur = 0;
+                }
+
+                if (rootDur != 0)
+                {
+                    isRooted = true;
+                }
+            }
         }
         public int SnareDur
         {
             get { return snareDur; }
-            set { stunDur = value; }
+            set { snareDur = value; }
         }
         public int SnareAmount
         {
@@ -178,7 +245,20 @@ namespace Once_A_Rogue
         public int PoisenDur
         {
             get { return poisenDur; }
-            set { poisenDur = value; }
+            set
+            {
+                poisenDur = value;
+
+                if (poisenDur < 0)
+                {
+                    poisenDur = 0;
+                }
+
+                if (poisenDur != 0)
+                {
+                    isPoisoned = true;
+                }
+            }
         }
         public int PoisenDmg
         {
@@ -190,7 +270,20 @@ namespace Once_A_Rogue
         public int FireDur
         {
             get { return fireDur; }
-            set { fireDur = value; }
+            set
+            {
+                fireDur = value;
+
+                if(fireDur < 0)
+                {
+                    fireDur = 0;
+                }
+
+                if(fireDur != 0)
+                {
+                    isOnFire = true;
+                }
+            }
         }
         public int FireDmg
         {
@@ -299,26 +392,26 @@ namespace Once_A_Rogue
         }
 
         //Timers to keep track of status effects
-        Timer poisonTimer;
-        Timer stunTimer;
-        Timer snareTimer;
-        Timer rootTimer;
-        Timer fireTimer;
+        Timer poisonTimer = new Timer(1000);
+        Timer stunTimer = new Timer(1000);
+        Timer snareTimer = new Timer(1000);
+        Timer rootTimer = new Timer(1000);
+        Timer fireTimer = new Timer(1000);
 
         //Method to update the player
         virtual public void Update()
         {
             //Checking for status effects
 
-            StatusChecker(snareTimer, IsSnared);
+            StatusChecker(snareTimer, isSnared);
 
-            StatusChecker(rootTimer, IsRooted);
+            StatusChecker(rootTimer, isRooted);
 
-            StatusChecker(stunTimer, IsStunned);
+            StatusChecker(stunTimer, isStunned);
 
-            StatusChecker(fireTimer, IsOnFire);
+            StatusChecker(fireTimer, isOnFire);
 
-            StatusChecker(poisonTimer, IsPoisoned);
+            StatusChecker(poisonTimer, isPoisoned);
         }
 
         //Event for the poisen timer or fire timer triggering
@@ -326,15 +419,15 @@ namespace Once_A_Rogue
         {
             //Adjusting all statuses timers if they are true
 
-            StatusTimerAdjust(snareTimer, IsSnared, SnareDur, MoveSpeedTotal, MoveSpeed);
+            StatusTimerAdjust(snareTimer, isSnared, SnareDur, MoveSpeedTotal, MoveSpeed);
 
-            StatusTimerAdjust(rootTimer, IsRooted, RootDur, MoveSpeedTotal, MoveSpeed);
+            StatusTimerAdjust(rootTimer, isRooted, RootDur, MoveSpeedTotal, MoveSpeed);
 
-            StatusTimerAdjust(stunTimer, IsStunned, StunDur);
+            StatusTimerAdjust(stunTimer, isStunned, StunDur);
 
-            StatusTimerAdjust(fireTimer, IsOnFire, FireDur, FireDmg);
+            StatusTimerAdjust(fireTimer, isOnFire, FireDur, FireDmg);
 
-            StatusTimerAdjust(poisonTimer, IsPoisoned, PoisenDur, PoisenDmg);
+            StatusTimerAdjust(poisonTimer, isPoisoned, PoisenDur, PoisenDmg);
         }
 
         //Method for checking a status and setting up a timer for that status if one does not exist
@@ -343,28 +436,14 @@ namespace Once_A_Rogue
             //If afflicted by status effect
             if (status == true)
             {
-                //If the timer is not already created
-                if (timer == null)
-                {
-                    //Create a timer with a 1 second interval
-                    timer = new Timer(1000);
+                //Set the timer to repeat the interval automatically
+                timer.AutoReset = true;
 
-                    //Set the timer to repeat the interval automatically
-                    timer.AutoReset = true;
+                //Create an event for when the interval goes off
+                timer.Elapsed += StatusTriggered;
 
-                    //Create an event for when the interval goes off
-                    timer.Elapsed += StatusTriggered;
-
-                    //Start the timer
-                    timer.Start();
-                }
-
-                //If a timer already is created
-                else
-                {
-                    //Start the timer
-                    timer.Start();
-                }
+                //Start the timer
+                timer.Start();
             }
         }
 
@@ -441,12 +520,12 @@ namespace Once_A_Rogue
         virtual public void OnDeath()
         {
             //Resetting the status effects
-            IsRooted = false;
-            IsSnared = false;
-            IsPoisoned = false;
-            IsStunned = false;
-            IsOnFire = false;
-            IsExplosive = false;
+            isRooted = false;
+            isSnared = false;
+            isPoisoned = false;
+            isStunned = false;
+            isOnFire = false;
+            isExplosive = false;
 
             //TO DO: Determine what else needs to happen here.
         }

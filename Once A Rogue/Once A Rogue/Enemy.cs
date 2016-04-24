@@ -56,7 +56,7 @@ namespace Once_A_Rogue
                 if (fearLevel > 100)
                 {
                     
-                    IsFeared = true;
+                    isFeared = true;
                     fearLevel = 100;
                 }
                 else
@@ -149,7 +149,6 @@ namespace Once_A_Rogue
         public override void OnDeath()
         {
             base.OnDeath();
-
         }
 
         //Overloaded OnDeath method that passes in a Player object
@@ -170,7 +169,7 @@ namespace Once_A_Rogue
             if(CurrHealth == TotalHealth / 5)
             {
                 //Automatically give enemy "IsFeared" attribute
-                IsFeared = true;
+                isFeared = true;
                 //Add code here to make enemy run in a random direction
             }
 
@@ -179,15 +178,13 @@ namespace Once_A_Rogue
             if (CurrHealth == TotalHealth / 7)
             {
                 //Automatically set IsFeared to false since enemy is in "last stand" mode
-                IsFeared = false;
+                isFeared = false;
                
                 //Automatically set armor level of enemy to 0 (they drop their sheilds and helmets in fear)
                 armorLevel = 0;
 
                 //BRAINSTORM: Make IsSnared variable true, enemy is expending all their energy trying
                 // to survive and fight, thus they probably can't move at full speed
-                IsSnared = true;
-
                 //Also alter the movement speed, both this and the IsSnared = True may be redundant
                 MoveSpeed = MoveSpeedTotal / 3;
 
@@ -331,5 +328,9 @@ namespace Once_A_Rogue
             PosY += pathSpeedY;
         }
 
+        public override void Update()
+        {
+            base.Update();
+        }
     }
 }

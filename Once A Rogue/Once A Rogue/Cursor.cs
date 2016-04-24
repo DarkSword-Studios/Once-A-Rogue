@@ -20,7 +20,7 @@ namespace Once_A_Rogue
         public void Update(Room room, Player player)
         {
             //Avix (A.K.A: Stasha's room tagging)
-            room.TagTiles(msState.Position, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.PosRect, player.CurrSkill.RangeX, player.CurrSkill.RangeY);
+            //room.TagTiles(msState.Position, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.CurrSkill.BurstRadius, player.PosRect, player.CurrSkill.RangeX, player.CurrSkill.RangeY);
 
             //Getting the current state
             msState = Mouse.GetState();
