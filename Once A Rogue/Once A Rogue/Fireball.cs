@@ -22,8 +22,6 @@ namespace Once_A_Rogue
             Cooldown = 0;
             CooldownTotal = 1000;
             BurstRadius = 0;
-            RangeX = 5;
-            RangeY = 5;
             Cost = 15;
             Name = "Fireball";
         }

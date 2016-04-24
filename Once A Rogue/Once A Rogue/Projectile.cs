@@ -101,9 +101,6 @@ namespace Once_A_Rogue
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
             limitRange = false;
-
-            //Adding the projectile to a projectile list in the game class
-            Game1.CurrProjectiles.Add(this);
         }
 
         //Overload Constructor if range is an issue
@@ -124,9 +121,6 @@ namespace Once_A_Rogue
             limitRange = true;
             distTravelled = 0;
             distTravel = vecDist.Length();
-
-            //Adding the projectile to a projectile list in the game class
-            Game1.CurrProjectiles.Add(this);
         }
 
         public void Update(GameTime gameTime)
@@ -166,25 +160,19 @@ namespace Once_A_Rogue
 
         public void OnCollision(Character target)
         {
+            currChar = target;
+            if (prevChar != currChar)
+            {
+                //Deal damage and remember that character
+                prevChar = currChar;
+                target.CurrHealth -= Damage;
+            }
+
             //If the tag is not to pass through
             if (Tag != "pass")
             {
                 //Subtract damage and remove
-                target.CurrHealth -= Damage;
                 Game1.RemoveProj.Add(this);
-            }
-
-            //Otherwise
-            else
-            {
-                //Make sure the projectile only hits that target once
-                currChar = target;
-                if(prevChar != currChar)
-                {
-                    //Deal damage and remember that character
-                    prevChar = currChar;
-                    target.CurrHealth -= Damage;
-                }
             }
 
             //Setting up combo situations
@@ -193,17 +181,41 @@ namespace Once_A_Rogue
                 case "fire":
                     target.FireDur = 4;
                     target.FireDmg = 4;
+                    if(target.IsExplosive)
+                    {
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(1, 0), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-1, 0), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(0, 1), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(0, -1), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, .707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, .707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, -.707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, -.707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        target.IsExplosive = false;
+                    }
                     break;
+
                 case "poisen":
                     target.PoisenDur = 4;
                     target.PoisenDmg = 4;
                     break;
+
                 case "stun":
                     target.StunDur = 4;
                     break;
+
                 case "snare":
                     target.MoveSpeed -= 1;
                     if(target.MoveSpeed <= 0)
+                    {
+                        target.MoveSpeed = 0;
+                    }
+                    break;
+
+                case "oil":
+                    target.IsExplosive = true;
+                    target.MoveSpeed -= 1;
+                    if (target.MoveSpeed <= 0)
                     {
                         target.MoveSpeed = 0;
                     }

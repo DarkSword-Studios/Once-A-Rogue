@@ -139,13 +139,12 @@ namespace Once_A_Rogue
             warriorSkillList.Add(new MeleeAttack(this));
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
-            rogueSkillList.Add(new FanOfKnives(this));
             rangerSkillList.Add(new MeleeAttack(this));
+
             rangerSkillList.Add(new PiercingShot(5, this));
-
-            Fireball test = new Fireball(5, this);
-
-            mageSkillList.Add(test);
+            rogueSkillList.Add(new FanOfKnives(5, this));
+            mageSkillList.Add(new Fireball(5, this));
+            mageSkillList.Add(new OilThrow(this));
 
             //Initializing the weapon array
             weaponArray = new string[4];

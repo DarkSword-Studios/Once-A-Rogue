@@ -13,7 +13,7 @@ namespace Once_A_Rogue
     //4/24/2016
     //This rogue skill unleashes a flurry of short range knives
     {
-        public FanOfKnives(Character own) : base(own)
+        public FanOfKnives(int dam, Character own) : base(dam, own)
         {
             //Setting default values
             CooldownTotal = 3000;
@@ -22,7 +22,7 @@ namespace Once_A_Rogue
             RangeY = 0;
             BurstRadius = 0;
             Cost = 10;
-            Damage = 5;
+            Damage = dam;
             Name = "Fan of Knives";
         }
 
