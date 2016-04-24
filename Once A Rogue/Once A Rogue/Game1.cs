@@ -121,6 +121,7 @@ namespace Once_A_Rogue
         //List to keep track of projectiles
         private static List<Projectile> currProjectiles;
         private static List<Projectile> removeProj;
+        private static List<Projectile> addProj;
 
         public static List<Projectile> CurrProjectiles
         {
@@ -132,6 +133,12 @@ namespace Once_A_Rogue
         {
             get { return removeProj; }
             set { removeProj = value; }
+        }
+
+        public static List<Projectile> AddProj
+        {
+            get { return addProj; }
+            set { addProj = value; }
         }
 
         float manaBarWidth;
@@ -400,6 +407,7 @@ namespace Once_A_Rogue
                 if (Game1.CurrProjectiles.Count > 0)
                 {
                     removeProj = new List<Projectile>();
+                    addProj = new List<Projectile>();
 
                     foreach (Projectile project in Game1.CurrProjectiles)
                     {
@@ -431,6 +439,13 @@ namespace Once_A_Rogue
                     {
                         Game1.currProjectiles.Remove(project);              
                     }
+
+                    foreach(Projectile project in addProj)
+                    {
+                        Game1.currProjectiles.Add(project);
+                    }
+
+                    addProj.Clear();
                 }
 
                 if(SingleKeyPress(Keys.Escape))
@@ -664,6 +679,7 @@ namespace Once_A_Rogue
                 if(gameState == GameState.Playing)
                 {
                     spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
+                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls, new Vector2(169, 170), Color.White);
                 }
                 
             }
