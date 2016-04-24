@@ -472,7 +472,7 @@ namespace Once_A_Rogue
             foreach(Enemy enemy in enemiesToRemove)
             {
                 enemyList.Remove(enemy);
-                enemy.OnDeath();
+                enemy.OnDeath(enemy.player);
             }
 
             enemiesToRemove.Clear();

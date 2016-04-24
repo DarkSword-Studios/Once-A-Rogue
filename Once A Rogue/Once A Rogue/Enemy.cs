@@ -45,6 +45,8 @@ namespace Once_A_Rogue
         enum enemyState { IdleRight, IdleLeft, WalkingRight, WalkingLeft, AttackRight, AttackLeft  };
         enemyState eState;
 
+        public Player player;
+
         //Property for Fear Level
         public int FearLevel
         {
@@ -216,6 +218,7 @@ namespace Once_A_Rogue
             PoisenResist = 0;
             SnareResist = 0;
             RootResist = 0;
+            player = play;
         }
 
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)

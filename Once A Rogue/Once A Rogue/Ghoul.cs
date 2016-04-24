@@ -24,8 +24,8 @@ namespace Once_A_Rogue
         {
 
             SkillList = new List<Skills>();
-            
 
+            player = play;
             MoveSpeedTotal = 6;
             MoveSpeed = 6;
             ghoulSouls = ghSouls;

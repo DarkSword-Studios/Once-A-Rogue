@@ -202,14 +202,15 @@ namespace Once_A_Rogue
             {
                 stunDur = (int)(value * (1-stunResist));
 
-                if (stunDur < 0)
+                if (stunDur <= 0)
                 {
                     stunDur = 0;
+                    IsStunned = false;
                 }
 
                 if (stunDur != 0)
                 {
-                    isStunned = true;
+                    IsStunned = true;
                 }
             }
         }
@@ -221,14 +222,15 @@ namespace Once_A_Rogue
             {
                 rootDur = (int)(value * (1 - rootResist));
 
-                if (rootDur < 0)
+                if (rootDur <= 0)
                 {
                     rootDur = 0;
+                    IsRooted = false;
                 }
 
                 if (rootDur != 0)
                 {
-                    isRooted = true;
+                    IsRooted = true;
                 }
             }
         }
@@ -249,14 +251,15 @@ namespace Once_A_Rogue
             {
                 poisenDur = value;
 
-                if (poisenDur < 0)
+                if (poisenDur <= 0)
                 {
                     poisenDur = 0;
+                    IsPoisened = false;
                 }
 
                 if (poisenDur != 0)
                 {
-                    isPoisoned = true;
+                    IsPoisened = true;
                 }
             }
         }
@@ -274,14 +277,15 @@ namespace Once_A_Rogue
             {
                 fireDur = value;
 
-                if(fireDur < 0)
+                if(fireDur <= 0)
                 {
                     fireDur = 0;
+                    IsOnFire = false;
                 }
 
                 if(fireDur != 0)
                 {
-                    isOnFire = true;
+                    IsOnFire = true;
                 }
             }
         }
@@ -490,7 +494,7 @@ namespace Once_A_Rogue
         }
 
         //Overload for the status timer adjustment used for fire and poisen
-        public void StatusTimerAdjust(Timer statTimer, bool status, int dur, int dmg)
+        public int StatusTimerAdjust(Timer statTimer, bool status, int dur, int dmg)
         {
             if (status == true)
             {
@@ -500,7 +504,7 @@ namespace Once_A_Rogue
                 //Taking damage dependent on the characters resistence
                 CurrHealth -= dmg;
 
-                //Seeing if the stun is over
+                //Seeing if the duration is over
                 if (dur <= 0)
                 {
                     dur = 0;
@@ -510,7 +514,11 @@ namespace Once_A_Rogue
                     //Stopping the timer
                     statTimer.Stop();
                 }
+
+                return dur;
             }
+
+            return 0;
         }
 
         //Method for events that occur when the character dies

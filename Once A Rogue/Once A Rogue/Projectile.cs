@@ -96,7 +96,7 @@ namespace Once_A_Rogue
             vector = vec;
             startX = x;
             startY = y;
-            speed = 5;
+            speed = 10;
             this.rowY = rowY;
             this.numFrames = numFrames;
             PosRect = new Rectangle(x, y, width, height);
@@ -113,7 +113,7 @@ namespace Once_A_Rogue
             vector = vec;
             startX = x;
             startY = y;
-            speed = 5;
+            speed = 10;
             vecDist = destination;
             this.rowY = rowY;
             this.numFrames = numFrames;

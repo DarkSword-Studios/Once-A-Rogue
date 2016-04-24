@@ -21,6 +21,7 @@ namespace Once_A_Rogue
             RangeY = 15;
             BurstRadius = 0;
             Name = "Piercing Shot";
+            Cost = 20;
         }
 
         public override void OnActivated()

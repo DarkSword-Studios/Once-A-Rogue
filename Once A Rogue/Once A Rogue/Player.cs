@@ -166,7 +166,7 @@ namespace Once_A_Rogue
             TotalMana = 100;
             CurrMana = 100;
             CurrHealth = 100;
-            ManaRegen = 2;
+            ManaRegen = 1;
             timePassed = 0;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];

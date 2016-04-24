@@ -324,6 +324,7 @@ namespace Once_A_Rogue
                 if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))))
                 {
                     gameState = GameState.Playing;
+                    CurrProjectiles.Clear();
                     NewLevelGen();
                 }
                 if ((arrowState == ArrowState.menu1) && kbs.IsKeyDown(Keys.S) || (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728))
@@ -364,6 +365,13 @@ namespace Once_A_Rogue
                 {
                     playerMove = "up";
                 }
+
+                //Death button
+                if(kbs.IsKeyDown(Keys.K))
+                {
+                    player.CurrHealth = 0;
+                }
+
                 if (camera.isMoving)
                 {
                     camera.Update();
@@ -489,6 +497,10 @@ namespace Once_A_Rogue
                     levelTrigger = false;
                 }
 
+                if(player.CurrHealth <= 0)
+                {
+                    gameState = GameState.GameOver;
+                }
             }
             
             //if(gameState == GameState.Playing && !this.IsActive)
@@ -497,9 +509,14 @@ namespace Once_A_Rogue
             //    arrowState = ArrowState.pos1;
             //}
 
+            //If you hit enter on the Game over screen it sends you to the main menu
             if(gameState == GameState.GameOver)
             {
-
+                kbs = Keyboard.GetState();
+                if (kbs.IsKeyDown(Keys.Enter))
+                {
+                    gameState = GameState.MainMenu;
+                }
             }
 
             if (gameState == GameState.Context)
@@ -628,7 +645,7 @@ namespace Once_A_Rogue
             }
 
             //this is drawn no matter what so even when paused, the game is still "drawn", it will just be "idle"
-            if ((this.IsActive) && (gameState != GameState.MainMenu))
+            if ((this.IsActive) && (gameState != GameState.MainMenu && gameState != GameState.GameOver))
             {
                 //Extremely important call to draw all active rooms
                 DrawRooms();
@@ -679,7 +696,7 @@ namespace Once_A_Rogue
                 if(gameState == GameState.Playing)
                 {
                     spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
-                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls, new Vector2(169, 170), Color.White);
+                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls, new Vector2(169, 180), Color.White);
                 }
                 
             }
@@ -713,7 +730,8 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.GameOver)
             {
-
+                spriteBatch.DrawString(alertText, "You made it to level: " + player.Level, new Vector2(800, 400), Color.White);
+                spriteBatch.DrawString(alertText, "Press Enter to Continue...", new Vector2(750, 600), Color.White);
             }
 
             if (gameState == GameState.Context)
