@@ -436,9 +436,6 @@ namespace Once_A_Rogue
             //If afflicted by status effect
             if (status == true)
             {
-                //Set the timer to repeat the interval automatically
-                timer.AutoReset = true;
-
                 //Create an event for when the interval goes off
                 timer.Elapsed += StatusTriggered;
 
@@ -468,7 +465,7 @@ namespace Once_A_Rogue
             }
         }
 
-        //Overload for the Status timer adjustment
+        //Overload for the Status timer adjustment used for movement speed
         public void StatusTimerAdjust(Timer timer, bool status, int dur, int totalStat, int affectedStat)
         {
             if (status == true)
@@ -492,7 +489,7 @@ namespace Once_A_Rogue
             }
         }
 
-        //Overload for the status timer adjustment
+        //Overload for the status timer adjustment used for fire and poisen
         public void StatusTimerAdjust(Timer statTimer, bool status, int dur, int dmg)
         {
             if (status == true)
