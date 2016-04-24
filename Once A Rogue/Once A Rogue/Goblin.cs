@@ -30,6 +30,10 @@ namespace Once_A_Rogue
         public override void Draw(SpriteBatch spritebatch)
         {
             base.Draw(spritebatch);
+            if(IsOnFire)
+            {
+                spritebatch.Draw(Texture, new Rectangle(PosX, PosY - 40, 10, 10), Color.Red);
+            }
         }
 
         //Default ranged attack for goblin
@@ -40,7 +44,9 @@ namespace Once_A_Rogue
 
         }
 
-
-
+        public override void OnDeath(Player play)
+        {
+            base.OnDeath(play);
+        }
     }
 }

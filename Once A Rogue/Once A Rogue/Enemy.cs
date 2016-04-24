@@ -160,8 +160,6 @@ namespace Once_A_Rogue
 
             //Increment the 'Soul Count' of the player'
             play.Souls++;
-
-
         }
         public void Retreat()
         {
@@ -213,6 +211,11 @@ namespace Once_A_Rogue
             armorLevel = 5;
             isHostile = host;
             isHostile = false;
+            FireResist = 0;
+            StunResist = 0;
+            PoisenResist = 0;
+            SnareResist = 0;
+            RootResist = 0;
         }
 
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)

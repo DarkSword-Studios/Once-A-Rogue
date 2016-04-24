@@ -127,7 +127,7 @@ namespace Once_A_Rogue
 
         public Player(int x, int y, int width, int height)
         {
-
+            Level = 1;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
@@ -173,6 +173,11 @@ namespace Once_A_Rogue
             currSkillList = warriorSkillList;
             CurrSkill = currSkillList[0];
             currentFrame = 0;
+            FireResist = 0;
+            PoisenResist = 0;
+            RootResist = 0;
+            SnareResist = 0;
+            StunResist = 0;
         }
 
         //Method for processing user input
@@ -475,6 +480,12 @@ namespace Once_A_Rogue
             {
                 CurrMana += ManaRegen;
                 timePassed = 0;
+            }
+
+            if(Souls == 100)
+            {
+                Level += 1;
+                Souls = 0;
             }
 
             else if (CurrMana > TotalMana)

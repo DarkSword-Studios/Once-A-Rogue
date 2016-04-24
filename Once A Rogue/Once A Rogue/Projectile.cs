@@ -180,7 +180,7 @@ namespace Once_A_Rogue
             {
                 case "fire":
                     target.FireDur = 4;
-                    target.FireDmg = 4;
+                    target.FireDmg = 1;
                     if(target.IsExplosive)
                     {
                         Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(1, 0), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
@@ -197,7 +197,7 @@ namespace Once_A_Rogue
 
                 case "poisen":
                     target.PoisenDur = 4;
-                    target.PoisenDmg = 4;
+                    target.PoisenDmg = 1;
                     break;
 
                 case "stun":
