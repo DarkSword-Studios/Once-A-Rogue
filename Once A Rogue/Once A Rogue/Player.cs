@@ -66,6 +66,11 @@ namespace Once_A_Rogue
             set { currentFrame = value; }
         }
 
+        //MouseStates
+        MouseState previousMs;
+        MouseState msState;
+
+        //Mana properties
         private int currMana;
 
         public int CurrMana
@@ -82,7 +87,17 @@ namespace Once_A_Rogue
             set { totalMana = value; }
         }
 
+        //Mana Regen Property
+        private int manaRegen;
 
+        public int ManaRegen
+        {
+            get { return manaRegen; }
+            set { manaRegen = value; }
+        }
+
+
+        //Percentage of HP remaining property
         private float percentHP;
 
         public float PercentHP
@@ -95,14 +110,6 @@ namespace Once_A_Rogue
         public float PercentMP
         {
             get { return percentMP; }
-        }
-
-        private int manaRegen;
-
-        public int ManaRegen
-        {
-            get { return manaRegen; }
-            set { manaRegen = value; }
         }
 
         //Keeps track of the current frame of animation for the player
@@ -187,7 +194,8 @@ namespace Once_A_Rogue
             KeyboardState kbs = Keyboard.GetState();
 
             //Figuring out which mouse buttn is being pressed
-            MouseState msState = Mouse.GetState();
+            previousMs = msState;
+            msState = Mouse.GetState();
 
             //Assume the player is moving, a special case exists to correct idle movement
             timePerFrame = 50;
@@ -286,6 +294,42 @@ namespace Once_A_Rogue
             if (PosX < 80)
             {
                 PosX = 80;
+            }
+
+            //Weapon switching
+            if(msState.RightButton == ButtonState.Pressed && previousMs.RightButton == ButtonState.Released)
+            {
+                if(CurrWeapon == "Sword")
+                {
+                    //Switch to the Daggers
+                    CurrWeapon = weaponArray[1];
+                    currSkillList = rogueSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+
+                else if(CurrWeapon == "Daggers")
+                {
+                    //Switch to the Bow
+                    CurrWeapon = weaponArray[2];
+                    currSkillList = rangerSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+
+                else if (CurrWeapon == "Bow")
+                {
+                    //Switch to the staff
+                    CurrWeapon = weaponArray[3];
+                    currSkillList = mageSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+
+                else if (CurrWeapon == "Staff")
+                {
+                    //Switch to the sword and restore defaults
+                    CurrWeapon = weaponArray[0];
+                    currSkillList = warriorSkillList;
+                    CurrSkill = currSkillList[0];
+                }
             }
 
             //Switch to sword
