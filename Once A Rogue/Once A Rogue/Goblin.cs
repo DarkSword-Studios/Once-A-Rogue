@@ -40,7 +40,7 @@ namespace Once_A_Rogue
       
         public void Update(Player play, GameTime gt)
         {
-            base.Update();
+            base.Update(gt);
 
         }
 

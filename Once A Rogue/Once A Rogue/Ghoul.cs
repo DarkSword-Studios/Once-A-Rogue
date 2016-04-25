@@ -74,18 +74,14 @@ namespace Once_A_Rogue
             //Add code for attack animation
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            base.Update();
+            base.Update(gameTime);
         }
 
         public void Update(Player play, GameTime gt)
         {
-            base.Update();
-
-
-
-
+            base.Update(gt);
         }
     }
 }

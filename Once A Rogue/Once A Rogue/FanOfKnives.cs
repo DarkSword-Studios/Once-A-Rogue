@@ -16,7 +16,7 @@ namespace Once_A_Rogue
         public FanOfKnives(int dam, Character own) : base(dam, own)
         {
             //Setting default values
-            CooldownTotal = 3000;
+            CooldownTotal = 2000;
             Cooldown = 0;
             RangeX = 6;
             RangeY = 0;

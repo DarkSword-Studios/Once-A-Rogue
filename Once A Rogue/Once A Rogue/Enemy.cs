@@ -217,7 +217,7 @@ namespace Once_A_Rogue
             isHostile = false;
             FireResist = 0;
             StunResist = 0;
-            PoisenResist = 0;
+            PoisonResist = 0;
             SnareResist = 0;
             RootResist = 0;
             player = play;
@@ -342,9 +342,9 @@ namespace Once_A_Rogue
             PosY += pathSpeedY;
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            base.Update();
+            base.Update(gameTime);
         }
     }
 }

@@ -180,8 +180,8 @@ namespace Once_A_Rogue
             {
                 case "fire":
                     //Set the duration of the fire and damage
-                    target.FireDur = 4;
-                    target.FireDmg = 1;
+                    target.FireDur = 4000;
+                    target.FireDmg = 3;
                     if(target.IsExplosive)
                     {
                         //Create projectiles which go off in 8 directions
@@ -193,14 +193,14 @@ namespace Once_A_Rogue
                         Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, .707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
                         Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, -.707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
                         Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, -.707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        target.IsExplosive = false;
+                        target.FireDur = 0;
                     }
                     break;
 
                 case "poison":
                     //Set the poison
-                    target.PoisonDur = 4;
-                    target.PoisonDmg = 1;
+                    target.PoisonDur = 4000;
+                    target.PoisonDmg = 4;
                     break;
 
                 case "stun":
@@ -216,13 +216,17 @@ namespace Once_A_Rogue
                     break;
 
                 case "oil":
-                    target.IsExplosive = true;
+                    target.ExplosiveDur = 4000;
                     target.MoveSpeed -= 1;
                     if (target.MoveSpeed <= 0)
                     {
                         target.MoveSpeed = 0;
                     }
                     break;
+
+                case "root":
+                    target.MoveSpeed = 0;
+
             }
         }
     }

@@ -183,24 +183,45 @@ namespace Once_A_Rogue
         }
 
         //Variables of the status effects
-        private int stunDur;
-        private int rootDur;
-        private int snareDur;
+        private double explosiveDur;
+        private double stunDur;
+        private double rootDur;
+        private double snareDur;
         private int snareAmt;
-        private int poisonDur;
+        private double poisonDur;
         private int poisonDmg;
-        private int fireDur;
+        private double fireDur;
         private int fireDmg;
 
         //Properties for the above variables
-        public int StunDur
+        public double ExplosiveDur
+        {
+            get { return explosiveDur; }
+            set
+            {
+                explosiveDur = value;
+
+                if (explosiveDur <= 0)
+                {
+                    explosiveDur = 0;
+                    IsExplosive = false;
+                }
+
+                if (explosiveDur != 0)
+                {
+                    IsExplosive = true;
+                }
+            }
+        }
+
+        public double StunDur
         {
             get { return stunDur; }
 
             //Duration of the status is reduced by a percentage based upon resistence of the character
             set
             {
-                stunDur = (int)(value * (1-stunResist));
+                stunDur = value * (1-stunResist);
 
                 if (stunDur <= 0)
                 {
@@ -215,12 +236,12 @@ namespace Once_A_Rogue
             }
         }
 
-        public int RootDur
+        public double RootDur
         {
             get { return rootDur; }
             set
             {
-                rootDur = (int)(value * (1 - rootResist));
+                rootDur = value * (1 - rootResist);
 
                 if (rootDur <= 0)
                 {
@@ -231,20 +252,35 @@ namespace Once_A_Rogue
                 if (rootDur != 0)
                 {
                     IsRooted = true;
+                    MoveSpeed = 0;
                 }
             }
         }
-        public int SnareDur
+        public double SnareDur
         {
             get { return snareDur; }
-            set { snareDur = value; }
+            set
+            {
+                snareDur = value * (1 - rootResist);
+
+                if (snareDur <= 0)
+                {
+                    snareDur = 0;
+                    IsSnared = false;
+                }
+
+                if (snareDur != 0)
+                {
+                    IsSnared = true;
+                }
+            }
         }
         public int SnareAmount
         {
             get { return snareAmt; }
-            set { snareAmt = (int)(value * (1 - snareResist)); }
+            set { MoveSpeed -= value; }
         }
-        public int PoisonDur
+        public double PoisonDur
         {
             get { return poisonDur; }
             set
@@ -268,9 +304,10 @@ namespace Once_A_Rogue
             get { return poisonDmg; }
 
             //Damage is reduced by a percentage based on character resist
-            set { poisonDmg = (int)(value * (1 - poisenResist)); }
+            set { poisonDmg = (int)(value * (1 - poisonResist)); }
         }
-        public int FireDur
+
+        public double FireDur
         {
             get { return fireDur; }
             set
@@ -319,21 +356,21 @@ namespace Once_A_Rogue
             }
         }
         
-        private double poisenResist;
+        private double poisonResist;
 
-        virtual public double PoisenResist
+        virtual public double PoisonResist
         {
-            get { return poisenResist; }
+            get { return poisonResist; }
             set
             {
                 if (value > 1.0)
                 {
-                    poisenResist = 1.0;
+                    poisonResist = 1.0;
                 }
 
                 else
                 {
-                    poisenResist = value;
+                    poisonResist = value;
                 }
             }
         }
@@ -395,142 +432,86 @@ namespace Once_A_Rogue
             }
         }
 
-        //Timers to keep track of status effects
-        Timer poisonTimer = new Timer(1000);
-        Timer stunTimer = new Timer(1000);
-        Timer snareTimer = new Timer(1000);
-        Timer rootTimer = new Timer(1000);
-        Timer fireTimer = new Timer(1000);
+        double elapsedTime = 0;
 
         //Method to update the player
-        virtual public void Update()
+        virtual public void Update(GameTime gameTime)
         {
             //Checking for status effects
-
-            StatusChecker(snareTimer, isSnared);
-
-            StatusChecker(rootTimer, isRooted);
-
-            StatusChecker(stunTimer, isStunned);
-
-            StatusChecker(fireTimer, isOnFire);
-
-            StatusChecker(poisonTimer, isPoisoned);
-        }
-
-        //Event for the poisen timer or fire timer triggering
-        private void StatusTriggered(object sender, ElapsedEventArgs e)
-        {
-            //Adjusting all statuses timers if they are true
-
-            StatusTimerAdjust(snareTimer, isSnared, SnareDur, MoveSpeedTotal, MoveSpeed);
-
-            StatusTimerAdjust(rootTimer, isRooted, RootDur, MoveSpeedTotal, MoveSpeed);
-
-            StatusTimerAdjust(stunTimer, isStunned, StunDur);
-
-            StatusTimerAdjust(fireTimer, isOnFire, FireDur, FireDmg);
-
-            StatusTimerAdjust(poisonTimer, isPoisoned, PoisonDur, PoisonDmg);
-        }
-
-        //Method for checking a status and setting up a timer for that status if one does not exist
-        public void StatusChecker(Timer timer, bool status)
-        {
-            //If afflicted by status effect
-            if (status == true)
+            if(IsOnFire == true)
             {
-                //Create an event for when the interval goes off
-                timer.Elapsed += StatusTriggered;
-
-                //Start the timer
-                timer.Start();
-            }
-        }
-
-        //StatusTimer adjustment method
-        public void StatusTimerAdjust(Timer timer, bool status, int dur)
-        {
-            if (status == true)
-            {
-                //Subtracting one from the duration of the timer
-                dur -= 1;
-
-                //Seeing if the stun is over
-                if (dur <= 0)
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                if(elapsedTime >= 1000)
                 {
-                    dur = 0;
-
-                    status = false;
-
-                    //Stopping the timer
-                    timer.Stop();
+                    elapsedTime = 0;
+                    FireDur -= 1000;
+                    CurrHealth -= FireDmg;
                 }
             }
-        }
 
-        //Overload for the Status timer adjustment used for movement speed
-        public void StatusTimerAdjust(Timer timer, bool status, int dur, int totalStat, int affectedStat)
-        {
-            if (status == true)
+            if (IsPoisoned == true)
             {
-                //Subtracting one from the duration of the timer
-                dur -= 1;
-
-                //Seeing if the stun is over
-                if (dur <= 0)
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsedTime >= 1000)
                 {
-                    dur = 0;
-
-                    //Returning the stat to normal
-                    affectedStat = totalStat;
-
-                    status = false;
-
-                    //Stopping the timer
-                    timer.Stop();
+                    elapsedTime = 0;
+                    PoisonDur -= 1000;
+                    CurrHealth -= PoisonDmg;
                 }
             }
-        }
 
-        //Overload for the status timer adjustment used for fire and poisen
-        public int StatusTimerAdjust(Timer statTimer, bool status, int dur, int dmg)
-        {
-            if (status == true)
+            if (IsSnared == true)
             {
-                //Subtracting one from the duration of the timer
-                dur -= 1;
-
-                //Taking damage dependent on the characters resistence
-                CurrHealth -= dmg;
-
-                //Seeing if the duration is over
-                if (dur <= 0)
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsedTime >= 1000)
                 {
-                    dur = 0;
-
-                    status = false;
-
-                    //Stopping the timer
-                    statTimer.Stop();
+                    elapsedTime = 0;
+                    SnareDur -= 1000;
                 }
-
-                return dur;
             }
 
-            return 0;
+            if (IsRooted == true)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsedTime >= 1000)
+                {
+                    elapsedTime = 0;
+                    RootDur -= 1000;
+                }
+            }
+
+            if (IsStunned == true)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsedTime >= 1000)
+                {
+                    elapsedTime = 0;
+                    StunDur -= 1000;
+                }
+            }
+
+            if (IsExplosive == true)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsedTime >= 1000)
+                {
+                    elapsedTime = 0;
+                    ExplosiveDur -= 1000;
+                }
+            }
+
         }
 
         //Method for events that occur when the character dies
         virtual public void OnDeath()
         {
             //Resetting the status effects
-            isRooted = false;
-            isSnared = false;
-            isPoisoned = false;
-            isStunned = false;
-            isOnFire = false;
-            isExplosive = false;
+            IsRooted = false;
+            IsSnared = false;
+            IsPoisoned = false;
+            IsStunned = false;
+            IsOnFire = false;
+            IsExplosive = false;
 
             //TO DO: Determine what else needs to happen here.
         }

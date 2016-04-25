@@ -942,7 +942,7 @@ namespace Once_A_Rogue
                                     }
 
                                     enemy.UpdatePathPosition();
-                                    enemy.Update();
+                                    enemy.Update(gameTime);
 
                                     //Pathfinding Algorithms --- Abandoned until further notice ---
 

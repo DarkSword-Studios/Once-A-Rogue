@@ -168,12 +168,12 @@ namespace Once_A_Rogue
             RootResist = 0;
             FireResist = 0;
             SnareResist = 0;
-            PoisenResist = 0;
+            PoisonResist = 0;
             TotalHealth = 100;
             TotalMana = 100;
             CurrMana = 100;
             CurrHealth = 100;
-            ManaRegen = 1;
+            ManaRegen = 3;
             timePassed = 0;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];
@@ -516,7 +516,7 @@ namespace Once_A_Rogue
 
         public void Update(int roomWidth, int roomHeight, Camera cam, GameTime gameTime)
         {
-            base.Update();
+            base.Update(gameTime);
 
             timePassed += gameTime.ElapsedGameTime.Milliseconds;
 
