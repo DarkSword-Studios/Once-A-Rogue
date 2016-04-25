@@ -180,11 +180,6 @@ namespace Once_A_Rogue
             currSkillList = warriorSkillList;
             CurrSkill = currSkillList[0];
             currentFrame = 0;
-            FireResist = 0;
-            PoisenResist = 0;
-            RootResist = 0;
-            SnareResist = 0;
-            StunResist = 0;
         }
 
         //Method for processing user input
