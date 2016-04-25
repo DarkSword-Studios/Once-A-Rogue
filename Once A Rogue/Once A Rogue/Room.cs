@@ -214,10 +214,10 @@ namespace Once_A_Rogue
             //--- At this point an interactable layer must be chosen ---
 
             //To avoid errors, only load in interactable layers for rooms that we have files for
-            if(roomCodeStr != "1234" && roomCodeStr != "14" && roomCodeStr != "23" && roomCodeStr != "3" && roomCodeStr != "1")
-            {
-                return;
-            }
+            //if(roomCodeStr != "1234" && roomCodeStr != "14" && roomCodeStr != "23" && roomCodeStr != "3" && roomCodeStr != "1")
+            //{
+            //    return;
+            //}
 
             //This list keeps track of all of the interactable layers in Content/InteractableLayer/ that would be valid fits for the current room
             List<string> possibleRooms = new List<string>();
@@ -225,6 +225,11 @@ namespace Once_A_Rogue
             //Read in each file in the Content/InteractableLayer/ folder (where we keep the room.txt files)
             foreach (string file in Directory.GetFiles(@"..\..\..\Content\InteractableLayer"))
             {
+                if (file.Contains("INCLUDE_ALL"))
+                {
+                    possibleRooms.Add(file);
+                }
+
                 //The purpose of this code is to determine if the file is valid to put in the possible rooms list (interactable layer list)
                 if (file.Contains(roomCodeStr))
                 {
