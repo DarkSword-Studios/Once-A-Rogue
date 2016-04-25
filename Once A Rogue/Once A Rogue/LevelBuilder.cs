@@ -383,6 +383,7 @@ namespace Once_A_Rogue
                     case ("LEFT"):
 
                         roomCode = 1;
+                        //Rooms that only have one entrance / exit qualify to be a potential boss room
                         addToBossList = true;
                         break;
 

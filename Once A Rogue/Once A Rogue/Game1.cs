@@ -46,7 +46,7 @@ namespace Once_A_Rogue
         const int SCREEN_WIDTH = 1920;
         const int SCREEN_HEIGHT = 1080;
 
-        //Stage locking a room
+        //Stage locking /unlocking a room
         Boolean lockRoom = false;
         Boolean unlockRoom = false;
 
@@ -59,6 +59,7 @@ namespace Once_A_Rogue
         //Track active rooms
         Room activeRoom;
 
+        //This flag indicates that enemies have just been spawned (in the current room most likely)
         Boolean done = false;
 
         //Track potential boss rooms
@@ -112,7 +113,7 @@ namespace Once_A_Rogue
 
         Cursor cur;
 
-        //Song for music
+        //Songs for music
         Song mainMusic, bossMusic;
 
         //Keep track of current song
@@ -205,6 +206,7 @@ namespace Once_A_Rogue
             //Notification Textures
             diagonalBar = Content.Load<Texture2D>("DiagonalNotificationBar.png");
 
+            //Rig font and texture to Notification system
             Notification.font = alertText;
             Notification.diagonalBar = diagonalBar;
 
@@ -316,7 +318,6 @@ namespace Once_A_Rogue
                 MediaPlayer.Resume();
             }
 
-            // TODO: Add your update logic here 
             if (gameState == GameState.MainMenu)
             {
                 mouseState = Mouse.GetState();
@@ -346,6 +347,7 @@ namespace Once_A_Rogue
                 //Extremely important call to update all active rooms
                 UpdateRooms(gameTime);
                 
+                //Update the player's animation
                 player.UpdateFrame(gameTime);
 
                 //Set W A S D keys to four different directions
@@ -372,6 +374,7 @@ namespace Once_A_Rogue
                     player.CurrHealth = 0;
                 }
 
+                //Update the camera if it is moving (transitions between rooms)
                 if (camera.isMoving)
                 {
                     camera.Update();
@@ -397,14 +400,6 @@ namespace Once_A_Rogue
                 {
                     playWepState = PlayWepState.Mage;
                 }
-
-                //REBUILD LEVEL ****USE FOR DEBUGGING ONLY
-
-                //if (state.IsKeyDown(Keys.R))
-                //{
-                //    gridSystem = new string[COLUMNS,ROWS];
-                //    gridSystem = builderAlpha.BuildLevel(gridSystem, 10);
-                //}
 
                 //Updating the player position
                 player.Update(camera.screenWidth, camera.screenHeight, camera, gameTime);
@@ -467,36 +462,45 @@ namespace Once_A_Rogue
                     gameState = GameState.Context;
                 }
 
+                //If M is pressed, toggle the visibility of the minimap
                 if (SingleKeyPress(Keys.M))
                 {
                     Minimap.Visible = !Minimap.Visible;
                 }
 
+                //If R is pressed, build a new level on the spot
                 if (SingleKeyPress(Keys.R))
                 {
                     levelTrigger = true;
                 }
 
                 //---- FOR DEBUGGING USE ONLY (Remove) ----
+                //If L is pressed, initiate the room locking procedure
                 if (SingleKeyPress(Keys.L))
                 {
                     lockRoom = true;
                 }
-
+                //If U is pressed, unlock the room
                 if (SingleKeyPress(Keys.U))
                 {
                     unlockRoom = true;
                 }
                 //---- END OF DEBUG CODE!!!! ----
-
+                
+                //Make sure the notifications are getting updated properly
                 Notification.UpdateAlert();
 
+                //If a call has been made to build a new level
                 if (levelTrigger)
                 {
+                    //Call the new level generator
                     NewLevelGen();
+
+                    //Set the new level trigger to be false to avoid further unintended calls
                     levelTrigger = false;
                 }
 
+                //If the player loses all of their health, move them to the game over screen
                 if(player.CurrHealth <= 0)
                 {
                     gameState = GameState.GameOver;
@@ -684,20 +688,28 @@ namespace Once_A_Rogue
                 spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (int)(healthBarWidth), 31), Color.White);
                 spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (int)(manaBarWidth), 31), Color.White);
 
-                if (Minimap.Visible && !Notification.Updating)
+                if (gameState == GameState.Playing)
                 {
-                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, true);
-                }
-                if (Notification.Updating)
-                {
-                    Notification.DrawAlert(spriteBatch);
-                }
-
-                if(gameState == GameState.Playing)
-                {
+                    //Allow the player to see their current equipped skill and current soul count
                     spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
                     spriteBatch.DrawString(alertText, "Souls: " + player.Souls, new Vector2(169, 180), Color.White);
                 }
+
+                //If the minimap should be visible and there isn't a notification onscreen
+                if (Minimap.Visible && !Notification.Updating)
+                {
+                    //Draw the minimap based on the current level
+                    //Debug mode currently == true
+                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, true);
+                }
+                //If there is a notification to update
+                if (Notification.Updating)
+                {
+                    //Draw the notification on screen
+                    Notification.DrawAlert(spriteBatch);
+                }
+
+                
                 
             }
 
@@ -800,12 +812,16 @@ namespace Once_A_Rogue
                         {
                             activeRoom = levelAnnex[columnIndex, rowIndex];
 
+                            //If the camera is shifting
                             if (shifting)
                             {
+                                //Clear the list of projectiles
                                 currProjectiles.Clear();
                             }
+                            //If there are spawn points left in the room
                             while (levelAnnex[columnIndex, rowIndex].spawnTiles.Count != 0)
                             {
+                                //Spawn a goblin on that tile (The default enemy for now)
                                 levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy, camera);
                                 done = true;
                             }
@@ -817,9 +833,10 @@ namespace Once_A_Rogue
                             //Cannot run check if the frame is shifting
                             if (!shifting)
                             {
-
+                                //If enemies have been spawned in the room and the room is done shifting
                                 if (done)
                                 {
+                                    //Lock the room
                                     levelAnnex[columnIndex, rowIndex].Lock();
                                     done = false;
                                 }
@@ -830,8 +847,10 @@ namespace Once_A_Rogue
                                     levelAnnex[columnIndex, rowIndex].Lock();
                                     lockRoom = false;
                                 }
+                                //Debuggder requested an unlocked room
                                 else if (unlockRoom)
                                 {
+                                    //Clear enemies and unlock the room
                                     levelAnnex[columnIndex, rowIndex].enemyList.Clear();
                                     levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
                                     unlockRoom = false;
@@ -923,6 +942,9 @@ namespace Once_A_Rogue
 
                                     enemy.UpdatePathPosition();
                                     enemy.Update();
+
+                                    //Pathfinding Algorithms --- Abandoned until further notice ---
+
                                     //PathFinderNode node = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
                                     //Vector2 travel = new Vector2(node.x, node.y);
                                     //if(travel != Vector2.Zero)
@@ -990,6 +1012,7 @@ namespace Once_A_Rogue
                 rowIndex++;
             }
         }
+        //This method handles creating a new level, and can be called whenever a new level needs to be generated, not just when the game starts
         private void NewLevelGen()
         {
             //Run Level Builder! Generate the first level

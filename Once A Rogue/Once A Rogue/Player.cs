@@ -237,7 +237,7 @@ namespace Once_A_Rogue
 
             if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W) && playerState != PlayerState.AttackLeft && playerState != PlayerState.AttackRight)
             {
-                //Correct speedy animation
+                //Correct the speedy animation to be slower if the player is idle
                 timePerFrame = 100;
 
                 if (playerState == PlayerState.WalkingLeft)
@@ -417,15 +417,20 @@ namespace Once_A_Rogue
         }
 
         //Added by Stasha
+        //This method handles drawing the player using the correct animation; based on the player's current state
         public void Draw(SpriteBatch spritebatch, Texture2D texture, int frameWidth, int frameHeight)
         {
             Rectangle frame;
 
+            //Look at the player's current state and choose the correct animation to play
             switch (playerState)
             {
                 case PlayerState.IdleRight:
 
+                    //Calculate the source rectangle for the frame
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+
+                    //Draw the player using the frame and the position rectangle
                     spritebatch.Draw(texture, PosRect, frame, Color.White);
                     break;
 
@@ -460,7 +465,7 @@ namespace Once_A_Rogue
                     break;
             }
         }
-
+        //This method handles updating the player's frame based on gametime
         public void UpdateFrame(GameTime gameTime)
         {
             timeElapsed += gameTime.ElapsedGameTime.Milliseconds;

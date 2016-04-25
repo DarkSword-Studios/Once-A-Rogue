@@ -18,6 +18,7 @@ namespace Once_A_Rogue
         private Boolean invalidTag = false;
         private Boolean validTag = false;
 
+        //A tile can store an interactable
         private Interactable interactable;
 
         //Each tile gets its own texture (relative location on the tilemap) and relative location in the room to which it belongs
@@ -27,6 +28,7 @@ namespace Once_A_Rogue
         public int localX;
         public int localY;
 
+        //A Tile can store a door and the door's relative local (left, up, right, down)
         private Tile door;
         private int doorLocal;
 

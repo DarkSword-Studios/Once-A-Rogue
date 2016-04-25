@@ -24,6 +24,7 @@ namespace Once_A_Rogue
         //The tilesize we are working with is 120 pixels
         const int TILESIZE = 120;
 
+        //Manage a list of all interactables (also a subset of just post interactables)
         List<Interactable> interactables;
         public List<Interactable> posts = new List<Interactable>();
 
@@ -33,8 +34,11 @@ namespace Once_A_Rogue
         //Keep track of the connections that the room supports
         private string doorLocals;
 
+        //Keep track of whether the room has been discovered, is aware, or is neither
         private Boolean discovered;
         private Boolean aware;
+
+        //Keep track of whether or not the room is a boss room, and if the a new level should be generated (did the player climb a ladder?)
         private Boolean boss;
         private Boolean levelTrigger;
 
@@ -45,14 +49,18 @@ namespace Once_A_Rogue
         //Handles room states
         public Boolean locked = false;
 
+        //Keep track of specific kinds of interactables
         List<Tile> doorTiles = new List<Tile>();
         public List<Tile> spawnTiles = new List<Tile>();
         public List<Tile> checkPoints = new List<Tile>();
+
+        //Keep track of enemies, and enemies to remove (usually if they are killed)
         public List<Enemy> enemyList = new List<Enemy>();
         List<Enemy> enemiesToRemove = new List<Enemy>();
 
         //Boolean clear = false;
 
+        //Properties to access (sometimes just get) private room attributes
         public Boolean LevelTrigger
         {
             get
@@ -83,6 +91,7 @@ namespace Once_A_Rogue
 
             set
             {
+                //A room can only become aware if it has not been discovered
                 if (!discovered)
                 {
                     aware = value;
@@ -101,6 +110,8 @@ namespace Once_A_Rogue
             set
             {
                 active = value;
+
+                //If a room becomes active, it has been discovered and is no longer just aware
                 if (value)
                 {
                     discovered = true;
@@ -200,18 +211,21 @@ namespace Once_A_Rogue
                 row++;
             }
 
+            //--- At this point an interactable layer must be chosen ---
+
+            //To avoid errors, only load in interactable layers for rooms that we have files for
             if(roomCodeStr != "1234" && roomCodeStr != "14" && roomCodeStr != "23" && roomCodeStr != "3" && roomCodeStr != "1")
             {
                 return;
             }
 
-            //This list keeps track of all of the rooms in Content/Rooms/ that would be valid fits for the current room to build
+            //This list keeps track of all of the interactable layers in Content/InteractableLayer/ that would be valid fits for the current room
             List<string> possibleRooms = new List<string>();
 
-            //Read in each file in the Content/Rooms/ folder (where we keep the room.txt files)
+            //Read in each file in the Content/InteractableLayer/ folder (where we keep the room.txt files)
             foreach (string file in Directory.GetFiles(@"..\..\..\Content\InteractableLayer"))
             {
-                //The purpose of this code is to determine if the file is valid to put in the possible rooms list
+                //The purpose of this code is to determine if the file is valid to put in the possible rooms list (interactable layer list)
                 if (file.Contains(roomCodeStr))
                 {
                     //Start of file processing by Ian
@@ -271,10 +285,10 @@ namespace Once_A_Rogue
 
             Random random = new Random();
 
-            //At this point a room file is chosen from the valid list
+            //At this point an interactable layer file is chosen from the valid list
             string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
 
-            //Open the txt room
+            //Open the txt interactable layer
             StreamReader reader = new StreamReader(roomPath);
 
             //Keeps track of placement
@@ -290,10 +304,10 @@ namespace Once_A_Rogue
                 //Separate all values into an array ( ',' is the delimiter)
                 string[] tiles = line.Split(',');
 
-                //For each tile in the array
+                //For each interactable in the array
                 foreach (string tile in tiles)
                 {
-                    //Load the tile code into the room annex array
+                    //Load the interactable code into the interactable layer array
                     interactableLayer[row, col] = int.Parse(tile);
                     col++;
                 }
@@ -305,49 +319,68 @@ namespace Once_A_Rogue
             row = 0;
             col = 0;
 
-            //Loop through every item in the room annex to deal with assigning tiles
+            //Loop through every item in the interactable layer to deal with assigning interactables to tiles
             while (row < interactableLayer.GetLength(0))
             {
                 while (col < interactableLayer.GetLength(1))
                 {
+                    //If the interactable code is -1, there isn't an interactable there
                     if(interactableLayer[row, col] != -1)
                     {
                         int tileY = interactableLayer[row, col] / 16;
                         int tileX = interactableLayer[row, col] % 16;
 
-                        //Locate the specified tile texture, and give it a new location within the room
+                        //Locate the specified interactable texture
                         Rectangle imageLocal = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
 
                         int tileTag = interactableLayer[row, col];
 
+                        //If the tileTag of the interactable is one of these values
                         if (tileTag == 82 || (tileTag >= 85 && tileTag < 89))
                         {
+                            //It is a spawn tile, so create a new spawn tile interactable
                             finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+
+                            //Spawn tile interactables need to be assigned a subtype
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
+                            
+                            //Add this spawn tile to the room's list of spawn tiles
                             spawnTiles.Add(finalRoomAnnex[row, col]);
                         }
                         else if(tileTag >= 96 && tileTag < 104)
                         {
+                            //It is a post tile, so create a new post interactable
                             finalRoomAnnex[row, col].Interactable = new Interactable("Post", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+
+                            //Post tiles need to be assigned a subtype
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
+                            
+                            //Add the post to the room's list of posts
                             posts.Add(finalRoomAnnex[row, col].Interactable);
                         }
-                        //Load the interactable if there is one
                         else if(tileTag == 80)
                         {
+                            //It is a box, so create a new box interactable
                             finalRoomAnnex[row, col].Interactable = new Interactable("Box", finalRoomAnnex[row, col].RelativeLocation, imageLocal, false, false, true);
                         }
                         else if(tileTag == 84)
                         {
+                            //It is a checkpoint, so create a new checkpoint interactable
                             finalRoomAnnex[row, col].Interactable = new Interactable("CheckPoint", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+
+                            //Add it to the room's list of checkpoints
                             checkPoints.Add(finalRoomAnnex[row, col]);
+
+                            //Assign the tiles's localX and localY (it may be needed for future calculations)
                             finalRoomAnnex[row, col].localX = col;
                             finalRoomAnnex[row, col].localY = row;
                         }
                         else
                         {
+                            //The only other type of interactable is a note, so create a note interactable
                             finalRoomAnnex[row, col].Interactable = new Interactable("Note", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, true, true);
                         }
+                        //Add interactable - regardless of what type it is - to the room's interactables list
                         interactables.Add(finalRoomAnnex[row, col].Interactable);
                         
                     }
@@ -375,13 +408,17 @@ namespace Once_A_Rogue
                     //Draw the tile
                     spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
 
+                    //If the current tile has an interactable associated with and the interactable is asking to be drawn
                     if(finalRoomAnnex[row, col].Interactable != null && finalRoomAnnex[row, col].Interactable.DoDraw)
                     {
+                        //Draw the interactable
                         spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].RelativeLocation, finalRoomAnnex[row, col].Interactable.RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
                     }
 
+                    //If the current tile has a door
                     if(finalRoomAnnex[row, col].Door != null)
                     {
+                        //Draw the door on top of the current tile
                         spriteBatch.Draw(tilemap, finalRoomAnnex[row, col].Door.RelativeLocation, finalRoomAnnex[row, col].Door.RelativeImageLocal, finalRoomAnnex[row, col].DetermineTileColor());
                     }
 
@@ -393,21 +430,30 @@ namespace Once_A_Rogue
                 col = 0;
                 row++;
             }
+            //Loop through the room's enemy list
             foreach(Enemy enemy in enemyList)
             {
+                //Based on the camera's direction
                 if (camera.direction == "right")
                 {
+                    //If the enemy has just spawned
                     if (enemy.justSpawned)
                     {
+                        //Adjust their local coords to be offscreen
                         enemy.PosX += camera.screenWidth;
+
+                        //The just spawned flag must be false now
                         enemy.justSpawned = false;
                     }
+                    //If the enemy hasn't just spawned
                     else
                     {
+                        //Update the enemy's position based on the direction of the camera and the difference between the camera's mod and the enemy's relative mod
                         enemy.PosX -= Math.Abs(Math.Abs(camera.xMod) - Math.Abs(enemy.relativeCamX));
                         enemy.relativeCamX = camera.xMod;
                     }
                 }
+                //The following cases are very similar to the first, just with different instructions for different camera directions
                 else if (camera.direction == "left")
                 {
                     if (enemy.justSpawned)
@@ -448,76 +494,100 @@ namespace Once_A_Rogue
                     }
                 }
 
+                //If the camera isn't moving
                 if (!camera.isMoving)
                 {
+                    //If the enemy somehow still has the just spawned tag (usually the case with the starting room)
                     if (enemy.justSpawned)
                     {
+                        //Set the enemy's just spawned tag to be false
                         enemy.justSpawned = false;
                     }
                 }
 
-
+                //If the enemy's current health equals zero, they must be dead
                 if (enemy.CurrHealth == 0)
                 {
+                    //Prepare the enemy to be removed outside of the loop
                     enemiesToRemove.Add(enemy);
                 }
 
+                //If the enemy has not just spawned, they may be drawn on screen
                 if (!enemy.justSpawned)
                 {
                     enemy.Draw(spriteBatch, 140, 140);
                 }
                 
             }
-
+            
+            //Loop through the enemies that need to be removed
             foreach(Enemy enemy in enemiesToRemove)
             {
+                //Remove the enemy from the room's enemy list
                 enemyList.Remove(enemy);
+
+                //Call the enemy's on death method
                 enemy.OnDeath(enemy.player);
             }
-
+            
+            //Clear the list that manages enemies that need to be removed (because they were just removed)
             enemiesToRemove.Clear();
 
+            //If the current room is a boss room
             if (boss)
             {
+                //Ask the atmosphere class to create a boss room filter
                 Atmosphere.BossFilter(spriteBatch, xCoord, yCoord);
             }
 
             
         }
-        //This method handles whether or not the camera should be moved to an adjacent room
+        //This method handles whether or not the camera should be moved to an adjacent room, as well as locking, unlocking, and updating interactables
         public String UpdateEvents(Player player, Camera camera, String playerMove, GameTime gameTime)
         {
+            //Loop through every interactable in the room
             foreach (Interactable interactable in interactables)
             {
+                //If the interactable can be activated (is interactable)
                 if (interactable.Activatable)
                 {
+                    //Call the interactable's interact method and pass in the player and the camera
                     interactable.Interact(player, camera);
 
+                    //If the interactable is calling for a new level, adjust the current room's flag to be true (pass it up the chain)
                     if (interactable.LevelTrigger)
                     {
                         this.levelTrigger = true;
                     }
                 }
+                //If the interactable is passable (no collision checks)
                 if (interactable.Passable)
                 {
+                    //Exit the loop
                     continue;
                 }
+                //If the interactable is not passable
                 else
                 {
+                    //Handle collisions betweenthe player and the interactable
                     interactable.HandleCollisions(player, camera);
                 }
 
 
             }
 
+            //If the room is currently going through the process of locking
             if (isLocking)
             {
+                //Go through the tiles marked to hold doors
                 foreach (Tile door in doorTiles)
                 {
+                    //Depending on which direction the door should be animating
                     switch (door.DoorLocal)
                     {
                         case 1:
 
+                            //Update the position of the door based on the direction
                             door.Door.RelativeLocation = new Rectangle(door.Door.RelativeLocation.X + 3, door.Door.RelativeLocation.Y, TILESIZE, TILESIZE);
                             break;
 
@@ -542,14 +612,18 @@ namespace Once_A_Rogue
                 //If one door is done closing, the rest of them should be done as well
                 if (doorTiles[0].RelativeLocation.Equals(doorTiles[0].Door.RelativeLocation))
                 {
+                    //The room is not locking anymore
                     isLocking = false;
                 }
             }
 
+            //If the room is going through the process of unlocking
             if (isUnlocking)
             {
+                //Just like with the locking process, examine all of the tiles marked to hold doors
                 foreach (Tile door in doorTiles)
                 {
+                    //Update the animation of the door based on the direction it should be traveling
                     switch (door.DoorLocal)
                     {
                         case 1:
@@ -578,7 +652,10 @@ namespace Once_A_Rogue
                 //If one door is done closing, the rest of them should be done as well
                 if (!doorTiles[0].RelativeLocation.Intersects(doorTiles[0].Door.RelativeLocation))
                 {
+                    //Clear the door tiles
                     doorTiles.Clear();
+                    
+                    //Declare that the room is done unlocking, and is not locked
                     isUnlocking = false;
                     locked = false;
                 }
@@ -711,18 +788,24 @@ namespace Once_A_Rogue
             }
         }
 
+        //This method handles the locking of a room
         public void Lock()
         {
+            //If the room is locked, is locking, or is unlocking do not allow a redundant / illegal call
             if (locked || isLocking || isUnlocking)
             {
                 return;
             }
 
+            //Make sure the room knows it is now in a locking state
             isLocking = true;
             locked = true;
 
+            //For each door local contained within the room
             if (doorLocals.Contains("UP"))
             {
+                //Each door requires the use of three tiles
+                //Set the door at the specified tile and correctly update the door local
                 finalRoomAnnex[0, 7].Door = new Tile(new Rectangle(14 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[0, 7].RelativeLocation.X, finalRoomAnnex[0, 7].RelativeLocation.Y - TILESIZE, TILESIZE, TILESIZE));
                 finalRoomAnnex[0, 7].DoorLocal = 2;
 
@@ -732,12 +815,13 @@ namespace Once_A_Rogue
                 finalRoomAnnex[0, 8].Door = new Tile(new Rectangle(12 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[0, 8].RelativeLocation.X, finalRoomAnnex[0, 8].RelativeLocation.Y - TILESIZE, TILESIZE, TILESIZE));
                 finalRoomAnnex[0, 8].DoorLocal = 2;
 
+                //Add the door tiles to the room's list of door tiles
                 doorTiles.Add(finalRoomAnnex[0, 7]);
                 doorTiles.Add(finalRoomAnnex[0, 6]);
                 doorTiles.Add(finalRoomAnnex[0, 8]);
 
             }
-
+            //Do the same for each door local (up to four)
             if (doorLocals.Contains("LEFT"))
             {
                 finalRoomAnnex[3, 0].Door = new Tile(new Rectangle(8 * TILESIZE, 1 * TILESIZE, TILESIZE, TILESIZE), new Rectangle(finalRoomAnnex[3, 0].RelativeLocation.X - TILESIZE, finalRoomAnnex[3, 0].RelativeLocation.Y, TILESIZE, TILESIZE));
@@ -791,35 +875,45 @@ namespace Once_A_Rogue
 
         }
 
+        //This method will call the room's private unlock method if the conditions are met
         public void RequestUnlock(Player player, Camera camera)
         {
-            //Put room clearing code here... e.g. have all of the enemies been killed yet? 
+            //Put room clearing code here... e.g. have all of the enemies been killed yet?
+            
+            //If there are no enemies in the room 
             if(enemyList.Count == 0)
             {
+                //Call the room's private unlock method
                 Unlock(player, camera);
             }
             
         }
-
+        //This method handles actually unlocking the room
         private void Unlock(Player player, Camera camera)
         {
+            //If the room is currently locking, unlocking, or is unlocked, ignore redundant / illegal calls
             if(isLocking || !locked || isUnlocking)
             {
                 return;
             }
-
+            //The room is now unlocking
             isUnlocking = true;
+
+            //If the current room is the boss room
             if (boss)
             {
+                //Create two new alerts, one to let the player know they have beaten the boss, and the other to tell them they have unlocked the next level
                 Notification.Alert("Boss cleared!", Color.Purple, 60, false);
                 Notification.Alert("Next Level Unlocked!", Color.OrangeRed, 60, true);
 
+                //If the player is on the left half of the screen, spawn a ladder on the right side of the room
                 if(player.PosX <= camera.screenWidth / 2)
                 {
                     Rectangle ladderImage = new Rectangle(3 * TILESIZE, 5 * TILESIZE, TILESIZE, TILESIZE);
                     finalRoomAnnex[2, 13].Interactable = new Interactable("Ladder", finalRoomAnnex[2, 13].RelativeLocation, ladderImage, true, true, true);
                     interactables.Add(finalRoomAnnex[2, 13].Interactable);
                 }
+                //If the player is on the right half of the screen, spawn a ladder on the left side of the room
                 else
                 {
                     Rectangle ladderImage = new Rectangle(3 * TILESIZE, 5 * TILESIZE, TILESIZE, TILESIZE);
@@ -827,13 +921,59 @@ namespace Once_A_Rogue
                     interactables.Add(finalRoomAnnex[2, 2].Interactable);
                 }
             }
+            //If the current room is not the boss room
             else
             {
+                //Let the player know they have cleared the room (by creating a new alert)
                 Notification.Alert("Room Cleared!", Color.Green, 60, false);
             }
             
         }
+
+        //This method handles spawning a goblin in the current room
         public void SpawnGoblin(Player play, Texture2D tex, Camera camera)
+        {
+            //Select a random tile and remove it from the room's list
+            Random randy = new Random();
+            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
+            spawnTiles.Remove(spawn);
+
+            //Calculate the goblin's relative location
+            int x = spawn.RelativeLocation.X;
+            int y = spawn.RelativeLocation.Y;
+            x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+            y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+
+            //Create a new goblin from the given information
+            Goblin goblin = new Goblin(play, camera, x, y, 140, 140, tex, false);
+
+            //The goblin has just spawned
+            goblin.justSpawned = true;
+
+            //Update the goblin with its initial direction
+            goblin.UpdatePathDirection(spawn.Interactable.SubType);
+
+            //Add the goblin to the enemy list
+            enemyList.Add(goblin);
+                 
+        }
+
+        //This method handles spawning a ghoul in the current room (refer to the above SpawnGoblin method to see how it works)
+        public void SpawnGhoul(Player play, Texture2D tex, Camera camera)
+        {
+            Random randy = new Random();
+            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
+            int x = spawn.RelativeLocation.X;
+            int y = spawn.RelativeLocation.Y;
+            x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+            y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+            Ghoul ghoul = new Ghoul(play, camera, 0, x, y, 140, 140, tex, false);
+            ghoul.UpdatePathDirection(spawn.Interactable.SubType);
+            enemyList.Add(ghoul);
+        }
+
+        //This method handles spawning a kobold in the current room (refer to the above SpawnGoblin method to see how it works)
+        public void SpawnKobold(Player play, Texture2D tex, Camera camera)
         {
 
             Random randy = new Random();
@@ -843,30 +983,7 @@ namespace Once_A_Rogue
             int y = spawn.RelativeLocation.Y;
             x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
             y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
-            Goblin goblin = new Goblin(play, camera, x, y, 140, 140, tex, false);
-            goblin.justSpawned = true;
-            goblin.UpdatePathDirection(spawn.Interactable.SubType);
-            enemyList.Add(goblin);
-                 
-        }
-
-        public void SpawnGhoul(Player play, Texture2D tex, Camera camera)
-        {
-            Random randy = new Random();
-            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
-            spawnTiles.Remove(spawn);
-            Ghoul ghoul = new Ghoul(play, camera, 0, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
-            ghoul.UpdatePathDirection(spawn.Interactable.SubType);
-            enemyList.Add(ghoul);
-        }
-        
-        public void SpawnKobold(Player play, Texture2D tex, Camera camera)
-        {
-
-            Random randy = new Random();
-            Tile spawn = spawnTiles[randy.Next(0, spawnTiles.Count)];
-            spawnTiles.Remove(spawn);
-            Kobold kobold = new Kobold(play, camera, spawn.RelativeLocation.X, spawn.RelativeLocation.Y, 140, 140, tex, false);
+            Kobold kobold = new Kobold(play, camera, x, y, 140, 140, tex, false);
             kobold.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(kobold);
             

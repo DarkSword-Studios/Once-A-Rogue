@@ -29,21 +29,23 @@ namespace Once_A_Rogue
 
         bool isHostile;
 
+        //Variables to keep track of the enemy's animation
         int timePerFrame = 100;
         int numFrames = 6;
         public int framesElapsed;
         public int timeElapsed;
         public int currentFrame;
+        enum enemyState { IdleRight, IdleLeft, WalkingRight, WalkingLeft, AttackRight, AttackLeft };
+        enemyState eState;
 
+        //Variables to keep track of the enemy's relative space in relation to the global grid
         public int relativeCamX;
         public int relativeCamY;
         public Boolean justSpawned = false;
 
+        //Variables to keep track of the enemy's current x and y path speed (if the enemy patrols)
         public int pathSpeedX;
         public int pathSpeedY;
-
-        enum enemyState { IdleRight, IdleLeft, WalkingRight, WalkingLeft, AttackRight, AttackLeft  };
-        enemyState eState;
 
         public Player player;
 
@@ -220,11 +222,12 @@ namespace Once_A_Rogue
             RootResist = 0;
             player = play;
         }
-
+        //This method handles drawing the enemy based onthe current animation
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
         {
             Rectangle frame;
 
+            //Based on the enemy's current state, switch the animation
             switch (eState)
             {
                 case enemyState.IdleRight:
@@ -233,6 +236,7 @@ namespace Once_A_Rogue
                     spritebatch.Draw(Texture, PosRect, frame, Color.White);
                     break;
 
+                //Currently the idle left animation is the only animation that is properly implemented
                 case enemyState.IdleLeft:
 
                     frame = new Rectangle(currentFrame * 140,  280, frameWidth, frameHeight);
@@ -263,9 +267,9 @@ namespace Once_A_Rogue
                     spritebatch.Draw(Texture, PosRect, frame, Color.White);
                     break;
             }
-            
 
         }
+        //This method handles updating the enemy's current frame based on the gametime
         public void UpdateFrame(GameTime gameTime)
         {
             timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
@@ -273,11 +277,14 @@ namespace Once_A_Rogue
             currentFrame = framesElapsed % numFrames + 1;
         }
 
+        //This method changes an enemy's patrol direction
         public void UpdatePathDirection(string direction)
         {
-
+            //Evaluate the new direction given
             switch (direction)
             {
+                //Based on the direction, change the pathSpeed x and y to be positive / negative / 0.
+                //This system allows for 8 directions of motion; up, down, left, right, and diagonals
                 case "up":
 
                     pathSpeedY = -MoveSpeed;
@@ -328,6 +335,7 @@ namespace Once_A_Rogue
             }
         }
 
+        //This method simply updates the enemy's position if they are patroling, based on the patrol speeds
         public void UpdatePathPosition()
         {
             PosX += pathSpeedX;
