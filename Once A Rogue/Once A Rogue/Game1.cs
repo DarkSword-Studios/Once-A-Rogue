@@ -106,7 +106,7 @@ namespace Once_A_Rogue
         KeyboardState previousKBS, kbs;
 
         //Mouse states
-        MouseState previouseMS, mouseState;
+        MouseState previousMS, mouseState;
 
         //Level builder to create and connect rooms
         LevelBuilder builderAlpha;
@@ -407,6 +407,7 @@ namespace Once_A_Rogue
                 manaBarWidth = 300f * player.PercentMP;
                 healthBarWidth = 300f * player.PercentHP;
 
+                //Handling projectiles
                 if (Game1.CurrProjectiles.Count > 0)
                 {
                     removeProj = new List<Projectile>();

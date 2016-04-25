@@ -10,8 +10,6 @@ namespace Once_A_Rogue
 {
     class GhoulSiphon : Skills
     {
-        Character owner;
-        
         public GhoulSiphon(int dam, Character own): base(dam, own)
         {
             Cooldown = 0;

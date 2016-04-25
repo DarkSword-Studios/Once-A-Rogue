@@ -162,7 +162,7 @@ namespace Once_A_Rogue
         }
 
         protected bool isPoisoned;
-        public bool IsPoisened
+        public bool IsPoisoned
         {
             get { return isPoisoned; }
             set { isPoisoned = value; }
@@ -187,8 +187,8 @@ namespace Once_A_Rogue
         private int rootDur;
         private int snareDur;
         private int snareAmt;
-        private int poisenDur;
-        private int poisenDmg;
+        private int poisonDur;
+        private int poisonDmg;
         private int fireDur;
         private int fireDmg;
 
@@ -244,31 +244,31 @@ namespace Once_A_Rogue
             get { return snareAmt; }
             set { snareAmt = (int)(value * (1 - snareResist)); }
         }
-        public int PoisenDur
+        public int PoisonDur
         {
-            get { return poisenDur; }
+            get { return poisonDur; }
             set
             {
-                poisenDur = value;
+                poisonDur = value;
 
-                if (poisenDur <= 0)
+                if (poisonDur <= 0)
                 {
-                    poisenDur = 0;
-                    IsPoisened = false;
+                    poisonDur = 0;
+                    IsPoisoned = false;
                 }
 
-                if (poisenDur != 0)
+                if (poisonDur != 0)
                 {
-                    IsPoisened = true;
+                    IsPoisoned = true;
                 }
             }
         }
-        public int PoisenDmg
+        public int PoisonDmg
         {
-            get { return poisenDmg; }
+            get { return poisonDmg; }
 
             //Damage is reduced by a percentage based on character resist
-            set { poisenDmg = (int)(value * (1 - poisenResist)); }
+            set { poisonDmg = (int)(value * (1 - poisenResist)); }
         }
         public int FireDur
         {
@@ -431,7 +431,7 @@ namespace Once_A_Rogue
 
             StatusTimerAdjust(fireTimer, isOnFire, FireDur, FireDmg);
 
-            StatusTimerAdjust(poisonTimer, isPoisoned, PoisenDur, PoisenDmg);
+            StatusTimerAdjust(poisonTimer, isPoisoned, PoisonDur, PoisonDmg);
         }
 
         //Method for checking a status and setting up a timer for that status if one does not exist
