@@ -27,7 +27,15 @@ namespace Once_A_Rogue
         private int fearLevel;
         private int fearLevelTotal;
 
-        bool isHostile;
+        private bool isHostile;
+
+        public bool IsHostile
+        {
+            get { return isHostile; }
+            set { isHostile = value; }
+        }
+
+        Random rgen;
 
         //Variables to keep track of the enemy's animation
         int timePerFrame = 100;
@@ -40,6 +48,7 @@ namespace Once_A_Rogue
 
         //Variables to keep track of the enemy's relative space in relation to the global grid
         public int relativeCamX;
+
         public int relativeCamY;
         public Boolean justSpawned = false;
 
@@ -48,6 +57,16 @@ namespace Once_A_Rogue
         public int pathSpeedY;
 
         public Player player;
+
+        protected Vector2 detectionVector;
+        private double cooldown;
+
+        public double Cooldown
+        {
+            get { return cooldown; }
+            set { cooldown = value; }
+        }
+
 
         //Property for Fear Level
         public int FearLevel
@@ -203,7 +222,7 @@ namespace Once_A_Rogue
         }
 
         //Do we even need this constructor?
-        public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height, bool host) : base()//Add code here
+        public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
         {
             relativeCamX = camera.xMod;
             relativeCamY = camera.yMod;
@@ -213,14 +232,14 @@ namespace Once_A_Rogue
             Level = play.Level;
             fearLevel = 0;
             armorLevel = 5;
-            isHostile = host;
-            isHostile = false;
+            IsHostile = false;
             FireResist = 0;
             StunResist = 0;
             PoisonResist = 0;
             SnareResist = 0;
             RootResist = 0;
             player = play;
+            rgen = new Random();
         }
         //This method handles drawing the enemy based onthe current animation
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
@@ -342,9 +361,40 @@ namespace Once_A_Rogue
             PosY += pathSpeedY;
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gt, Player play)
         {
-            base.Update(gameTime);
+            base.Update(gt);
+
+            detectionVector = new Vector2(player.PosX, player.PosY) - new Vector2(PosX, PosY);
+
+            if (detectionVector.Length() <= 360 && IsHostile == false)
+            {
+                IsHostile = true;
+            }
+
+            if (IsHostile == true)
+            {
+                MoveSpeed = 0;
+                pathSpeedX = 0;
+                pathSpeedY = 0;
+
+                int ranSpell = rgen.Next(0, SkillList.Count - 1);
+
+                if (Cooldown == 0)
+                {
+                    SkillList[ranSpell].OnActivated();
+                    Cooldown += SkillList[ranSpell].CooldownTotal + 500;
+                }
+            }
+
+            if (Cooldown > 0)
+            {
+                Cooldown -= gt.ElapsedGameTime.Milliseconds;
+                if (Cooldown < 0)
+                {
+                    Cooldown = 0;
+                }
+            }
         }
     }
 }

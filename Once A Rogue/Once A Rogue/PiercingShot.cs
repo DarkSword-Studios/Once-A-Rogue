@@ -38,9 +38,35 @@ namespace Once_A_Rogue
 
                     //Get the mouse position
                     MouseState ms = Mouse.GetState();
+                    GamePadState gPadState = GamePad.GetState(PlayerIndex.One);
 
                     //Subtract mana
                     player.CurrMana -= Cost;
+
+                    if (gPadState.IsConnected)
+                    {
+                        float deadZone = 0.25f;
+
+                        Vector2 stickInput = new Vector2(gPadState.ThumbSticks.Right.X, gPadState.ThumbSticks.Right.Y);
+                        if (stickInput.Length() > deadZone)
+                        {
+                            stickInput.Normalize();
+
+                            if (stickInput.X < 0)
+                            {
+                                player.PlayerStates = Player.PlayerState.AttackLeft;
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, stickInput, 1, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                            }
+
+                            if (stickInput.X > 0)
+                            {
+                                player.PlayerStates = Player.PlayerState.AttackRight;
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, stickInput, 1, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                            }
+
+                            return;
+                        }
+                    }
 
                     //If the player is attcking left
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)

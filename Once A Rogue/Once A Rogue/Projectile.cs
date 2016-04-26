@@ -226,6 +226,8 @@ namespace Once_A_Rogue
 
                 case "root":
                     target.MoveSpeed = 0;
+                    target.RootDur = 4000;
+                    break;
 
             }
         }

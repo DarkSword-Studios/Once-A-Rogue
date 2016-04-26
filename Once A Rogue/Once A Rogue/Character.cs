@@ -278,7 +278,16 @@ namespace Once_A_Rogue
         public int SnareAmount
         {
             get { return snareAmt; }
-            set { MoveSpeed -= value; }
+            set
+            {
+                MoveSpeed -= value;
+                if(MoveSpeed <= 0)
+                {
+                    MoveSpeed = 0;
+                    RootDur = SnareDur;
+                    SnareDur = 0;
+                }
+            }
         }
         public double PoisonDur
         {
@@ -468,6 +477,10 @@ namespace Once_A_Rogue
                     elapsedTime = 0;
                     SnareDur -= 1000;
                 }
+                if (SnareDur == 0)
+                {
+                    MoveSpeed = MoveSpeedTotal;
+                }
             }
 
             if (IsRooted == true)
@@ -477,6 +490,11 @@ namespace Once_A_Rogue
                 {
                     elapsedTime = 0;
                     RootDur -= 1000;
+
+                    if(RootDur == 0)
+                    {
+                        MoveSpeed = MoveSpeedTotal;
+                    }
                 }
             }
 

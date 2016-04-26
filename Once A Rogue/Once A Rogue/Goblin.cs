@@ -10,12 +10,13 @@ namespace Once_A_Rogue
 {
     class Goblin : Enemy
     {
-        public Goblin(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex, bool host) : base(tex, play, camera, x, y, width, height, host)
+        public Goblin(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex) : base(tex, play, camera, x, y, width, height)
         {
             Random randy = new Random();
 
             SkillList = new List<Skills>();
             SkillList.Add(new Fireball(10, this));
+            SkillList.Add(new OilThrow(this));
             
             Level = randy.Next(-2, 2) + play.Level;
             ArmorLevel = 2 + Level * 2;
@@ -25,6 +26,7 @@ namespace Once_A_Rogue
             MoveSpeed = MoveSpeedTotal;
             TotalHealth = 25 + Level * 5;
             CurrHealth = TotalHealth;
+            Cooldown = 0;
         }
 
         public override void Draw(SpriteBatch spritebatch)
@@ -37,11 +39,9 @@ namespace Once_A_Rogue
         }
 
         //Default ranged attack for goblin
-      
         public void Update(Player play, GameTime gt)
         {
-            base.Update(gt);
-
+            base.Update(gt, play);
         }
 
         public override void OnDeath(Player play)

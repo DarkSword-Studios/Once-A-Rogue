@@ -34,9 +34,35 @@ namespace Once_A_Rogue
 
                     //Get the mouse position
                     MouseState ms = Mouse.GetState();
+                    GamePadState gPadState = GamePad.GetState(PlayerIndex.One);
 
                     //Subtract mana
                     player.CurrMana -= Cost;
+
+                    if (gPadState.IsConnected)
+                    {
+                        float deadZone = 0.25f;
+
+                        Vector2 stickInput = new Vector2(gPadState.ThumbSticks.Right.X, gPadState.ThumbSticks.Right.Y);
+                        if (stickInput.Length() > deadZone)
+                        {
+                            stickInput.Normalize();
+
+                            if (stickInput.X < 0)
+                            {
+                                player.PlayerStates = Player.PlayerState.AttackLeft;
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                            }
+
+                            if (stickInput.X > 0)
+                            {
+                                player.PlayerStates = Player.PlayerState.AttackRight;
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                            }
+
+                            return;
+                        }
+                    }
 
                     //If the player is attcking left
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)
@@ -75,6 +101,51 @@ namespace Once_A_Rogue
 
                         Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     }
+                }
+            }
+
+            if (Owner is Enemy)
+            {
+                Enemy enemy = (Enemy)Owner;
+
+                if (enemy.player.PosX <= enemy.PosX)
+                {
+                    //Create a vector between the player and the mouse
+                    Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX - 40, enemy.PosY + enemy.PosRect.Height / 2);
+
+                    //If the vector is not zero
+                    if (target != Vector2.Zero)
+                    {
+                        //Normalize the vector to get the direction
+                        target.Normalize();
+                    }
+
+                    if (target.Y >= .90)
+                    {
+                        return;
+                    }
+
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 40, 40, enemy.PosX - 40, enemy.PosY + enemy.PosRect.Height / 2));
+                }
+
+                else
+                {
+                    //Create a vector between the player and the mouse
+                    Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX - 40, enemy.PosY + enemy.PosRect.Height / 2);
+
+                    //If the vector is not zero
+                    if (target != Vector2.Zero)
+                    {
+                        //Normalize the vector to get the direction
+                        target.Normalize();
+                    }
+
+                    if (target.Y >= .90)
+                    {
+                        return;
+                    }
+
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 40, 40, enemy.PosX + enemy.PosRect.Width + 10, enemy.PosY + enemy.PosRect.Height / 2));
                 }
             }
         }

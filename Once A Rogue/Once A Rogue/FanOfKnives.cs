@@ -39,9 +39,46 @@ namespace Once_A_Rogue
 
                     //Get the mouse position
                     MouseState ms = Mouse.GetState();
+                    GamePadState gPadState = GamePad.GetState(PlayerIndex.One);
 
                     //Subtract mana
                     player.CurrMana -= Cost;
+
+                    if (gPadState.IsConnected)
+                    {
+                        float deadZone = 0.25f;
+
+                        Vector2 stickInput = new Vector2(gPadState.ThumbSticks.Right.X, gPadState.ThumbSticks.Right.Y);
+                        if (stickInput.Length() > deadZone)
+                        {
+                            stickInput.Normalize();
+
+                            Vector2 target = stickInput;
+                            Vector2 vectorLength = target;
+
+                            if (stickInput.X < 0)
+                            {
+                                player.PlayerStates = Player.PlayerState.AttackLeft;
+                                vectorLength.X = (vectorLength.X * RangeX * 120) + (60 * RangeX);
+                                vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                            }
+
+                            if(stickInput.X > 0)
+                            {
+                                player.PlayerStates = Player.PlayerState.AttackRight;
+                                vectorLength.X = (vectorLength.X * RangeX * 120) - (60 * RangeX);
+                                vectorLength.Y = (vectorLength.Y * RangeY * 120) - (60 * RangeY);
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                            }
+
+                            return;
+                        }
+                    }
 
                     //If the player is attcking left
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)

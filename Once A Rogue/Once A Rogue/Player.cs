@@ -66,9 +66,15 @@ namespace Once_A_Rogue
             set { currentFrame = value; }
         }
 
+        int skillIndex;
+
         //MouseStates
-        MouseState previousMs;
+        MouseState prevMS;
         MouseState msState;
+
+        //GamePadStates
+        GamePadState prevGPadState;
+        GamePadState gPadState;
 
         //Mana properties
         private int currMana;
@@ -130,7 +136,9 @@ namespace Once_A_Rogue
             set { playerState = value; }
         }
 
-        //End of stuff added by Stasha
+        public Vector2 rightStickInput;
+        Vector2 leftStickInput;
+        float deadZone;
 
         public Player(int x, int y, int width, int height)
         {
@@ -180,17 +188,59 @@ namespace Once_A_Rogue
             currSkillList = warriorSkillList;
             CurrSkill = currSkillList[0];
             currentFrame = 0;
+            skillIndex = 0;
         }
 
         //Method for processing user input
         public void ProcessInput(int roomWidth, int roomHeight)
         {
             //Figuring out which key is down
-            KeyboardState kbs = Keyboard.GetState();
-
-            //Figuring out which mouse buttn is being pressed
-            previousMs = msState;
+            prevMS = msState;
             msState = Mouse.GetState();
+            KeyboardState kbs = Keyboard.GetState();
+            prevGPadState = gPadState;
+            gPadState = GamePad.GetState(PlayerIndex.One);
+
+            if(gPadState.IsConnected)
+            {
+                deadZone = 0.25f;
+
+                leftStickInput = new Vector2(gPadState.ThumbSticks.Left.X, gPadState.ThumbSticks.Left.Y);
+                rightStickInput = new Vector2(gPadState.ThumbSticks.Right.X, gPadState.ThumbSticks.Right.Y);
+
+                if (leftStickInput.Length() > deadZone)
+                {
+                    if(leftStickInput.X < 0)
+                    {
+                        playerState = PlayerState.WalkingLeft;
+                    }
+
+                    if(leftStickInput.X > 0)
+                    {
+                        playerState = PlayerState.WalkingRight;
+                    }
+
+                    if(leftStickInput.Y != 0)
+                    {
+                        if (playerState == PlayerState.IdleRight)
+                        {
+                            playerState = PlayerState.WalkingRight;
+                        }
+
+                        else if (playerState == PlayerState.IdleLeft)
+                        {
+                            playerState = PlayerState.WalkingLeft;
+                        }
+                    }
+
+                    if(kbs.IsKeyUp(Keys.W) && kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.D))
+                    {
+                        leftStickInput.Normalize();
+                        PosX += (int)(leftStickInput.X * MoveSpeed);
+                        PosY += (int)(leftStickInput.Y * MoveSpeed);
+                    }
+                }
+            }
 
             //Assume the player is moving, a special case exists to correct idle movement
             timePerFrame = 50;
@@ -200,14 +250,12 @@ namespace Once_A_Rogue
             {
                 PosX -= MoveSpeed;
                 playerState = PlayerState.WalkingLeft;
-                //direction = "left";
             }
 
             if (kbs.IsKeyDown(Keys.D))
             {
                 PosX += MoveSpeed;
                 playerState = PlayerState.WalkingRight;
-                //direction = "right";
             }
 
             if (kbs.IsKeyDown(Keys.S))
@@ -238,7 +286,7 @@ namespace Once_A_Rogue
                 }
             }
 
-            if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W) && playerState != PlayerState.AttackLeft && playerState != PlayerState.AttackRight)
+            if (kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.D) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.W) && playerState != PlayerState.AttackLeft && playerState != PlayerState.AttackRight && (leftStickInput == null || leftStickInput.Length() < deadZone))
             {
                 //Correct the speedy animation to be slower if the player is idle
                 timePerFrame = 100;
@@ -251,7 +299,6 @@ namespace Once_A_Rogue
                 {
                     playerState = PlayerState.IdleRight;
                 }
-
             }
 
             if (currentFrame == 6 && playerState == PlayerState.AttackLeft)
@@ -266,7 +313,12 @@ namespace Once_A_Rogue
                 playerState = PlayerState.IdleRight;
             }
 
-            if (msState.LeftButton == ButtonState.Pressed)
+            if ((msState.LeftButton == ButtonState.Pressed || rightStickInput.Length() > deadZone))
+            {
+                CurrSkill.OnActivated();
+            }
+
+            else if(CurrSkill.Name == "Swing" && gPadState.IsButtonDown(Buttons.A))
             {
                 CurrSkill.OnActivated();
             }
@@ -292,7 +344,7 @@ namespace Once_A_Rogue
             }
 
             //Weapon switching
-            if(msState.RightButton == ButtonState.Pressed && previousMs.RightButton == ButtonState.Released)
+            if((msState.RightButton == ButtonState.Pressed && prevMS.RightButton == ButtonState.Released) || (gPadState.IsConnected && (gPadState.IsButtonDown(Buttons.RightShoulder) && prevGPadState.IsButtonUp(Buttons.RightShoulder))))
             {
                 if(CurrWeapon == "Sword")
                 {
@@ -323,6 +375,41 @@ namespace Once_A_Rogue
                     //Switch to the sword and restore defaults
                     CurrWeapon = weaponArray[0];
                     currSkillList = warriorSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+            }
+
+            if(gPadState.IsConnected && (gPadState.IsButtonDown(Buttons.LeftShoulder) && prevGPadState.IsButtonUp(Buttons.LeftShoulder)))
+            {
+                if(CurrWeapon == "Sword")
+                {
+                    //Switch to the staff
+                    CurrWeapon = weaponArray[3];
+                    currSkillList = mageSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+
+                else if(CurrWeapon == "Daggers")
+                {
+                    //Switch to the sword and restore defaults
+                    CurrWeapon = weaponArray[0];
+                    currSkillList = warriorSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+
+                else if (CurrWeapon == "Bow")
+                {
+                    //Switch to the Daggers
+                    CurrWeapon = weaponArray[1];
+                    currSkillList = rogueSkillList;
+                    CurrSkill = currSkillList[0];
+                }
+
+                else if (CurrWeapon == "Staff")
+                {
+                    //Switch to the Bow
+                    CurrWeapon = weaponArray[2];
+                    currSkillList = rangerSkillList;
                     CurrSkill = currSkillList[0];
                 }
             }
@@ -453,6 +540,40 @@ namespace Once_A_Rogue
                     currSkill = prevSkill;
                 }
             }
+
+            if (gPadState.Triggers.Right > .20f && prevGPadState.Triggers.Right <= .20f)
+            {
+                Skills prevSkill = currSkill;
+
+                skillIndex += 1;
+
+                try
+                {
+                    CurrSkill = currSkillList[skillIndex];
+                }
+                catch
+                {
+                    CurrSkill = currSkillList[0];
+                    skillIndex = 0;
+                }
+            }
+
+            if (gPadState.Triggers.Left > .20f && prevGPadState.Triggers.Left <= .20f)
+            {
+                Skills prevSkill = currSkill;
+
+                skillIndex -= 1;
+
+                try
+                {
+                    CurrSkill = currSkillList[skillIndex];
+                }
+                catch
+                {
+                    CurrSkill = currSkillList[currSkillList.Count - 1];
+                    skillIndex = currSkillList.Count - 1;
+                }
+            }
         }
 
         //Added by Stasha
@@ -510,7 +631,6 @@ namespace Once_A_Rogue
             timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
             framesElapsed = (int)(timeElapsed / timePerFrame);
             currentFrame = framesElapsed % numFrames + 1;
-
         }
         //End of things added by Stasha
 

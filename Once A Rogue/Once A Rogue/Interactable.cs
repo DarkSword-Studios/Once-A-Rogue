@@ -205,6 +205,7 @@ namespace Once_A_Rogue
                 }
             }
         }
+
         //This method handles finding the specific collision depth between two rectangles 
         public Vector2 FindIntersectionDepth(Rectangle rec1, Rectangle rec2)
         {

@@ -13,7 +13,7 @@ namespace Once_A_Rogue
 
 
 
-        public Kobold(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex, bool host) : base(tex, play, camera, x, y, width, height, host)
+        public Kobold(Player play, Camera camera, int x, int y, int width, int height, Texture2D tex) : base(tex, play, camera, x, y, width, height)
         {
             Random randy = new Random();
             Level = randy.Next(-2, 2) + play.Level;
