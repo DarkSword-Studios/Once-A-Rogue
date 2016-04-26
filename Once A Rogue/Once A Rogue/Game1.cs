@@ -105,6 +105,13 @@ namespace Once_A_Rogue
         //Keyboard states
         KeyboardState previousKBS, kbs;
 
+        //GamePad States
+        GamePadState prevGPadState, gPadState;
+
+        float deadZone;
+
+        Vector2 leftStickInput, prevLeftStickInput;
+
         //Mouse states
         MouseState previousMS, mouseState;
 
@@ -171,6 +178,8 @@ namespace Once_A_Rogue
             graphics.ApplyChanges();
 
             currProjectiles = new List<Projectile>();
+
+            deadZone = .25f;
 
             //Initializing the gamestate
             gameState = GameState.MainMenu;
@@ -307,6 +316,12 @@ namespace Once_A_Rogue
 
             previousKBS = kbs;
             kbs = Keyboard.GetState();
+            prevGPadState = gPadState;
+            gPadState = GamePad.GetState(PlayerIndex.One);
+
+            leftStickInput = new Vector2(gPadState.ThumbSticks.Left.X, gPadState.ThumbSticks.Left.Y);
+            prevLeftStickInput = new Vector2(prevGPadState.ThumbSticks.Left.X, prevGPadState.ThumbSticks.Left.Y);
+            
 
             if (this.IsActive == false)
             {
@@ -322,21 +337,21 @@ namespace Once_A_Rogue
             {
                 mouseState = Mouse.GetState();
 
-                if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))))
+                if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))) || ((arrowState == ArrowState.menu1) && gPadState.IsButtonDown(Buttons.A)))
                 {
                     gameState = GameState.Playing;
                     CurrProjectiles.Clear();
                     NewLevelGen();
                 }
-                if ((arrowState == ArrowState.menu1) && kbs.IsKeyDown(Keys.S) || (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728))
+                if ((arrowState == ArrowState.menu1) && kbs.IsKeyDown(Keys.S) || (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728) || ((arrowState == ArrowState.menu1) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                 {
                     arrowState = ArrowState.menu2;
                 }
-                if (((arrowState == ArrowState.menu2) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728))))
+                if (((arrowState == ArrowState.menu2) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728))) || ((arrowState == ArrowState.menu2) && gPadState.IsButtonDown(Buttons.A)))
                 {
                     Exit();
                 }
-                if ((arrowState == ArrowState.menu2) && kbs.IsKeyDown(Keys.W) || (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))
+                if ((arrowState == ArrowState.menu2) && kbs.IsKeyDown(Keys.W) || (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598) || ((arrowState == ArrowState.menu2) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                 {
                     arrowState = ArrowState.menu1;   
                 }
@@ -452,7 +467,7 @@ namespace Once_A_Rogue
                     addProj.Clear();
                 }
 
-                if(SingleKeyPress(Keys.Escape))
+                if(SingleKeyPress(Keys.Escape) || gPadState.IsButtonDown(Buttons.Start))
                 {
                     gameState = GameState.paused;
                     arrowState = ArrowState.pos1;
@@ -556,7 +571,7 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.howTo)
             {
-                if (SingleKeyPress(Keys.Escape))
+                if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
                 {
                     gameState = GameState.paused;
                 }
@@ -566,39 +581,39 @@ namespace Once_A_Rogue
             {
                 mouseState = Mouse.GetState();
 
-                if (SingleKeyPress(Keys.Escape))
+                if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
                 {
                     gameState = GameState.Playing;
                 }
 
-                if ((arrowState == ArrowState.pos1) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 405))))
+                if ((arrowState == ArrowState.pos1) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 405))) || (arrowState == ArrowState.pos1) && (gPadState.IsButtonDown(Buttons.A)) || (arrowState == ArrowState.pos1) && (gPadState.IsButtonDown(Buttons.A)))
                 {
                     gameState = GameState.Playing;
                 }
-                if ((arrowState == ArrowState.pos1) && (SingleKeyPress(Keys.S)) || (((mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))))
+                if ((arrowState == ArrowState.pos1) && (SingleKeyPress(Keys.S)) || (((mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))) || (arrowState == ArrowState.pos1) && (SingleKeyPress(Keys.S)) || ((arrowState == ArrowState.pos1) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                 {
                     arrowState = ArrowState.pos2;
                 }
-                if(arrowState == ArrowState.pos2)
+                else if(arrowState == ArrowState.pos2)
                 {
-                    if (SingleKeyPress(Keys.W) || (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 398))
+                    if (SingleKeyPress(Keys.W) || (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 398) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                     {
                         arrowState = ArrowState.pos1;
                     }
-                    if (SingleKeyPress(Keys.S) || (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))
+                    if (SingleKeyPress(Keys.S) || (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                     {
                         arrowState = ArrowState.pos3;
                     }
                 }
-                if((arrowState == ArrowState.pos2) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))))
+                if((arrowState == ArrowState.pos2) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))) || ((arrowState == ArrowState.pos2) && (gPadState.IsButtonDown(Buttons.A))))
                 {
                     gameState = GameState.howTo;
                 }
-                if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))))
+                if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))) || ((arrowState == ArrowState.pos3) && (gPadState.IsButtonDown(Buttons.A))))
                 {
                     Exit();
                 }
-                if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480))
+                if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480) || ((arrowState == ArrowState.pos3) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                 {
                     arrowState = ArrowState.pos2;
                 }
@@ -783,6 +798,31 @@ namespace Once_A_Rogue
             }
         }
 
+        public bool SingleKeyPress(Buttons button)
+        {
+            if ((prevGPadState.IsButtonUp(button) && (gPadState.IsButtonDown(button))))
+            {
+                prevGPadState = gPadState;
+                gPadState = GamePad.GetState(PlayerIndex.One);
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool SingleGamePadMove(Vector2 prevLeftStick, Vector2 currLeftStick)
+        {
+            if(prevLeftStickInput.Length() <= deadZone && leftStickInput.Length() > deadZone)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public void UpdateRooms(GameTime gameTime)
         {
             //Start at the beginning of the grid
@@ -812,6 +852,11 @@ namespace Once_A_Rogue
                         if (levelAnnex[columnIndex, rowIndex].Active)
                         {
                             activeRoom = levelAnnex[columnIndex, rowIndex];
+
+                            foreach(Enemy enemy in activeRoom.enemyList)
+                            {
+                                enemy.Update(gameTime, player);
+                            }
 
                             //If the camera is shifting
                             if (shifting)
