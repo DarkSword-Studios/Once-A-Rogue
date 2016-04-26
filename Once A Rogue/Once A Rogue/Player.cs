@@ -137,8 +137,8 @@ namespace Once_A_Rogue
         }
 
         public Vector2 rightStickInput;
-        Vector2 leftStickInput;
-        float deadZone;
+        public Vector2 leftStickInput;
+        public float deadZone;
 
         public Player(int x, int y, int width, int height)
         {
