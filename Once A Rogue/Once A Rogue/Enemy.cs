@@ -240,6 +240,7 @@ namespace Once_A_Rogue
             RootResist = 0;
             player = play;
             rgen = new Random();
+            Cooldown = 2000;
         }
         //This method handles drawing the enemy based onthe current animation
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)

@@ -311,9 +311,6 @@ namespace Once_A_Rogue
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                Exit();
-
             previousKBS = kbs;
             kbs = Keyboard.GetState();
             prevGPadState = gPadState;
@@ -366,25 +363,25 @@ namespace Once_A_Rogue
                 player.UpdateFrame(gameTime);
 
                 //Set W A S D keys to four different directions
-                if (kbs.IsKeyDown(Keys.A))
+                if (kbs.IsKeyDown(Keys.A) || leftStickInput.X < -player.deadZone)
                 {
                     playerMove = "left";
                 }
-                else if (kbs.IsKeyDown(Keys.D))
+                else if (kbs.IsKeyDown(Keys.D) || leftStickInput.X > player.deadZone)
                 {
                     playerMove = "right";
                 }
-                if (kbs.IsKeyDown(Keys.S))
+                if (kbs.IsKeyDown(Keys.S) || leftStickInput.Y > player.deadZone)
                 {
                     playerMove = "down";
                 }
-                else if (kbs.IsKeyDown(Keys.W))
+                else if (kbs.IsKeyDown(Keys.W) || leftStickInput.Y  < -player.deadZone)
                 {
                     playerMove = "up";
                 }
 
                 //Death button
-                if(kbs.IsKeyDown(Keys.K))
+                if(kbs.IsKeyDown(Keys.K) || gPadState.IsButtonDown(Buttons.Back))
                 {
                     player.CurrHealth = 0;
                 }
@@ -541,7 +538,7 @@ namespace Once_A_Rogue
             if(gameState == GameState.GameOver)
             {
                 kbs = Keyboard.GetState();
-                if (kbs.IsKeyDown(Keys.Enter))
+                if (kbs.IsKeyDown(Keys.Enter) || gPadState.IsButtonDown(Buttons.Start))
                 {
                     gameState = GameState.MainMenu;
                 }
