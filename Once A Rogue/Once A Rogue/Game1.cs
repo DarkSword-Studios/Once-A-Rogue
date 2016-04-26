@@ -445,6 +445,14 @@ namespace Once_A_Rogue
                             project.OnCollision(player);
                         }
 
+                        foreach (Interactable interact in activeRoom.interactables)
+                        {
+                            if (interact.Passable != true && project.PosRect.Intersects(interact.RelativeLocation))
+                            {
+                                removeProj.Add(project);
+                            }
+                        }
+
                         foreach (Enemy enemy in activeRoom.enemyList)
                         {
                             if (project.PosRect.Intersects(enemy.PosRect) && project.Owner != enemy)

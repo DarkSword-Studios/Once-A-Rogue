@@ -25,7 +25,7 @@ namespace Once_A_Rogue
         const int TILESIZE = 120;
 
         //Manage a list of all interactables (also a subset of just post interactables)
-        List<Interactable> interactables;
+        public List<Interactable> interactables;
         public List<Interactable> posts = new List<Interactable>();
 
         //This variables manages the room's activity state which is important (do we update the room? Do we draw it? Only if it's active)

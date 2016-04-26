@@ -16,12 +16,13 @@ namespace Once_A_Rogue
     {
         //These are the different tags an interactable can have (affect how it is seen and dealt with in the world)
         private Boolean interactable;
-        private Boolean passable;
+        public Boolean passable;
         private Boolean doDraw;
         private Boolean functioning;
         private Boolean levelTrigger;
         private string type;
         private string subType;
+        public Rectangle adjustedLocal;
 
         //Just like a tile, an interactable has a relative location and a relative image location
         private Rectangle relativeImageLocal;
@@ -144,7 +145,7 @@ namespace Once_A_Rogue
                 yCoord = ((yCoord %= camera.screenHeight) < 0) ? yCoord + camera.screenHeight : yCoord;
 
                 //Calculate the relative local coordinates of the note
-                Rectangle adjustedLocal = new Rectangle(xCoord, yCoord, this.relativeLocation.Width, this.relativeLocation.Height);
+                adjustedLocal = new Rectangle(xCoord, yCoord, this.relativeLocation.Width, this.relativeLocation.Height);
 
                 //If the player is intersecting with the note
                 if (player.PosRect.Intersects(adjustedLocal))
