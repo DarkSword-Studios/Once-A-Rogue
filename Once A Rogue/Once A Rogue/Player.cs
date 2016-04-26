@@ -170,8 +170,8 @@ namespace Once_A_Rogue
 
             //Setting default values
             playerState = PlayerState.IdleRight;
-            MoveSpeedTotal = 5;
-            MoveSpeed = 5;
+            MoveSpeedTotal = 6;
+            MoveSpeed = 6;
             StunResist = 0;
             RootResist = 0;
             FireResist = 0;
