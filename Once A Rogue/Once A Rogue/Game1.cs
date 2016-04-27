@@ -991,14 +991,26 @@ namespace Once_A_Rogue
                                         }
                                         enemy.UpdatePathPosition();
                                     }
-                                    else if(enemy.path != null && enemy.path.Count > 0)
-                                    {                                       
-                                        if(enemy.path != null && enemy.path.Count > 0)
+                                    else if(enemy.path == null && !enemy.pathFinding)
+                                    {
+                                        if (enemy.PosX % 120 != 0 || enemy.PosY % 120 != 0)
                                         {
-                                            enemy.UpdatePathFindPosition();
-                                        }                                    
+                                            enemy.UpdatePathPosition();
+
+                                            if(enemy.PosX % 120 == 0 && enemy.PosY % 120 == 0)
+                                            {
+                                                enemy.pathFinding = true;
+                                                enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                                enemy.pathIndex = -1;
+                                            }
+                                        }                    
                                     }
-                                    else if(enemy.path == null)
+                                    else if(enemy.path != null && enemy.path.Count > 0)
+                                    {
+                                        enemy.UpdatePathFindPosition();
+                                    }
+
+                                    else if(enemy.path == null || enemy.path.Count == 0)
                                     {
                                         enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
                                         enemy.pathIndex = -1;

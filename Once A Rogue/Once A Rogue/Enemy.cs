@@ -59,6 +59,7 @@ namespace Once_A_Rogue
         //Variables to keep track of the enemy's current x and y path speed (if the enemy patrols)
         public int pathSpeedX;
         public int pathSpeedY;
+        public Boolean pathFinding = false;
 
         public Player player;
 
@@ -403,8 +404,8 @@ namespace Once_A_Rogue
             if (IsHostile == true)
             {
                 //MoveSpeed = 0;
-                pathSpeedX = 0;
-                pathSpeedY = 0;
+                //pathSpeedX = 0;
+                //pathSpeedY = 0;
 
                 int ranSpell = rgen.Next(0, SkillList.Count - 1);
 
