@@ -207,6 +207,23 @@ namespace Once_A_Rogue
             }
         }
 
+        public void HandleCollisions(Projectile project, Camera camera)
+        {
+            //Find the collision depth
+            //We need REAL modulo, not remainders
+            int xCoord = this.relativeLocation.X;
+            int yCoord = this.relativeLocation.Y;
+            xCoord = ((xCoord %= camera.screenWidth) < 0) ? xCoord + camera.screenWidth : xCoord;
+            yCoord = ((yCoord %= camera.screenHeight) < 0) ? yCoord + camera.screenHeight : yCoord;
+            Rectangle adjustedLocal = new Rectangle(xCoord, yCoord, this.relativeLocation.Width, this.relativeLocation.Height);
+
+            //If there has been a collision
+            if (project.PosRect.Intersects(adjustedLocal) && !this.Passable)
+            {
+                Game1.RemoveProj.Add(project);
+            }
+        }
+
         //This method handles finding the specific collision depth between two rectangles 
         public Vector2 FindIntersectionDepth(Rectangle rec1, Rectangle rec2)
         {
