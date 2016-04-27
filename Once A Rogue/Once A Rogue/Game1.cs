@@ -993,7 +993,14 @@ namespace Once_A_Rogue
 
                                     //Pathfinding Algorithms --- Abandoned until further notice ---
 
-                                    //PathFinderNode node = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                    //int pathNum
+                                    //if(enemy hasn't moved distance)
+                                    //Move
+                                    //else
+                                    //pathNum + 1
+                                    //
+
+                                    //List<PathFinderNode> path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
                                     //Vector2 travel = new Vector2(node.x, node.y);
                                     //if(travel != Vector2.Zero)
                                     //{
