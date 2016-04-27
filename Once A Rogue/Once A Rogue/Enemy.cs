@@ -257,7 +257,7 @@ namespace Once_A_Rogue
             {
                 case enemyState.IdleRight:
 
-                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, Color.White);
                     break;
 
@@ -270,25 +270,25 @@ namespace Once_A_Rogue
 
                 case enemyState.WalkingRight:
 
-                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, Color.White);
                     break;
 
                 case enemyState.WalkingLeft:
 
-                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackLeft:
 
-                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackRight:
 
-                    frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, Color.White);
                     break;
             }
@@ -314,48 +314,56 @@ namespace Once_A_Rogue
 
                     pathSpeedY = -MoveSpeed;
                     pathSpeedX = 0;
+                    eState = enemyState.WalkingLeft;
                     break;
 
                 case "down":
 
                     pathSpeedY = MoveSpeed;
                     pathSpeedX = 0;
+                    eState = enemyState.WalkingRight;
                     break;
 
                 case "left":
 
                     pathSpeedY = 0;
                     pathSpeedX = -MoveSpeed;
+                    eState = enemyState.WalkingLeft;
                     break;
 
                 case "right":
 
                     pathSpeedY = 0;
                     pathSpeedX = MoveSpeed;
+                    eState = enemyState.WalkingRight;
                     break;
 
                 case "upright":
 
                     pathSpeedY = -MoveSpeed;
                     pathSpeedX = MoveSpeed;
+                    eState = enemyState.WalkingRight;
                     break;
 
                 case "upleft":
 
                     pathSpeedY = -MoveSpeed;
                     pathSpeedX = -MoveSpeed;
+                    eState = enemyState.WalkingLeft;
                     break;
 
                 case "downleft":
 
                     pathSpeedY = -MoveSpeed;
                     pathSpeedX = MoveSpeed;
+                    eState = enemyState.WalkingLeft;
                     break;
 
                 case "downright":
 
                     pathSpeedY = MoveSpeed;
                     pathSpeedX = MoveSpeed;
+                    eState = enemyState.WalkingRight;
                     break;
             }
         }
@@ -386,6 +394,34 @@ namespace Once_A_Rogue
 
             PosX += (int) (pathDirection.X * MoveSpeed);
             PosY += (int) (pathDirection.Y * MoveSpeed);
+
+            if(pathDirection.X < 0)
+            {
+                eState = enemyState.WalkingLeft;
+            }
+            else if(pathDirection.X > 0)
+            {
+                eState = enemyState.WalkingRight;
+            }
+            else if(pathDirection.Y < 0)
+            {
+                eState = enemyState.WalkingLeft;
+            }
+            else if (pathDirection.Y > 0)
+            {
+                eState = enemyState.WalkingRight;
+            }
+            else if(pathDirection.X == 0 && pathDirection.Y == 0)
+            {
+                if(eState == enemyState.WalkingLeft && eState != enemyState.AttackLeft && eState != enemyState.AttackRight)
+                {
+                    eState = enemyState.IdleLeft;
+                }
+                else
+                {
+                    eState = enemyState.IdleRight;
+                }
+            }
             
 
         }
@@ -412,6 +448,14 @@ namespace Once_A_Rogue
                 if (Cooldown == 0)
                 {
                     SkillList[ranSpell].OnActivated();
+                    if (eState == enemyState.IdleLeft)
+                    {
+                        eState = enemyState.AttackLeft;
+                    }
+                    else
+                    {
+                        eState = enemyState.AttackRight;
+                    }
                     Cooldown += SkillList[ranSpell].CooldownTotal + 500;
                 }
             }
@@ -421,6 +465,14 @@ namespace Once_A_Rogue
                 Cooldown -= gt.ElapsedGameTime.Milliseconds;
                 if (Cooldown < 0)
                 {
+                    if(eState == enemyState.AttackRight)
+                    {
+                        eState = enemyState.IdleRight;
+                    }
+                    else
+                    {
+                        eState = enemyState.IdleLeft;
+                    }
                     Cooldown = 0;
                 }
             }
