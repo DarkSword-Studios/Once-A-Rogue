@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 //Implemented by: Ian Moon & Stasha Blank
 //Team: DarkSword Studios
 //Purpose: Declares how the environment handles an interactable
-//Date Modified: 4/20/16
+//Date Modified: 4/27/16
 
 namespace Once_A_Rogue
 {
@@ -35,134 +35,118 @@ namespace Once_A_Rogue
 
             List<PathFinderNode> open = new List<PathFinderNode>();
             List<PathFinderNode> closed = new List<PathFinderNode>();
-            List<PathFinderNode> checkForOpen = new List<PathFinderNode>();
+            List<PathFinderNode> neighbors = new List<PathFinderNode>();
 
             //Loop through every item in the room annex to deal with assigning tiles
+            PathFinderNode[,] nodes = new PathFinderNode[9, 16];
 
-            PathFinderNode newNode = new PathFinderNode(null, (int) new Vector2(finishXCoord - startXCoord, finishYCoord - startYCoord).Length(), startXCoord, startYCoord);
-            PathFinderNode endNode = new PathFinderNode(null, 0, finishXCoord, finishYCoord);
+            for (int i = 0; i < nodes.GetLength(0); i++)
+            {
+                for (int j = 0; j < nodes.GetLength(1); j++)
+                {
+                    if(i == 0 || i == 8 || j == 0 || j == 15)
+                    {
+                        continue;
+                    }
+                    if ((room.finalRoomAnnex[i, j].Interactable == null || room.finalRoomAnnex[i, j].Interactable.Passable))
+                    {
+                        nodes[i, j] = new PathFinderNode(i, j);
+                    }
+                        
+                }
+            }
+
+            PathFinderNode newNode = nodes[startYCoord, startXCoord];
+            PathFinderNode endNode = nodes[finishYCoord, finishXCoord];
 
             open.Add(newNode);
 
-            PathFinderNode currentNode = newNode;
+            PathFinderNode currentNode;
 
-            while(currentNode.x != endNode.x && currentNode.y != endNode.y)
+            while (open.Count > 0)
             {
                 currentNode = open[0];
-
-                foreach (PathFinderNode node in open)
+                for (int i = 1; i < open.Count; i++)
                 {
-                    if (node.heuristic < currentNode.heuristic)
+                    if (open[i].GetFCost() < currentNode.GetFCost() || open[i].GetFCost() == currentNode.GetFCost() && open[i].heuristic < currentNode.heuristic)
                     {
-                        currentNode = node;
+                        currentNode = open[i];
                     }
                 }
 
                 open.Remove(currentNode);
                 closed.Add(currentNode);
 
-                if(currentNode.x == endNode.x && currentNode.y == endNode.y)
+                if(currentNode == endNode)
                 {
-                    return closed;
+                    return RetracePath(newNode, endNode);
                 }
 
-                if ((room.finalRoomAnnex[currentNode.y + 1, currentNode.x].Interactable == null || room.finalRoomAnnex[currentNode.y + 1, currentNode.x].Interactable.Passable) && currentNode.y + 1 != 15)
+                if(nodes[currentNode.x + 1, currentNode.y] != null)
                 {
-                    Vector2 vector = new Vector2(finishXCoord - (currentNode.x + 1), finishYCoord - currentNode.y);
-                    PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x + 1, currentNode.y);
-                    Boolean allow = true;
-                    foreach (PathFinderNode closedNode in closed)
+                    neighbors.Add(nodes[currentNode.x + 1, currentNode.y]);
+                }
+                if (nodes[currentNode.x - 1, currentNode.y] != null)
+                {
+                    neighbors.Add(nodes[currentNode.x - 1, currentNode.y]);
+                }
+                if (nodes[currentNode.x, currentNode.y + 1] != null)
+                {
+                    neighbors.Add(nodes[currentNode.x, currentNode.y + 1]);
+                }
+                if (nodes[currentNode.x, currentNode.y - 1] != null)
+                {
+                    neighbors.Add(nodes[currentNode.x, currentNode.y - 1]);
+                }
+
+                foreach(PathFinderNode neighbor in neighbors)
+                {
+                    if (closed.Contains(neighbor))
                     {
-                        if (closedNode.x == node.x && closedNode.y == node.y)
+                        continue;
+                    }
+
+                    int newDistance = currentNode.movementCost + GetDistance(currentNode, neighbor);
+                    if (newDistance < neighbor.movementCost || !open.Contains(neighbor))
+                    {
+                        neighbor.movementCost = newDistance;
+                        neighbor.heuristic = GetDistance(neighbor, endNode);
+                        neighbor.parent = currentNode;
+
+                        if (!open.Contains(neighbor))
                         {
-                            allow = false;
+                            open.Add(neighbor);
                         }
                     }
-                    if (allow)
-                    {
-                        checkForOpen.Add(node);
-                    }
                 }
-
-                if ((room.finalRoomAnnex[currentNode.y - 1, currentNode.x].Interactable == null || room.finalRoomAnnex[currentNode.y - 1, currentNode.x].Interactable.Passable) && currentNode.y - 1 != 0)
-                {
-                    Vector2 vector = new Vector2(finishXCoord - (currentNode.x - 1), finishYCoord - currentNode.y);
-                    PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x - 1, currentNode.y);
-                    Boolean allow = true;
-                    foreach (PathFinderNode closedNode in closed)
-                    {
-                        if (closedNode.x == node.x && closedNode.y == node.y)
-                        {
-                            allow = false;
-                        }
-                    }
-                    if (allow)
-                    {
-                        checkForOpen.Add(node);
-                    }
-                }
-
-                if ((room.finalRoomAnnex[currentNode.y, currentNode.x + 1].Interactable == null || room.finalRoomAnnex[currentNode.y, currentNode.x + 1].Interactable.Passable) && currentNode.x + 1 != 8)
-                {
-                    Vector2 vector = new Vector2(finishXCoord - currentNode.x, finishYCoord - (currentNode.y + 1));
-                    PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x, (currentNode.y + 1));
-                    Boolean allow = true;
-                    foreach (PathFinderNode closedNode in closed)
-                    {
-                        if (closedNode.x == node.x && closedNode.y == node.y)
-                        {
-                            allow = false;
-                        }
-                    }
-                    if (allow)
-                    {
-                        checkForOpen.Add(node);
-                    }
-                }
-
-                if ((room.finalRoomAnnex[currentNode.y, currentNode.x - 1].Interactable == null || room.finalRoomAnnex[currentNode.y, currentNode.x - 1].Interactable.Passable) && currentNode.x- 1 != 0)
-                {
-                    Vector2 vector = new Vector2(finishXCoord - currentNode.x, finishYCoord - (currentNode.y - 1));
-                    PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x, currentNode.y - 1);
-                    Boolean allow = true;
-                    foreach (PathFinderNode closedNode in closed)
-                    {
-                        if (closedNode.x == node.x && closedNode.y == node.y)
-                        {
-                            allow = false;
-                        }
-                    }
-                    if (allow)
-                    {
-                        checkForOpen.Add(node);
-                    }
-                }
-                foreach(PathFinderNode node in checkForOpen)
-                {
-
-                    Boolean allow = true;
-                    foreach (PathFinderNode openNode in open)
-                    {
-                        if (openNode.x == node.x && openNode.y == node.y)
-                        {
-                            allow = false;
-                        }
-                    }
-                    if (allow)
-                    {
-                        open.Add(node);
-                    }
-                }
-                
-
-                checkForOpen.Clear();
-
-                //return new PathFinderNode(null, 0, finishXCoord - currentNode.x, finishYCoord - currentNode.y);
 
 
             }
 
             return closed;
+        }
+
+        private static int GetDistance(PathFinderNode nodeA, PathFinderNode nodeB)
+        {
+            int distX = Math.Abs(nodeA.x - nodeB.x);
+            int distY = Math.Abs(nodeA.y - nodeB.y);
+
+            return 10 * (distX + distY);
+        }
+
+        private static List<PathFinderNode> RetracePath(PathFinderNode startNode, PathFinderNode endNode)
+        {
+            List<PathFinderNode> path = new List<PathFinderNode>();
+            PathFinderNode currentNode = endNode;
+
+            while (currentNode != startNode)
+            {
+                path.Add(currentNode);
+                currentNode = currentNode.parent;
+            }
+
+            path.Reverse();
+            return path;
         }
 
     }

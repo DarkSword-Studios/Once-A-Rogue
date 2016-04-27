@@ -368,12 +368,12 @@ namespace Once_A_Rogue
 
         public void UpdatePathFindPosition()
         {
-            if(pathDirection == Vector2.Zero || (PosX == path[pathIndex].x * 120 && PosY == path[pathIndex].y * 120))
+            if(pathDirection == Vector2.Zero || (PosX == path[pathIndex].y * 120 && PosY == path[pathIndex].x * 120))
             {
                 if(pathIndex < path.Count - 1)
                 {
                     pathIndex++;
-                    pathDirection = new Vector2(path[pathIndex].x * 120 - PosX, path[pathIndex].y * 120 - PosY);
+                    pathDirection = new Vector2(path[pathIndex].y * 120 - PosX, path[pathIndex].x * 120 - PosY);
                     pathDirection.Normalize();
                 }
                 else

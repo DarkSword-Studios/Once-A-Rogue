@@ -16,14 +16,17 @@ namespace Once_A_Rogue
         public int movementCost;
         public int weight;
 
-        public PathFinderNode(PathFinderNode parent, int heuristic, int x, int y)
+        public PathFinderNode(int x, int y)
         {
-            this.parent = parent;
-            this.heuristic = heuristic;
             this.x = x;
             this.y = y;
             //movementCost = (int)(new Vector2(this.x - parent.x, this.y - parent.y).Length() * 10);
             //weight = heuristic + movementCost;
+        }
+
+        public int GetFCost()
+        {
+            return heuristic + movementCost;
         }
     }
 }

@@ -991,18 +991,18 @@ namespace Once_A_Rogue
                                         }
                                         enemy.UpdatePathPosition();
                                     }
-                                    //else if(enemy.path != null && enemy.path.Count > 0)
-                                    //{                                       
-                                    //    if(enemy.path != null && enemy.path.Count > 0)
-                                    //    {
-                                    //        enemy.UpdatePathFindPosition();
-                                    //    }                                    
-                                    //}
-                                    //else if(enemy.path == null)
-                                    //{
-                                    //    enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
-                                    //    enemy.pathIndex = -1;
-                                    //}
+                                    else if(enemy.path != null && enemy.path.Count > 0)
+                                    {                                       
+                                        if(enemy.path != null && enemy.path.Count > 0)
+                                        {
+                                            enemy.UpdatePathFindPosition();
+                                        }                                    
+                                    }
+                                    else if(enemy.path == null)
+                                    {
+                                        enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                        enemy.pathIndex = -1;
+                                    }
                                     
                                     enemy.Update(gameTime);
 
@@ -1134,7 +1134,7 @@ namespace Once_A_Rogue
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
             //Initializing the player
-            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 120, 120);
+            player = new Player(120, 120, 120, 120);
         }
     }
 }
