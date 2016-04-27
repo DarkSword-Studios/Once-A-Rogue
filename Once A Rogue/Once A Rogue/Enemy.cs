@@ -37,6 +37,10 @@ namespace Once_A_Rogue
 
         Random rgen;
 
+        public List<PathFinderNode> path;
+        public int pathIndex;
+        public Vector2 pathDirection;
+
         //Variables to keep track of the enemy's animation
         int timePerFrame = 100;
         int numFrames = 6;
@@ -362,6 +366,29 @@ namespace Once_A_Rogue
             PosY += pathSpeedY;
         }
 
+        public void UpdatePathFindPosition()
+        {
+            if(pathDirection == Vector2.Zero || (PosX == path[pathIndex].x * 120 && PosY == path[pathIndex].y * 120))
+            {
+                if(pathIndex < path.Count - 1)
+                {
+                    pathIndex++;
+                    pathDirection = new Vector2(path[pathIndex].x * 120 - PosX, path[pathIndex].y * 120 - PosY);
+                    pathDirection.Normalize();
+                }
+                else
+                {
+                    path = null;
+                    pathDirection = Vector2.Zero;
+                }                
+            }
+
+            PosX += (int) (pathDirection.X * MoveSpeed);
+            PosY += (int) (pathDirection.Y * MoveSpeed);
+            
+
+        }
+
         public void Update(GameTime gt, Player play)
         {
             base.Update(gt);
@@ -375,7 +402,7 @@ namespace Once_A_Rogue
 
             if (IsHostile == true)
             {
-                MoveSpeed = 0;
+                //MoveSpeed = 0;
                 pathSpeedX = 0;
                 pathSpeedY = 0;
 

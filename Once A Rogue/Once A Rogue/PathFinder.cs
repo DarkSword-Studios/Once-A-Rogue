@@ -46,8 +46,10 @@ namespace Once_A_Rogue
 
             PathFinderNode currentNode = newNode;
 
-            while(currentNode != endNode)
+            while(currentNode.x != endNode.x && currentNode.y != endNode.y)
             {
+                currentNode = open[0];
+
                 foreach (PathFinderNode node in open)
                 {
                     if (node.heuristic < currentNode.heuristic)
@@ -59,65 +61,108 @@ namespace Once_A_Rogue
                 open.Remove(currentNode);
                 closed.Add(currentNode);
 
-                if(currentNode == endNode)
+                if(currentNode.x == endNode.x && currentNode.y == endNode.y)
                 {
                     return closed;
                 }
 
-                if ((room.finalRoomAnnex[currentNode.y + 1, currentNode.x].Interactable == null || room.finalRoomAnnex[currentNode.y + 1, currentNode.x].Interactable.Passable) && currentNode.x + 1 != 15 && )
+                if ((room.finalRoomAnnex[currentNode.y + 1, currentNode.x].Interactable == null || room.finalRoomAnnex[currentNode.y + 1, currentNode.x].Interactable.Passable) && currentNode.y + 1 != 15)
                 {
                     Vector2 vector = new Vector2(finishXCoord - (currentNode.x + 1), finishYCoord - currentNode.y);
                     PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x + 1, currentNode.y);
-                    if (!closed.Contains(node))
+                    Boolean allow = true;
+                    foreach (PathFinderNode closedNode in closed)
+                    {
+                        if (closedNode.x == node.x && closedNode.y == node.y)
+                        {
+                            allow = false;
+                        }
+                    }
+                    if (allow)
                     {
                         checkForOpen.Add(node);
                     }
                 }
 
-                if ((room.finalRoomAnnex[currentNode.y - 1, currentNode.x].Interactable == null || room.finalRoomAnnex[currentNode.y - 1, currentNode.x].Interactable.Passable) && currentNode.x - 1 != 0)
+                if ((room.finalRoomAnnex[currentNode.y - 1, currentNode.x].Interactable == null || room.finalRoomAnnex[currentNode.y - 1, currentNode.x].Interactable.Passable) && currentNode.y - 1 != 0)
                 {
                     Vector2 vector = new Vector2(finishXCoord - (currentNode.x - 1), finishYCoord - currentNode.y);
                     PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x - 1, currentNode.y);
-                    if (!closed.Contains(node))
+                    Boolean allow = true;
+                    foreach (PathFinderNode closedNode in closed)
+                    {
+                        if (closedNode.x == node.x && closedNode.y == node.y)
+                        {
+                            allow = false;
+                        }
+                    }
+                    if (allow)
                     {
                         checkForOpen.Add(node);
                     }
                 }
 
-                if ((room.finalRoomAnnex[currentNode.y, currentNode.x + 1].Interactable == null || room.finalRoomAnnex[currentNode.y, currentNode.x + 1].Interactable.Passable) && currentNode.y + 1 != 8)
+                if ((room.finalRoomAnnex[currentNode.y, currentNode.x + 1].Interactable == null || room.finalRoomAnnex[currentNode.y, currentNode.x + 1].Interactable.Passable) && currentNode.x + 1 != 8)
                 {
                     Vector2 vector = new Vector2(finishXCoord - currentNode.x, finishYCoord - (currentNode.y + 1));
                     PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x, (currentNode.y + 1));
-                    if (!closed.Contains(node))
+                    Boolean allow = true;
+                    foreach (PathFinderNode closedNode in closed)
+                    {
+                        if (closedNode.x == node.x && closedNode.y == node.y)
+                        {
+                            allow = false;
+                        }
+                    }
+                    if (allow)
                     {
                         checkForOpen.Add(node);
                     }
                 }
 
-                if ((room.finalRoomAnnex[currentNode.y, currentNode.x - 1].Interactable == null || room.finalRoomAnnex[currentNode.y, currentNode.x - 1].Interactable.Passable) && currentNode.y - 1 != 0)
+                if ((room.finalRoomAnnex[currentNode.y, currentNode.x - 1].Interactable == null || room.finalRoomAnnex[currentNode.y, currentNode.x - 1].Interactable.Passable) && currentNode.x- 1 != 0)
                 {
                     Vector2 vector = new Vector2(finishXCoord - currentNode.x, finishYCoord - (currentNode.y - 1));
                     PathFinderNode node = new PathFinderNode(currentNode, (int)vector.Length(), currentNode.x, currentNode.y - 1);
-                    if (!closed.Contains(node))
+                    Boolean allow = true;
+                    foreach (PathFinderNode closedNode in closed)
+                    {
+                        if (closedNode.x == node.x && closedNode.y == node.y)
+                        {
+                            allow = false;
+                        }
+                    }
+                    if (allow)
                     {
                         checkForOpen.Add(node);
                     }
                 }
                 foreach(PathFinderNode node in checkForOpen)
                 {
-                    if (!open.Contains(node))
+
+                    Boolean allow = true;
+                    foreach (PathFinderNode openNode in open)
+                    {
+                        if (openNode.x == node.x && openNode.y == node.y)
+                        {
+                            allow = false;
+                        }
+                    }
+                    if (allow)
                     {
                         open.Add(node);
                     }
                 }
                 
 
-                //checkForOpen.Clear();
+                checkForOpen.Clear();
 
                 //return new PathFinderNode(null, 0, finishXCoord - currentNode.x, finishYCoord - currentNode.y);
 
 
             }
+
+            return closed;
         }
 
     }

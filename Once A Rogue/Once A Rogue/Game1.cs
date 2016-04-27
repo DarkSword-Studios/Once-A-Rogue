@@ -976,19 +976,34 @@ namespace Once_A_Rogue
                                 {
                                     enemy.UpdateFrame(gameTime);
 
-                                    foreach(Interactable post in levelAnnex[columnIndex, rowIndex].posts)
+                                    if (!enemy.IsHostile)
                                     {
-                                        int x = post.RelativeLocation.X;
-                                        int y = post.RelativeLocation.Y;
-                                        x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
-                                        y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
-                                        if (enemy.PosX == x && enemy.PosY == y)
+                                        foreach (Interactable post in levelAnnex[columnIndex, rowIndex].posts)
                                         {
-                                            enemy.UpdatePathDirection(post.SubType);
+                                            int x = post.RelativeLocation.X;
+                                            int y = post.RelativeLocation.Y;
+                                            x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+                                            y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+                                            if (enemy.PosX == x && enemy.PosY == y)
+                                            {
+                                                enemy.UpdatePathDirection(post.SubType);
+                                            }
                                         }
+                                        enemy.UpdatePathPosition();
                                     }
-
-                                    enemy.UpdatePathPosition();
+                                    //else if(enemy.path != null && enemy.path.Count > 0)
+                                    //{                                       
+                                    //    if(enemy.path != null && enemy.path.Count > 0)
+                                    //    {
+                                    //        enemy.UpdatePathFindPosition();
+                                    //    }                                    
+                                    //}
+                                    //else if(enemy.path == null)
+                                    //{
+                                    //    enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                    //    enemy.pathIndex = -1;
+                                    //}
+                                    
                                     enemy.Update(gameTime);
 
                                     //Pathfinding Algorithms --- Abandoned until further notice ---
@@ -1000,8 +1015,8 @@ namespace Once_A_Rogue
                                     //pathNum + 1
                                     //
 
-                                    //List<PathFinderNode> path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
-                                    //Vector2 travel = new Vector2(node.x, node.y);
+                                    
+                                    //Vector2 travel = new Vector2(path[0].x, path[0].y);
                                     //if(travel != Vector2.Zero)
                                     //{
                                     //    travel.Normalize();
