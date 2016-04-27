@@ -951,7 +951,7 @@ namespace Once_A_Rogue
             y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
 
             //Create a new goblin from the given information
-            Goblin goblin = new Goblin(play, camera, x, y, 140, 140, tex);
+            Goblin goblin = new Goblin(play, camera, x, y, 120, 120, tex);
 
             //The goblin has just spawned
             goblin.justSpawned = true;
@@ -973,7 +973,7 @@ namespace Once_A_Rogue
             int y = spawn.RelativeLocation.Y;
             x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
             y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
-            Ghoul ghoul = new Ghoul(play, camera, 0, x, y, 140, 140, tex);
+            Ghoul ghoul = new Ghoul(play, camera, 0, x, y, 120, 120, tex);
             ghoul.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(ghoul);
         }
@@ -989,7 +989,7 @@ namespace Once_A_Rogue
             int y = spawn.RelativeLocation.Y;
             x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
             y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
-            Kobold kobold = new Kobold(play, camera, x, y, 140, 140, tex);
+            Kobold kobold = new Kobold(play, camera, x, y, 120, 120, tex);
             kobold.UpdatePathDirection(spawn.Interactable.SubType);
             enemyList.Add(kobold);
             

@@ -368,7 +368,7 @@ namespace Once_A_Rogue
 
             detectionVector = new Vector2(player.PosX, player.PosY) - new Vector2(PosX, PosY);
 
-            if ((detectionVector.Length() <= 360 || CurrHealth < TotalHealth) && IsHostile == false)
+            if ((detectionVector.Length() <= 200 || CurrHealth < TotalHealth) && IsHostile == false)
             {
                 IsHostile = true;
             }

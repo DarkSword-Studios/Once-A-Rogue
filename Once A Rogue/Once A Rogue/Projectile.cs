@@ -185,14 +185,14 @@ namespace Once_A_Rogue
                     if(target.IsExplosive)
                     {
                         //Create projectiles which go off in 8 directions
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(1, 0), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-1, 0), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(0, 1), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(0, -1), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, .707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, .707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, -.707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
-                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, -.707f), 0, 7, 40, 40, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(1, 0), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-1, 0), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(0, 1), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(0, -1), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, .707f), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, .707f), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(.707f, -.707f), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
+                        Game1.AddProj.Add(new Projectile(0, "fire", target, new Vector2(-.707f, -.707f), 0, 7, 10, 10, target.PosX + target.PosRect.Width / 2, target.PosY + target.PosRect.Height / 2));
                         target.FireDur = 0;
                     }
                     break;

@@ -444,10 +444,7 @@ namespace Once_A_Rogue
 
                         foreach (Interactable interact in activeRoom.interactables)
                         {
-                            if (interact.Passable != true && project.PosRect.Intersects(interact.RelativeLocation))
-                            {
-                                removeProj.Add(project);
-                            }
+                            interact.HandleCollisions(project, camera);
                         }
 
                         foreach (Enemy enemy in activeRoom.enemyList)
@@ -1115,7 +1112,7 @@ namespace Once_A_Rogue
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
             //Initializing the player
-            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 140, 140);
+            player = new Player(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, 120, 120);
         }
     }
 }

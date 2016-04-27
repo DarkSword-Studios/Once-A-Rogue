@@ -64,14 +64,14 @@ namespace Once_A_Rogue
                             {
                                 player.PlayerStates = Player.PlayerState.AttackLeft;
                                 player.CurrMana -= Cost;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, stickInput, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, stickInput, 0, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
                             }
 
                             if (stickInput.X > 0)
                             {
                                 player.PlayerStates = Player.PlayerState.AttackRight;
                                 player.CurrMana -= Cost;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, stickInput, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, stickInput, 0, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                             }
 
                             return;
@@ -98,7 +98,7 @@ namespace Once_A_Rogue
 
                         //Add the projectile to the list
                         player.CurrMana -= Cost;
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2));
                     }
 
                     else
@@ -124,7 +124,7 @@ namespace Once_A_Rogue
                         vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
                         player.CurrMana -= Cost;
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace Once_A_Rogue
                     target.Normalize();
                 }
 
-                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 40, 40, enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2));
+                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2));
             }
         }
     }
