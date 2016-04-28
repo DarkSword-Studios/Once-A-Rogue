@@ -855,9 +855,12 @@ namespace Once_A_Rogue
                         {
                             activeRoom = levelAnnex[columnIndex, rowIndex];
 
-                            foreach(Enemy enemy in activeRoom.enemyList)
+                            if(!shifting)
                             {
-                                enemy.Update(gameTime, player);
+                                foreach (Enemy enemy in activeRoom.enemyList)
+                                {
+                                    enemy.Update(gameTime, player);
+                                }
                             }
 
                             //If the camera is shifting
