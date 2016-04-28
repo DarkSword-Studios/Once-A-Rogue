@@ -321,6 +321,15 @@ namespace Once_A_Rogue
             prevLeftStickInput = new Vector2(prevGPadState.ThumbSticks.Left.X, prevGPadState.ThumbSticks.Left.Y);
             
 
+            if(SingleKeyPress(Keys.N) && Window.IsBorderless)
+            {
+                Window.IsBorderless = false;
+            }
+            else
+            {
+                Window.IsBorderless = true;
+            }
+
             if (this.IsActive == false)
             {
                 MediaPlayer.Pause();
@@ -763,8 +772,8 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.GameOver)
             {
-                spriteBatch.DrawString(alertText, "You made it to level: " + player.Level, new Vector2(800, 400), Color.White);
-                spriteBatch.DrawString(alertText, "Press Enter to Continue...", new Vector2(750, 600), Color.White);
+                spriteBatch.DrawString(alertText, "Collected Souls: " + player.Souls, new Vector2(800, 400), Color.White);
+                spriteBatch.DrawString(alertText, "Press Enter/Start to Continue...", new Vector2(750, 600), Color.White);
             }
 
             if (gameState == GameState.Context)
