@@ -616,7 +616,7 @@ namespace Once_A_Rogue
                 }
                 if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))) || ((arrowState == ArrowState.pos3) && (gPadState.IsButtonDown(Buttons.A))))
                 {
-                    Exit();
+                    gameState = GameState.MainMenu;
                 }
                 if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480) || ((arrowState == ArrowState.pos3) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                 {
@@ -721,7 +721,7 @@ namespace Once_A_Rogue
                 {
                     //Draw the minimap based on the current level
                     //Debug mode currently == true
-                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, true);
+                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
                 }
                 //If there is a notification to update
                 if (Notification.Updating)
