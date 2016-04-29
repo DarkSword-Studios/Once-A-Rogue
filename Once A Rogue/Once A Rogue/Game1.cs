@@ -543,7 +543,7 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.Context)
             {
-                if(SingleKeyPress(Keys.Tab))
+                if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Keys.Escape))
                 {
                     gameState = GameState.Playing;
                 }
