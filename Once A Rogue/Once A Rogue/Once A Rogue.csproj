@@ -58,6 +58,8 @@
     <Compile Include="LevelBuilder.cs" />
     <Compile Include="MeleeAttack.cs" />
     <Compile Include="Minimap.cs" />
+    <Compile Include="Note.cs" />
+    <Compile Include="Notes.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="OilThrow.cs" />
     <Compile Include="PathFinder.cs" />

@@ -100,7 +100,7 @@ namespace Once_A_Rogue
 
         //Declare HUD Textures
         Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM, mana, health, container;
-        Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger;
+        Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger, loreEntry;
 
         //Keyboard states
         KeyboardState previousKBS, kbs;
@@ -250,6 +250,7 @@ namespace Once_A_Rogue
             skillRanger = Content.Load<Texture2D>("HUDStuff/HUDskillranger");
             skillWarrior = Content.Load<Texture2D>("HUDStuff/HUDskillwarrior");
             skillRogue = Content.Load<Texture2D>("HUDStuff/HUDskillrogue");
+            //loreEntry = Content.Load<Texture2D>("HUDStuff/LoreEntry");
 
             //Initialize MiniMap textures and add them to the map texture dictionary
             mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
@@ -567,6 +568,8 @@ namespace Once_A_Rogue
                     {
                         contextState = ContextState.Skills;
                     }
+
+                    //
                 }
                 
             }
@@ -1149,7 +1152,7 @@ namespace Once_A_Rogue
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
             //Initializing the player
-            player = new Player(120, 120, 120, 120);
+            player = new Player(120, 120, 110, 110);
         }
     }
 }
