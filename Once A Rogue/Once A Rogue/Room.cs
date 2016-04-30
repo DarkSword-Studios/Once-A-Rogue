@@ -34,6 +34,9 @@ namespace Once_A_Rogue
         //Keep track of the connections that the room supports
         private string doorLocals;
 
+        //Is this room the starting room
+        public Boolean startingRoom = false;
+
         //Keep track of whether the room has been discovered, is aware, or is neither
         private Boolean discovered;
         private Boolean aware;
@@ -79,6 +82,25 @@ namespace Once_A_Rogue
             set
             {
                 boss = value;
+                interactables.Clear();
+                posts.Clear();
+                spawnTiles.Clear();
+                checkPoints.Clear();
+                int row = 0;
+                int col = 0;
+
+                //Loop through every item in the room annex to deal with assigning tiles
+                while (row < unformattedRoomAnnex.GetLength(0))
+                {
+                    while (col < unformattedRoomAnnex.GetLength(1))
+                    {
+                        finalRoomAnnex[row, col].Interactable = null;
+
+                        col++;
+                    }
+                    col = 0;
+                    row++;
+                }
             }
         }
 
@@ -295,6 +317,11 @@ namespace Once_A_Rogue
 
             //Open the txt interactable layer
             StreamReader reader = new StreamReader(roomPath);
+
+            if (startingRoom)
+            {
+                return;
+            }
 
             //Keeps track of placement
             string line = "";

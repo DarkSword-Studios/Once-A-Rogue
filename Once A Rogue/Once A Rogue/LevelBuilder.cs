@@ -528,6 +528,8 @@ namespace Once_A_Rogue
 
                 Random random = new Random();
 
+                System.Threading.Thread.Sleep(001);
+
                 //At this point a room file is chosen from the valid list
                 string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
 
@@ -537,6 +539,16 @@ namespace Once_A_Rogue
                     //Create a new room from the file picked in the specific position within the level annex
                     Room room = new Room(roomPath, false, gridSystem[columnIndex, rowIndex]);
 
+                    //Add the room to the level annex after it has been built
+                    levelAnnex[columnIndex, rowIndex] = room;
+
+                    //If the generated room is the starting room, it should be initially active (we need a place to start, every other room's activity can be determined algorithmically)
+                    if (columnIndex == ((int)levelAnnex.GetLength(0) / 2) && rowIndex == ((int)levelAnnex.GetLength(1) / 2))
+                    {
+                        levelAnnex[columnIndex, rowIndex].Active = true;
+                        levelAnnex[columnIndex, rowIndex].startingRoom = true;
+                    }
+
                     //Build the level to take care of necessary initialization
                     room.BuildRoom(xCoord, yCoord, roomCodeStr);
 
@@ -544,15 +556,6 @@ namespace Once_A_Rogue
                     if (addToBossList)
                     {
                         bossRooms.Add(room);
-                    }
-
-                    //Add the room to the level annex after it has been built
-                    levelAnnex[columnIndex, rowIndex] = room;
-
-                    //If the generated room is the starting room, it should be initially active (we need a place to start, every other room's activity can be determined algorithmically)
-                    if (columnIndex == ((int)levelAnnex.GetLength(0) / 2) && rowIndex == ((int)levelAnnex.GetLength(1) / 2))
-                    {
-                        levelAnnex[columnIndex, rowIndex].Active = true;                        
                     }
                 }
 

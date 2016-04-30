@@ -646,10 +646,10 @@ namespace Once_A_Rogue
                 timePassed = 0;
             }
 
-            if(Souls == 100)
+            if(Souls > 100)
             {
                 Level += 1;
-                Souls = 0;
+                Souls -= 100;
             }
 
             else if (CurrMana > TotalMana)

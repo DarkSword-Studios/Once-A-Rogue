@@ -1148,6 +1148,7 @@ namespace Once_A_Rogue
             Random random = new Random();
             possibleBossRooms[random.Next(0, possibleBossRooms.Count)].Boss = true;
 
+
             //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 

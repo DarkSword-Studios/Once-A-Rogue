@@ -120,6 +120,12 @@ namespace Once_A_Rogue
 
                         Rectangle location = new Rectangle(xCoord, yCoord, TILE_WIDTH, TILE_HEIGHT);
 
+                        if (map[x, y].Boss)
+                        {
+                            spriteBatch.Draw(textures["Unknown"], location, Color.Purple * 0.5f);
+                            return;
+                        }
+
                         //Draw an unknown tile at the current location to indicate the player could discover a room at this location
                         spriteBatch.Draw(textures["Unknown"], location, Color.White * 0.5f);
 
