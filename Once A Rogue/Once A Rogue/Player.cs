@@ -684,7 +684,7 @@ namespace Once_A_Rogue
                     case "right":
                         if (cam.progress <= (1080 / 2))
                         {
-                            PosX -= cam.panSpeed - 7;
+                            PosX -= cam.panSpeed - 5;
                         }
 
                         if (cam.progress > (1080 / 2))
@@ -697,7 +697,7 @@ namespace Once_A_Rogue
                     case "left":
                         if (cam.progress <= (1080 / 2))
                         {
-                            PosX += cam.panSpeed - 7;
+                            PosX += cam.panSpeed - 5;
                         }
 
                         if (cam.progress > (1080 / 2))
