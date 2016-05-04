@@ -61,9 +61,9 @@ namespace Once_A_Rogue
                                 player.PlayerStates = Player.PlayerState.AttackLeft;
                                 vectorLength.X = (vectorLength.X * RangeX * 120) + (60 * RangeX);
                                 vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
                             }
 
                             if(stickInput.X > 0)
@@ -71,9 +71,9 @@ namespace Once_A_Rogue
                                 player.PlayerStates = Player.PlayerState.AttackRight;
                                 vectorLength.X = (vectorLength.X * RangeX * 120) - (60 * RangeX);
                                 vectorLength.Y = (vectorLength.Y * RangeY * 120) - (60 * RangeY);
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
                             }
 
                             return;
@@ -101,9 +101,9 @@ namespace Once_A_Rogue
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
 
                         //Add the projectiles to the list
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2,false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
                     }
 
                     else
@@ -125,9 +125,9 @@ namespace Once_A_Rogue
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - (60 * RangeY);
 
                         //Add the projectiles to the list
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y + .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, new Vector2(target.X, target.Y - .3f), vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
                     }
                 }
             }

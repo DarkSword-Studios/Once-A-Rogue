@@ -325,10 +325,6 @@ namespace Once_A_Rogue
             {
                 Window.IsBorderless = false;
             }
-            else
-            {
-                Window.IsBorderless = true;
-            }
 
             if (this.IsActive == false)
             {
@@ -459,7 +455,7 @@ namespace Once_A_Rogue
 
                         foreach (Enemy enemy in activeRoom.enemyList)
                         {
-                            if (project.PosRect.Intersects(enemy.PosRect) && project.Owner != enemy)
+                            if (project.PosRect.Intersects(enemy.PosRect) && (project.Owner == player || (project.isCombo && project.Owner != enemy)))
                             {
                                 project.OnCollision(enemy);
                             }
@@ -548,6 +544,7 @@ namespace Once_A_Rogue
                 if (kbs.IsKeyDown(Keys.Enter) || gPadState.IsButtonDown(Buttons.Start))
                 {
                     gameState = GameState.MainMenu;
+                    arrowState = ArrowState.menu1;
                 }
             }
 
@@ -626,6 +623,7 @@ namespace Once_A_Rogue
                 if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))) || ((arrowState == ArrowState.pos3) && (gPadState.IsButtonDown(Buttons.A))))
                 {
                     gameState = GameState.MainMenu;
+                    arrowState = ArrowState.menu1;
                 }
                 if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480) || ((arrowState == ArrowState.pos3) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                 {
@@ -722,7 +720,7 @@ namespace Once_A_Rogue
                 {
                     //Allow the player to see their current equipped skill and current soul count
                     spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
-                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls, new Vector2(169, 180), Color.White);
+                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 180), Color.White);
                 }
 
                 //If the minimap should be visible and there isn't a notification onscreen

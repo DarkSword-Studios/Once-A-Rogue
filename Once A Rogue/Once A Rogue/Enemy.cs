@@ -187,7 +187,7 @@ namespace Once_A_Rogue
             //Add additional code here to handle animation of enemy dying
 
             //Increment the 'Soul Count' of the player'
-            play.Souls++;
+            play.Souls += Level + 100 * 2;
         }
         public void Retreat()
         {

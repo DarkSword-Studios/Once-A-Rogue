@@ -33,6 +33,15 @@ namespace Once_A_Rogue
             set { souls = value; }
         }
 
+        private int soulsNeeded;
+
+        public int SoulsNeeded
+        {
+            get { return soulsNeeded; }
+            set { soulsNeeded = value; }
+        }
+
+
         //Currently selected weapon
         private string currWeapon;
 
@@ -143,6 +152,7 @@ namespace Once_A_Rogue
         public Player(int x, int y, int width, int height)
         {
             Level = 1;
+            SoulsNeeded = 1000;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
@@ -181,7 +191,7 @@ namespace Once_A_Rogue
             TotalMana = 100;
             CurrMana = 100;
             CurrHealth = 100;
-            ManaRegen = 3;
+            ManaRegen = 1;
             timePassed = 0;
             PosRect = new Rectangle(x, y, width, height);
             currWeapon = weaponArray[0];
@@ -646,10 +656,9 @@ namespace Once_A_Rogue
                 timePassed = 0;
             }
 
-            if(Souls > 100)
+            if(Souls > SoulsNeeded)
             {
-                Level += 1;
-                Souls -= 100;
+                LevelUp();
             }
 
             else if (CurrMana > TotalMana)
@@ -792,6 +801,17 @@ namespace Once_A_Rogue
                     skill.Cooldown = 0;
                 }
             }
+        }
+
+        private void LevelUp()
+        {
+            Souls -= SoulsNeeded;
+            SoulsNeeded += SoulsNeeded * 2 + 256;
+            Level += 1;
+            TotalHealth += Level * 5;
+            CurrHealth = TotalHealth;
+            TotalMana += Level * 5;
+            CurrMana = TotalMana;
         }
     }
 }
