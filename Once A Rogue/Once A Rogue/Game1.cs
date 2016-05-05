@@ -188,7 +188,7 @@ namespace Once_A_Rogue
             contextState = ContextState.Skills;
 
             //Starting level please!
-            NewLevelGen();
+            NewLevelGen(true);
 
             //Initializing the Cursor
             cur = new Cursor();          
@@ -344,7 +344,7 @@ namespace Once_A_Rogue
                 {
                     gameState = GameState.Playing;
                     CurrProjectiles.Clear();
-                    NewLevelGen();
+                    NewLevelGen(true);
                 }
                 if ((arrowState == ArrowState.menu1) && kbs.IsKeyDown(Keys.S) || (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728) || ((arrowState == ArrowState.menu1) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                 {
@@ -387,7 +387,7 @@ namespace Once_A_Rogue
                 }
 
                 //Death button
-                if(kbs.IsKeyDown(Keys.K) || gPadState.IsButtonDown(Buttons.Back))
+                if(kbs.IsKeyDown(Keys.K) /*|| gPadState.IsButtonDown(Buttons.Back)*/)
                 {
                     player.CurrHealth = 0;
                 }
@@ -487,7 +487,7 @@ namespace Once_A_Rogue
                 }
 
                 //If M is pressed, toggle the visibility of the minimap
-                if (SingleKeyPress(Keys.M))
+                if (SingleKeyPress(Keys.M) || (prevGPadState.IsButtonUp(Buttons.Back) && gPadState.IsButtonDown(Buttons.Back)))
                 {
                     Minimap.Visible = !Minimap.Visible;
                 }
@@ -518,7 +518,7 @@ namespace Once_A_Rogue
                 if (levelTrigger)
                 {
                     //Call the new level generator
-                    NewLevelGen();
+                    NewLevelGen(false);
 
                     //Set the new level trigger to be false to avoid further unintended calls
                     levelTrigger = false;
@@ -884,9 +884,9 @@ namespace Once_A_Rogue
                             {
                                 //Spawn a goblin on that tile (The default enemy for now)
                                 levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy, camera);
+                                System.Threading.Thread.Sleep(5);
                                 done = true;
                             }
-                            
 
                             levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
 
@@ -1108,7 +1108,7 @@ namespace Once_A_Rogue
             }
         }
         //This method handles creating a new level, and can be called whenever a new level needs to be generated, not just when the game starts
-        private void NewLevelGen()
+        private void NewLevelGen(bool reset)
         {
             //Run Level Builder! Generate the first level
             gridSystem = new string[COLUMNS, ROWS];
@@ -1159,8 +1159,11 @@ namespace Once_A_Rogue
             //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
-            //Initializing the player
-            player = new Player(120, 120, 110, 110);
+            if(reset)
+            {
+                //Initializing the player
+                player = new Player(120, 120, 110, 110);
+            }
         }
     }
 }
