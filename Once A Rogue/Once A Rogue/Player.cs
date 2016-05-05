@@ -41,6 +41,13 @@ namespace Once_A_Rogue
             set { soulsNeeded = value; }
         }
 
+        private int skillPoints;
+
+        public int SkillPoints
+        {
+            get { return skillPoints; }
+            set { skillPoints = value; }
+        }
 
         //Currently selected weapon
         private string currWeapon;
@@ -153,6 +160,7 @@ namespace Once_A_Rogue
         {
             Level = 1;
             SoulsNeeded = 1000;
+            SkillPoints = 0;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
@@ -164,8 +172,9 @@ namespace Once_A_Rogue
             warriorSkillList.Add(new MeleeAttack(this));
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
-            rangerSkillList.Add(new MeleeAttack(this));
 
+
+            rangerSkillList.Add(new StandardShot(4, this));
             rangerSkillList.Add(new PiercingShot(5, this));
             rogueSkillList.Add(new FanOfKnives(5, this));
             mageSkillList.Add(new Fireball(5, this));
@@ -806,12 +815,13 @@ namespace Once_A_Rogue
         private void LevelUp()
         {
             Souls -= SoulsNeeded;
-            SoulsNeeded += SoulsNeeded * 2 + 256;
+            SoulsNeeded = SoulsNeeded * 2 + 256;
             Level += 1;
             TotalHealth += Level * 5;
             CurrHealth = TotalHealth;
             TotalMana += Level * 5;
             CurrMana = TotalMana;
+            SkillPoints++;
         }
     }
 }

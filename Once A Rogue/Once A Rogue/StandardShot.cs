@@ -8,20 +8,17 @@ using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
 {
-    class PiercingShot:Skills
-    //Ian Moon
-    //3/20/2016
-    //Ranger skill that will be able to pass through numerous enemies
+    class StandardShot:Skills
     {
-        public PiercingShot(int dam, Character own):base(dam,own)
+        public StandardShot(int dam, Character own):base(dam,own)
         {
-            CooldownTotal = 2000;
+            CooldownTotal = 1000;
             Cooldown = 0;
             RangeX = 15;
             RangeY = 15;
             BurstRadius = 0;
-            Name = "Piercing Shot";
-            Cost = 20;
+            Name = "Standard Shot";
+            Cost = 0;
         }
 
         public override void OnActivated()
@@ -55,13 +52,13 @@ namespace Once_A_Rogue
                             if (stickInput.X < 0)
                             {
                                 player.PlayerStates = Player.PlayerState.AttackLeft;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, stickInput, 1, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, stickInput, 1, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
                             }
 
                             if (stickInput.X > 0)
                             {
                                 player.PlayerStates = Player.PlayerState.AttackRight;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, stickInput, 1, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, stickInput, 1, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
                             }
 
                             return;
@@ -82,7 +79,7 @@ namespace Once_A_Rogue
                         }
 
                         //Add the projectile to the list
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, target, 1, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
                     }
 
                     else
@@ -103,9 +100,26 @@ namespace Once_A_Rogue
                         vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
 
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, "pass", Owner, target, 1, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
                     }
                 }
+            }
+
+            if(Owner is Enemy)
+            {
+                Enemy enemy = (Enemy)Owner;
+
+                //Create a vector between the player and the mouse
+                Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2);
+
+                //If the vector is not zero
+                if (target != Vector2.Zero)
+                {
+                    //Normalize the vector to get the direction
+                    target.Normalize();
+                }
+
+                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2, false));
             }
         }
     }

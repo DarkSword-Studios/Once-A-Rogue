@@ -42,12 +42,6 @@ namespace Once_A_Rogue
                     Damage = 5;
                 }
 
-                if (player.CurrWeapon == "Bow")
-                {
-                    CooldownTotal = 1000;
-                    Damage = 7;
-                }
-
                 if (player.CurrWeapon == "Staff")
                 {
                     CooldownTotal = 1500;

@@ -15,8 +15,6 @@ namespace Once_A_Rogue
             Random randy = new Random();
 
             SkillList = new List<Skills>();
-            SkillList.Add(new Fireball(10, this));
-            SkillList.Add(new OilThrow(this));
             
             Level = randy.Next(-2, 2) + play.Level;
             ArmorLevel = 2 + Level * 2;
@@ -27,6 +25,17 @@ namespace Once_A_Rogue
             TotalHealth = 25 + Level * 5;
             CurrHealth = TotalHealth;
             Cooldown = 0;
+
+            if(Level < 4)
+            {
+                SkillList.Add(new StandardShot(Level * 2, this));
+            }
+
+            if (Level >= 4)
+            {
+                SkillList.Add(new Fireball(Level * 2, this));
+                SkillList.Add(new OilThrow(this));
+            }
         }
 
         public override void Draw(SpriteBatch spritebatch)
