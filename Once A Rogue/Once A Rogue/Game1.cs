@@ -770,8 +770,9 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.GameOver)
             {
-                spriteBatch.DrawString(alertText, "Collected Souls: " + player.Souls, new Vector2(800, 400), Color.White);
-                spriteBatch.DrawString(alertText, "Press Enter/Start to Continue...", new Vector2(750, 600), Color.White);
+                spriteBatch.DrawString(alertText, "Level(s) acheived: " + player.Level, new Vector2(740, 400), Color.White);
+                spriteBatch.DrawString(alertText, "Collected Souls: " + player.Souls, new Vector2(750, 500), Color.White);
+                spriteBatch.DrawString(alertText, "Press Enter/Start to Continue...", new Vector2(600, 600), Color.White);
             }
 
             if (gameState == GameState.Context)
