@@ -885,7 +885,7 @@ namespace Once_A_Rogue
                             {
                                 //Spawn a goblin on that tile (The default enemy for now)
                                 levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy, camera);
-                                System.Threading.Thread.Sleep(5);
+                                System.Threading.Thread.Sleep(1);
                                 done = true;
                             }
 
