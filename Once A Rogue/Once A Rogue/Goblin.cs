@@ -17,6 +17,10 @@ namespace Once_A_Rogue
             SkillList = new List<Skills>();
             
             Level = randy.Next(-2, 2) + play.Level;
+            if(Level <= 0)
+            {
+                Level = 1;
+            }
             ArmorLevel = 2 + Level * 2;
             FearLevelTotal = 2 + Level;
             FearLevel = 0;
