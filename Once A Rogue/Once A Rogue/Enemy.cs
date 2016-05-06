@@ -226,6 +226,16 @@ namespace Once_A_Rogue
             
         }
 
+        private bool isSpinning;
+
+        public bool IsSpinning
+        {
+            get { return isSpinning; }
+            set { isSpinning = value; }
+        }
+
+        int timeTilSpin;
+
         //Do we even need this constructor?
         public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
         {
@@ -246,6 +256,7 @@ namespace Once_A_Rogue
             player = play;
             rgen = new Random();
             Cooldown = 2000;
+            timeTilSpin = 0;
         }
         //This method handles drawing the enemy based onthe current animation
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
@@ -475,6 +486,42 @@ namespace Once_A_Rogue
                         eState = enemyState.IdleLeft;
                     }
                     Cooldown = 0;
+                }
+            }
+
+            if(IsSpinning)
+            {
+                timeTilSpin += gt.ElapsedGameTime.Milliseconds;
+
+                if (CurrHealth != 0 || timeTilSpin >= 1000)
+                {
+                    MoveSpeed = 0;
+
+                    if(SkillList[0] is Whirlwind)
+                    {
+                        Whirlwind whirlwind = (Whirlwind)SkillList[0];
+
+                        whirlwind.rotations++;
+
+                        Vector2 updatedTarget = Vector2.Transform(whirlwind.target, Matrix.CreateRotationZ(0.261799f * whirlwind.rotations));
+
+                        Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, false));
+
+                        if (whirlwind.rotations > 24)
+                        {
+                            whirlwind.numSpins -= 1;
+                            whirlwind.rotations = 0;
+                        }
+
+                        if (whirlwind.numSpins == 0)
+                        {
+                            IsSpinning = false;
+                            whirlwind.numSpins = whirlwind.totalNumSpins;
+                            whirlwind.rotations = 0;
+                        }
+
+                        timeTilSpin = 0;
+                    }
                 }
             }
         }

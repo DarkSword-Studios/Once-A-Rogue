@@ -11,12 +11,11 @@ namespace Once_A_Rogue
 {
     class Whirlwind:Skills
     {
-        Timer timer;
-        Vector2 target;
-        Vector2 origVector;
-        int totalNumSpins;
-        int numSpins;
-        int rotations = 0;
+        public Vector2 target;
+        public Vector2 origVector;
+        public int totalNumSpins;
+        public int numSpins;
+        public int rotations;
 
         public Whirlwind(int dam, Character own) : base(dam, own)
         {
@@ -35,9 +34,10 @@ namespace Once_A_Rogue
             }
 
             numSpins = totalNumSpins;
+            rotations = 0;
 
             Cooldown = 0;
-            CooldownTotal = 5000 + (100 * 12);
+            CooldownTotal = 5000 + (100 * 24);
         }
 
         public override void OnActivated()
@@ -72,45 +72,7 @@ namespace Once_A_Rogue
 
                 Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, Owner.PosX + Owner.PosRect.Width / 2, Owner.PosY + Owner.PosRect.Height / 2, false));
 
-                timer = new Timer(100);
-
-                timer.Start();
-
-                timer.Elapsed += Spinning;
-            }
-        }
-
-        private void Spinning(object sender, ElapsedEventArgs e)
-        {
-            if (Owner.CurrHealth != 0)
-            {
-                Owner.MoveSpeed = 0;
-
-                rotations++;
-
-                Vector2 updatedTarget = Vector2.Transform(target, Matrix.CreateRotationZ(0.261799f * rotations));
-
-                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, updatedTarget, 1, 7, 10, 10, Owner.PosX + Owner.PosRect.Width / 2, Owner.PosY + Owner.PosRect.Height / 2, false));
-
-                if (rotations == 24)
-                {
-                    numSpins -= 1;
-                    rotations = 0;
-                }
-
-                if (numSpins == 0)
-                {
-                    timer.Close();
-                    numSpins = totalNumSpins;
-                    rotations = 0;
-                }
-            }
-
-            else
-            {
-                timer.Close();
-                numSpins = totalNumSpins;
-                rotations = 0;
+                enemy.IsSpinning = true;
             }
         }
     }
