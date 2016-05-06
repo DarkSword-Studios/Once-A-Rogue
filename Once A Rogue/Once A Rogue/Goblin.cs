@@ -32,15 +32,15 @@ namespace Once_A_Rogue
             Cooldown = 0;
 
             SkillList.Add(new Charge(5, this));
-            //if (Level < 4)
-            //{
-            //    SkillList.Add(new StandardShot(4 + Level, this));
-            //}
+            if (Level < 4)
+            {
+                SkillList.Add(new StandardShot(4 + Level, this));
+            }
 
-            //if (Level >= 4)
-            //{
-            //    SkillList.Add(new Fireball(2 + Level, this));
-            //}
+            if (Level >= 4)
+            {
+                SkillList.Add(new Fireball(2 + Level, this));
+            }
         }
 
         public override void Draw(SpriteBatch spritebatch)
