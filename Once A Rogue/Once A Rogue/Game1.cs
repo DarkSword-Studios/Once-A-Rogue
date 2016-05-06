@@ -817,7 +817,8 @@ namespace Once_A_Rogue
                 {
                     //Allow the player to see their current equipped skill and current soul count
                     spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
-                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 180), Color.White);
+                    spriteBatch.DrawString(alertText, "Level: " + player.Level, new Vector2(169, 180), Color.White);
+                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 220), Color.White);
                 }
 
                 //If the minimap should be visible and there isn't a notification onscreen
