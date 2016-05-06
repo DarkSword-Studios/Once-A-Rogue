@@ -82,21 +82,6 @@ namespace Once_A_Rogue
 
         private void Spinning(object sender, ElapsedEventArgs e)
         {
-            if (Game1.gameState != Game1.GameState.Playing)
-            {
-                timer.Stop();
-            }
-
-            if (Game1.gameState == Game1.GameState.Playing && !timer.Enabled)
-            {
-                timer.Start();
-            }
-
-            if (Game1.gameState == Game1.GameState.MainMenu)
-            {
-                timer.Close();
-            }
-
             if (Owner.CurrHealth != 0)
             {
                 Owner.MoveSpeed = 0;
