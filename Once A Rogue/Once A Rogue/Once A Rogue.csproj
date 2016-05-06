@@ -44,6 +44,7 @@
     <Compile Include="Boss.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="Charge.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="FanOfKnives.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Skills.cs" />
     <Compile Include="StandardShot.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Ulmog.cs" />
     <Compile Include="Whirlwind.cs" />
   </ItemGroup>
   <ItemGroup>

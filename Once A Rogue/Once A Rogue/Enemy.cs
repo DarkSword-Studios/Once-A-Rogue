@@ -236,6 +236,18 @@ namespace Once_A_Rogue
 
         int timeTilSpin;
 
+        private bool isCharging;
+
+        public bool IsCharging
+        {
+            get { return isCharging; }
+            set { isCharging = value; }
+        }
+
+        double distanceTrav;
+
+        bool hasHit;
+
         //Do we even need this constructor?
         public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
         {
@@ -262,6 +274,20 @@ namespace Once_A_Rogue
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
         {
             Rectangle frame;
+            Color color;
+
+            if(IsExplosive)
+            {
+                color = Color.Gray;
+            }
+            else if(IsOnFire)
+            {
+                color = Color.Red;
+            }
+            else
+            {
+                color = Color.White;
+            }
 
             //Based on the enemy's current state, switch the animation
             switch (eState)
@@ -269,38 +295,38 @@ namespace Once_A_Rogue
                 case enemyState.IdleRight:
 
                     frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
 
                 //Currently the idle left animation is the only animation that is properly implemented
                 case enemyState.IdleLeft:
 
                     frame = new Rectangle(currentFrame * 140,  280, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.WalkingRight:
 
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
 
                 case enemyState.WalkingLeft:
 
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackLeft:
 
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackRight:
 
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
             }
 
@@ -469,6 +495,19 @@ namespace Once_A_Rogue
                     }
 
                     Cooldown += SkillList[ranSpell].CooldownTotal + 500;
+
+                    if (SkillList[0] is Whirlwind && CurrHealth / TotalHealth <= .70)
+                    {
+                        Whirlwind whirlwind = (Whirlwind)SkillList[0];
+                        whirlwind.totalNumSpins++;
+                        whirlwind.numSpins = whirlwind.totalNumSpins;
+                        
+                        if(CurrHealth / TotalHealth <= .30)
+                        {
+                            whirlwind.totalNumSpins++;
+                            whirlwind.numSpins = whirlwind.totalNumSpins;
+                        }
+                    }
                 }
             }
 
@@ -493,7 +532,7 @@ namespace Once_A_Rogue
             {
                 timeTilSpin += gt.ElapsedGameTime.Milliseconds;
 
-                if (CurrHealth != 0 || timeTilSpin >= 1000)
+                if (CurrHealth != 0 || timeTilSpin >= 1500)
                 {
                     MoveSpeed = 0;
 
@@ -522,6 +561,54 @@ namespace Once_A_Rogue
 
                         timeTilSpin = 0;
                     }
+                }
+            }
+
+            if (IsCharging)
+            {
+                if(CurrHealth/TotalHealth <= 30)
+                {
+                    MoveSpeed = 10;
+                }
+
+                else if (CurrHealth / TotalHealth <= 70)
+                {
+                    MoveSpeed = 7;
+                }
+                else
+                {
+                    MoveSpeed = 5;
+                }
+
+                //Create a vector between the enemy and player
+                Vector2 target = new Vector2(player.PosX + (player.PosRect.Width / 2), player.PosY + (player.PosRect.Height / 2)) - new Vector2(PosX + PosRect.Width / 2, PosY + PosRect.Height / 2);
+
+                if (target != Vector2.Zero)
+                {
+                    target.Normalize();
+                }
+
+                PosX += (int)(target.X * MoveSpeed);
+                PosY += (int)(target.Y * MoveSpeed);
+
+                distanceTrav = Math.Sqrt(Math.Pow((int)(target.X * MoveSpeed), 2) + Math.Pow((int)(target.Y * MoveSpeed), 2));
+
+                if(PosRect.Intersects(player.PosRect) && !hasHit)
+                {
+                    player.CurrHealth -= SkillList[0].Damage;
+                    hasHit = true;
+                }
+
+                if (distanceTrav >= 2203)
+                {
+                    PosX -= 4406;
+                    hasHit = false;
+                }
+
+                if (distanceTrav == 4406)
+                {
+                    IsCharging = false;
+                    MoveSpeed = 0;
                 }
             }
         }
