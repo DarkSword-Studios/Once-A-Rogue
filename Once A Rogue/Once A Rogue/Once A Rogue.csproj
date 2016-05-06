@@ -73,6 +73,7 @@
     <Compile Include="Skills.cs" />
     <Compile Include="StandardShot.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Whirlwind.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

@@ -187,7 +187,7 @@ namespace Once_A_Rogue
             //Add additional code here to handle animation of enemy dying
 
             //Increment the 'Soul Count' of the player'
-            play.Souls += Level + 100 * 2;
+            play.Souls += (Level * 5 + 100) * 2;
         }
         public void Retreat()
         {
@@ -456,6 +456,7 @@ namespace Once_A_Rogue
                     {
                         eState = enemyState.AttackRight;
                     }
+
                     Cooldown += SkillList[ranSpell].CooldownTotal + 500;
                 }
             }

@@ -185,7 +185,7 @@ namespace Once_A_Rogue
                 case "fire":
                     //Set the duration of the fire and damage
                     target.FireDur = 4000;
-                    target.FireDmg = 3;
+                    target.FireDmg = 1 + Owner.Level;
                     if(target.IsExplosive)
                     {
                         //Create projectiles which go off in 8 directions

@@ -30,16 +30,18 @@ namespace Once_A_Rogue
             CurrHealth = TotalHealth;
             Cooldown = 0;
 
-            if(Level < 4)
-            {
-                SkillList.Add(new StandardShot(Level * 2, this));
-            }
 
-            if (Level >= 4)
-            {
-                SkillList.Add(new Fireball(Level * 2, this));
-                SkillList.Add(new OilThrow(this));
-            }
+            SkillList.Add(new Whirlwind(5, this));
+            //if(Level < 4)
+            //{
+            //    SkillList.Add(new StandardShot(4 + Level * 4, this));
+            //}
+
+            //if (Level >= 4)
+            //{
+            //    SkillList.Add(new Fireball(2 + Level * 4, this));
+            //    SkillList.Add(new OilThrow(this));
+            //}
         }
 
         public override void Draw(SpriteBatch spritebatch)
