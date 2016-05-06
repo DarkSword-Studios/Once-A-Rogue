@@ -37,7 +37,7 @@ namespace Once_A_Rogue
             numSpins = totalNumSpins;
 
             Cooldown = 0;
-            CooldownTotal = 5000 + (200 * 12);
+            CooldownTotal = 5000 + (100 * 12);
         }
 
         public override void OnActivated()
@@ -72,7 +72,7 @@ namespace Once_A_Rogue
 
                 Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, Owner.PosX + Owner.PosRect.Width / 2, Owner.PosY + Owner.PosRect.Height / 2, false));
 
-                timer = new Timer(200);
+                timer = new Timer(100);
 
                 timer.Start();
 
