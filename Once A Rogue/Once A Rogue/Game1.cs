@@ -22,8 +22,8 @@ namespace Once_A_Rogue
         Player player;
 
         //Enums for game state
-        enum GameState { MainMenu, Playing, GameOver, paused, howTo, Context }
-        GameState gameState;
+        public enum GameState { MainMenu, Playing, GameOver, paused, howTo, Context }
+        static public GameState gameState;
 
         //Enums for selector arrow
         enum ArrowState { pos1, pos2, pos3, menu1, menu2 }
@@ -600,15 +600,15 @@ namespace Once_A_Rogue
                     gameState = GameState.GameOver;
                 }
             }
-            
-            //if(gameState == GameState.Playing && !this.IsActive)
-            //{
-            //    gameState = GameState.paused;
-            //    arrowState = ArrowState.pos1;
-            //}
+
+            if (gameState == GameState.Playing && !this.IsActive)
+            {
+                gameState = GameState.paused;
+                arrowState = ArrowState.pos1;
+            }
 
             //If you hit enter on the Game over screen it sends you to the main menu
-            if(gameState == GameState.GameOver)
+            if (gameState == GameState.GameOver)
             {
                 kbs = Keyboard.GetState();
                 if (kbs.IsKeyDown(Keys.Enter) || gPadState.IsButtonDown(Buttons.Start))

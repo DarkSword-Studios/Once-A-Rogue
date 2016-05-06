@@ -176,7 +176,6 @@ namespace Once_A_Rogue
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
 
-
             rangerSkillList.Add(new StandardShot(4, this));
             rangerSkillList.Add(new PiercingShot(5, this));
             rogueSkillList.Add(new FanOfKnives(5, this));
@@ -818,7 +817,7 @@ namespace Once_A_Rogue
         private void LevelUp()
         {
             Souls -= SoulsNeeded;
-            SoulsNeeded = SoulsNeeded * 2 + 256;
+            SoulsNeeded += Level^2 * 256;
             Level += 1;
             TotalHealth += Level * 5;
             CurrHealth = TotalHealth;

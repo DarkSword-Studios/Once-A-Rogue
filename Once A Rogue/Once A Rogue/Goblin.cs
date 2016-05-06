@@ -21,6 +21,7 @@ namespace Once_A_Rogue
             {
                 Level = 1;
             }
+
             ArmorLevel = 2 + Level * 2;
             FearLevelTotal = 2 + Level;
             FearLevel = 0;
@@ -30,25 +31,21 @@ namespace Once_A_Rogue
             CurrHealth = TotalHealth;
             Cooldown = 0;
 
-            if(Level < 4)
+            SkillList.Add(new Charge(5, this));
+            if (Level < 4)
             {
-                SkillList.Add(new StandardShot(Level * 2, this));
+                SkillList.Add(new StandardShot(4 + Level, this));
             }
 
             if (Level >= 4)
             {
-                SkillList.Add(new Fireball(Level * 2, this));
-                SkillList.Add(new OilThrow(this));
+                SkillList.Add(new Fireball(2 + Level, this));
             }
         }
 
         public override void Draw(SpriteBatch spritebatch)
         {
             base.Draw(spritebatch);
-            if(IsOnFire)
-            {
-                spritebatch.Draw(Texture, new Rectangle(PosX, PosY - 40, 10, 10), Color.Red);
-            }
         }
 
         //Default ranged attack for goblin

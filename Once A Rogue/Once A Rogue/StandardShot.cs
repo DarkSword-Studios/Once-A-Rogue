@@ -109,7 +109,7 @@ namespace Once_A_Rogue
             {
                 Enemy enemy = (Enemy)Owner;
 
-                //Create a vector between the player and the mouse
+                //Create a vector between the enemy and player
                 Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2);
 
                 //If the vector is not zero

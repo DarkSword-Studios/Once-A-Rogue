@@ -187,7 +187,7 @@ namespace Once_A_Rogue
             //Add additional code here to handle animation of enemy dying
 
             //Increment the 'Soul Count' of the player'
-            play.Souls += Level + 100 * 2;
+            play.Souls += (Level * 5 + 100) * 2;
         }
         public void Retreat()
         {
@@ -226,6 +226,28 @@ namespace Once_A_Rogue
             
         }
 
+        private bool isSpinning;
+
+        public bool IsSpinning
+        {
+            get { return isSpinning; }
+            set { isSpinning = value; }
+        }
+
+        int timeTilSpin;
+
+        private bool isCharging;
+
+        public bool IsCharging
+        {
+            get { return isCharging; }
+            set { isCharging = value; }
+        }
+
+        double distanceTrav;
+
+        bool hasHit;
+
         //Do we even need this constructor?
         public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
         {
@@ -246,11 +268,26 @@ namespace Once_A_Rogue
             player = play;
             rgen = new Random();
             Cooldown = 2000;
+            timeTilSpin = 0;
         }
         //This method handles drawing the enemy based onthe current animation
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
         {
             Rectangle frame;
+            Color color;
+
+            if(IsExplosive)
+            {
+                color = Color.Gray;
+            }
+            else if(IsOnFire)
+            {
+                color = Color.Red;
+            }
+            else
+            {
+                color = Color.White;
+            }
 
             //Based on the enemy's current state, switch the animation
             switch (eState)
@@ -258,38 +295,38 @@ namespace Once_A_Rogue
                 case enemyState.IdleRight:
 
                     frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
 
                 //Currently the idle left animation is the only animation that is properly implemented
                 case enemyState.IdleLeft:
 
                     frame = new Rectangle(currentFrame * 140,  280, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.WalkingRight:
 
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
 
                 case enemyState.WalkingLeft:
 
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackLeft:
 
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackRight:
 
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
-                    spritebatch.Draw(Texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
             }
 
@@ -456,7 +493,21 @@ namespace Once_A_Rogue
                     {
                         eState = enemyState.AttackRight;
                     }
+
                     Cooldown += SkillList[ranSpell].CooldownTotal + 500;
+
+                    if (SkillList[0] is Whirlwind && CurrHealth / TotalHealth <= .70)
+                    {
+                        Whirlwind whirlwind = (Whirlwind)SkillList[0];
+                        whirlwind.totalNumSpins++;
+                        whirlwind.numSpins = whirlwind.totalNumSpins;
+                        
+                        if(CurrHealth / TotalHealth <= .30)
+                        {
+                            whirlwind.totalNumSpins++;
+                            whirlwind.numSpins = whirlwind.totalNumSpins;
+                        }
+                    }
                 }
             }
 
@@ -474,6 +525,90 @@ namespace Once_A_Rogue
                         eState = enemyState.IdleLeft;
                     }
                     Cooldown = 0;
+                }
+            }
+
+            if(IsSpinning)
+            {
+                timeTilSpin += gt.ElapsedGameTime.Milliseconds;
+
+                if (CurrHealth != 0 || timeTilSpin >= 1500)
+                {
+                    MoveSpeed = 0;
+
+                    if(SkillList[0] is Whirlwind)
+                    {
+                        Whirlwind whirlwind = (Whirlwind)SkillList[0];
+
+                        whirlwind.rotations++;
+
+                        Vector2 updatedTarget = Vector2.Transform(whirlwind.target, Matrix.CreateRotationZ(0.261799f * whirlwind.rotations));
+
+                        Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, false));
+
+                        if (whirlwind.rotations > 24)
+                        {
+                            whirlwind.numSpins -= 1;
+                            whirlwind.rotations = 0;
+                        }
+
+                        if (whirlwind.numSpins == 0)
+                        {
+                            IsSpinning = false;
+                            whirlwind.numSpins = whirlwind.totalNumSpins;
+                            whirlwind.rotations = 0;
+                        }
+
+                        timeTilSpin = 0;
+                    }
+                }
+            }
+
+            if (IsCharging)
+            {
+                if(CurrHealth/TotalHealth <= 30)
+                {
+                    MoveSpeed = 10;
+                }
+
+                else if (CurrHealth / TotalHealth <= 70)
+                {
+                    MoveSpeed = 7;
+                }
+                else
+                {
+                    MoveSpeed = 5;
+                }
+
+                //Create a vector between the enemy and player
+                Vector2 target = new Vector2(player.PosX + (player.PosRect.Width / 2), player.PosY + (player.PosRect.Height / 2)) - new Vector2(PosX + PosRect.Width / 2, PosY + PosRect.Height / 2);
+
+                if (target != Vector2.Zero)
+                {
+                    target.Normalize();
+                }
+
+                PosX += (int)(target.X * MoveSpeed);
+                PosY += (int)(target.Y * MoveSpeed);
+
+                distanceTrav = Math.Sqrt(Math.Pow((int)(target.X * MoveSpeed), 2) + Math.Pow((int)(target.Y * MoveSpeed), 2));
+
+                if(PosRect.Intersects(player.PosRect) && !hasHit)
+                {
+                    player.CurrHealth -= SkillList[0].Damage;
+                    hasHit = true;
+                }
+
+                if (distanceTrav >= 2203)
+                {
+                    PosX -= 4406;
+                    hasHit = false;
+                }
+
+                if (distanceTrav == 4406)
+                {
+                    IsCharging = false;
+                    MoveSpeed = 0;
                 }
             }
         }

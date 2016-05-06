@@ -32,9 +32,9 @@ namespace Once_A_Rogue
 
 
         //Health properties
-        private int currHealth;
+        private float currHealth;
 
-        public int CurrHealth
+        public float CurrHealth
         {
             get { return currHealth; }
             set
@@ -65,9 +65,9 @@ namespace Once_A_Rogue
         }
 
         //Int to handle maximum amount of health that the character can have
-        private int maxHealth;
+        private float maxHealth;
 
-        public int TotalHealth
+        public float TotalHealth
         {
             get { return maxHealth; }
             set
