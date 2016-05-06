@@ -95,11 +95,13 @@ namespace Once_A_Rogue
         Texture2D koboldEnemy;
         Texture2D ghoulEnemy;
 
+        int timer = 0;
+
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
         //Declare HUD Textures
-        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, play, exitM, mana, health, container;
+        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, sky, play, exitM, mana, health, container;
         Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger, loreEntry;
 
         //Keyboard states
@@ -121,7 +123,7 @@ namespace Once_A_Rogue
         Cursor cur;
 
         //Songs for music
-        Song mainMusic, bossMusic;
+        Song mainMusic, bossMusic, transientLoop;
 
         //Keep track of current song
         string currentSong;
@@ -187,11 +189,14 @@ namespace Once_A_Rogue
             playWepState = PlayWepState.Sword;
             contextState = ContextState.Skills;
 
-            //Starting level please!
-            NewLevelGen(true);
-
             //Initializing the Cursor
-            cur = new Cursor();          
+            cur = new Cursor();
+
+            //Initialize a new camera (origin at the center of the screen; dimensions of screen size)
+            camera = new Camera(-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, 10);
+
+            //Rig environment port
+            Atmosphere.Camera = camera;
 
             base.Initialize();
         }
@@ -236,7 +241,9 @@ namespace Once_A_Rogue
             mage = Content.Load<Texture2D>("HUDStuff/HUDmage.png");
             ranger = Content.Load<Texture2D>("HUDStuff/HUDranger.png");
             back = Content.Load<Texture2D>("HUDStuff/HUDback.png");
-            main = Content.Load<Texture2D>("HUDStuff/HUDMain.png");
+            //main = Content.Load<Texture2D>("HUDStuff/HUDMain.png");
+            main = Content.Load<Texture2D>("HUDStuff/MainMenuBG.png");
+            sky = Content.Load<Texture2D>("HUDStuff/Sky.png");
             play = Content.Load<Texture2D>("HUDStuff/HUDplay.png");
             exitM = Content.Load<Texture2D>("HUDStuff/HUDexit.png");
             mana = Content.Load<Texture2D>("HUDStuff/HUDManaBar.png");
@@ -284,16 +291,15 @@ namespace Once_A_Rogue
 
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
             //Song is Finding The Balance by Kevin Macleod
-            mainMusic = Content.Load<Song>("Music/music.wav");
+            //mainMusic = Content.Load<Song>("Music/music.wav");
+            mainMusic = Content.Load<Song>("Music/A Hero is Born.wav");
             bossMusic = Content.Load<Song>("Music/RogueRequiem.wav");
+            transientLoop = Content.Load<Song>("Music/Transient Loop.wav");
             MediaPlayer.Play(mainMusic);
             MediaPlayer.Volume = (float)(MediaPlayer.Volume * .40);
             MediaPlayer.IsRepeating = true;
 
             currentSong = "mainMusic";
-
-            manaBarWidth = 300f * player.PercentMP;
-            healthBarWidth = 300f * player.PercentHP;
         }
 
         /// <summary>
@@ -338,7 +344,18 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.MainMenu)
             {
+                timer += gameTime.ElapsedGameTime.Milliseconds;
+                
                 mouseState = Mouse.GetState();
+
+                if(player == null)
+                {
+                    player = new Player(400, 750, 140, 140);
+                }
+                else
+                {
+                    player.UpdateFrame(gameTime);
+                }
 
                 if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))) || ((arrowState == ArrowState.menu1) && gPadState.IsButtonDown(Buttons.A)))
                 {
@@ -358,6 +375,59 @@ namespace Once_A_Rogue
                 {
                     arrowState = ArrowState.menu1;   
                 }
+
+                if(currentSong == "mainMusic" && timer > 48000)
+                {
+                    if (Atmosphere.Intensity < 0.3)
+                    {
+                        Atmosphere.IncreaseIntensity();
+                    }
+                    else if (Atmosphere.SecondIntensity < 0.7)
+                    {
+                        Atmosphere.IncreaseSecondIntensity();
+                    }
+
+                    if(timer > 72000)
+                    {
+                        if (Atmosphere.ThirdIntensity < 0.8)
+                        {
+                            Atmosphere.IncreaseThirdIntensity();
+
+                            if (player.PosX < 1170)
+                            {
+                                if (player.PlayerStates == Player.PlayerState.IdleRight)
+                                {
+                                    player.PlayerStates = Player.PlayerState.WalkingRight;
+                                }
+
+                                player.PosX += 3;
+                            }
+                            else
+                            {
+                                if (player.PlayerStates == Player.PlayerState.WalkingRight)
+                                {
+                                    player.PlayerStates = Player.PlayerState.IdleRight;
+                                }
+
+                                if (player.colorPhase > 0)
+                                {
+                                    player.color = Color.White * player.colorPhase;
+                                    player.colorPhase -= (float)0.05;
+                                }
+                                else
+                                {
+                                    player.color = Color.Transparent;
+                                }
+                            }
+                        }
+                    }
+                    if(timer > 100000)
+                    {
+                        currentSong = "transientLoop";
+                        MediaPlayer.Play(transientLoop);
+                        MediaPlayer.IsRepeating = true;
+                    }   
+                }          
             }
 
             if(gameState == GameState.Playing && this.IsActive)
@@ -574,8 +644,6 @@ namespace Once_A_Rogue
                     {
                         contextState = ContextState.Skills;
                     }
-
-                    //
                 }
                 
             }
@@ -624,6 +692,12 @@ namespace Once_A_Rogue
                 {
                     gameState = GameState.MainMenu;
                     arrowState = ArrowState.menu1;
+                    player = null;
+                    Atmosphere.ResetIntensities();
+                    timer = 0;
+                    MediaPlayer.IsRepeating = false;
+                    MediaPlayer.Play(mainMusic);
+                    currentSong = "mainMusic";
                 }
                 if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480) || ((arrowState == ArrowState.pos3) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                 {
@@ -662,6 +736,21 @@ namespace Once_A_Rogue
             //This draws the main menu
             if (gameState == GameState.MainMenu)
             {
+                spriteBatch.Draw(sky, new Vector2(0, 0), Color.White);
+
+                if (Atmosphere.ThirdIntensity > 0)
+                {
+                    Atmosphere.AmberDarkPurpleTransition(spriteBatch, 0, 0);
+                }
+                else if (Atmosphere.SecondIntensity > 0)
+                {
+                    Atmosphere.AmberPurpleTransition(spriteBatch, 0, 0);
+                }
+                else
+                {
+                    Atmosphere.AmberTransition(spriteBatch, 0, 0);
+                }
+
                 spriteBatch.Draw(main, new Vector2(0, 0), Color.White);
                 spriteBatch.Draw(play, new Vector2(784, 522), Color.White);
                 spriteBatch.Draw(exitM, new Vector2(405, 652), Color.White);
@@ -674,6 +763,14 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(select, new Vector2(329, 667), Color.White);
                 }
+
+                if(player != null)
+                {
+                    player.Draw(spriteBatch, playerTextures, 140, 140);
+                }
+
+                Atmosphere.Darken(spriteBatch, 0, 0);
+                
             }
 
             //this is drawn no matter what so even when paused, the game is still "drawn", it will just be "idle"
@@ -736,9 +833,7 @@ namespace Once_A_Rogue
                     //Draw the notification on screen
                     Notification.DrawAlert(spriteBatch);
                 }
-
-                
-                
+       
             }
 
             //draws the following if the game is paused

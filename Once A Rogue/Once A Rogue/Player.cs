@@ -92,6 +92,9 @@ namespace Once_A_Rogue
         GamePadState prevGPadState;
         GamePadState gPadState;
 
+        public Color color = Color.White;
+        public float colorPhase = 1;
+
         //Mana properties
         private int currMana;
 
@@ -610,37 +613,37 @@ namespace Once_A_Rogue
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
 
                     //Draw the player using the frame and the position rectangle
-                    spritebatch.Draw(texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(texture, PosRect, frame, color);
                     break;
 
                 case PlayerState.IdleLeft:
 
                     frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
-                    spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case PlayerState.WalkingRight:
 
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
-                    spritebatch.Draw(texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(texture, PosRect, frame, color);
                     break;
 
                 case PlayerState.WalkingLeft:
 
                     frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
-                    spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case PlayerState.AttackLeft:
 
                     frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
-                    spritebatch.Draw(texture, PosRect, frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    spritebatch.Draw(texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case PlayerState.AttackRight:
 
                     frame = new Rectangle(currentFrame * 140, 280, frameWidth, frameHeight);
-                    spritebatch.Draw(texture, PosRect, frame, Color.White);
+                    spritebatch.Draw(texture, PosRect, frame, color);
                     break;
             }
         }
