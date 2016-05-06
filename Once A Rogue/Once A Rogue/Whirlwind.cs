@@ -46,10 +46,11 @@ namespace Once_A_Rogue
             {
                 Enemy enemy = (Enemy)Owner;
 
-                if ((Owner.CurrHealth / Owner.TotalHealth) < .70)
+                if ((Owner.CurrHealth / Owner.TotalHealth) <= .70)
                 {
                     numSpins++;
-                    if ((Owner.CurrHealth / Owner.TotalHealth) < .30)
+
+                    if ((Owner.CurrHealth / Owner.TotalHealth) <= .30)
                     {
                         numSpins++;
                     }
