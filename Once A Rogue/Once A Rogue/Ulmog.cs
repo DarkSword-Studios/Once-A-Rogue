@@ -24,8 +24,8 @@ namespace Once_A_Rogue
 
             ArmorLevel = 4 + Level * 4;
             StunResist = 100;
-            MoveSpeedTotal = 0;
-            MoveSpeed = MoveSpeedTotal;
+            MoveSpeedTotal = 10;
+            MoveSpeed = 0;
             TotalHealth = 100 + Level * 10;
             CurrHealth = TotalHealth;
             Cooldown = 0;

@@ -35,7 +35,6 @@ namespace Once_A_Rogue
 
             numSpins = totalNumSpins;
             rotations = 0;
-
             Cooldown = 0;
             CooldownTotal = 5000 + (100 * 24);
         }
