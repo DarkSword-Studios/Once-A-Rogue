@@ -102,6 +102,11 @@ namespace Once_A_Rogue
             intensity += (float) 0.001;
         }
 
+        public static void RapidIncreaseIntensity()
+        {
+            intensity += (float) 0.02;
+        }
+
         public static void IncreaseSecondIntensity()
         {
             secondIntensity += (float) 0.001;
@@ -116,17 +121,17 @@ namespace Once_A_Rogue
         {
             if(intensity > 0)
             {
-                intensity -= (float) 0.01;
+                intensity -= (float) 0.02;
             }
 
             if(secondIntensity > 0)
             {
-                secondIntensity -= (float) 0.01;
+                secondIntensity -= (float) 0.02;
             }
 
             if(thirdIntensity > 0)
             {
-                thirdIntensity -= (float) 0.01;
+                thirdIntensity -= (float) 0.02;
             }
         }
 
