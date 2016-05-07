@@ -819,9 +819,9 @@ namespace Once_A_Rogue
             Souls -= SoulsNeeded;
             SoulsNeeded += Level^2 * 256;
             Level += 1;
-            TotalHealth += Level * 5;
+            TotalHealth += 10;
             CurrHealth = TotalHealth;
-            TotalMana += Level * 5;
+            TotalMana += 10;
             CurrMana = TotalMana;
             SkillPoints++;
         }
