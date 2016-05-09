@@ -31,6 +31,7 @@ namespace Once_A_Rogue
             CurrHealth = TotalHealth;
             Cooldown = 0;
 
+            //SkillList.Add(new Whirlwind(5, this));
             if (Level <= 4)
             {
                 SkillList.Add(new StandardShot(4 + Level, this));

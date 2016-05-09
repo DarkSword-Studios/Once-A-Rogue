@@ -550,7 +550,6 @@ namespace Once_A_Rogue
                 {
                     enemy.Draw(spriteBatch, 140, 140);
                 }
-                
             }
             
             //Loop through the enemies that need to be removed

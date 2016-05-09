@@ -49,6 +49,7 @@ namespace Once_A_Rogue
         //Stage locking /unlocking a room
         Boolean lockRoom = false;
         Boolean unlockRoom = false;
+        bool debugMode = false;
 
         //Declare a number of rooms for a level
         int numRooms;
@@ -456,6 +457,11 @@ namespace Once_A_Rogue
                     playerMove = "up";
                 }
 
+                if(SingleKeyPress(Keys.P))
+                {
+                    debugMode = !debugMode;
+                }
+
                 //Death button
                 if(kbs.IsKeyDown(Keys.K) /*|| gPadState.IsButtonDown(Buttons.Back)*/)
                 {
@@ -826,7 +832,15 @@ namespace Once_A_Rogue
                 {
                     //Draw the minimap based on the current level
                     //Debug mode currently == true
-                    Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
+                    if(debugMode == true)
+                    {
+                        Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, true);
+                    }
+
+                    else
+                    {
+                        Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
+                    }
                 }
                 //If there is a notification to update
                 if (Notification.Updating)
@@ -1203,7 +1217,27 @@ namespace Once_A_Rogue
                 columnIndex = 0;
                 rowIndex++;
             }
+
+            if(activeRoom.enemyList != null)
+            {
+                foreach (Enemy enemy in activeRoom.enemyList)
+                {
+                    if (enemy.IsHostile)
+                    {
+                        if (enemy is Ulmog)
+                        {
+
+                        }
+                        else
+                        {
+                            spriteBatch.Draw(health, new Rectangle(enemy.PosX, enemy.PosY - 20, (int)(120f * (enemy.CurrHealth / enemy.TotalHealth)), 10), Color.White);
+                        }
+                    }
+                }
+            }
         }
+
+
         //This method handles creating a new level, and can be called whenever a new level needs to be generated, not just when the game starts
         private void NewLevelGen(bool reset)
         {

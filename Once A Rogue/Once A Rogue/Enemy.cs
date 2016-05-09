@@ -329,8 +329,8 @@ namespace Once_A_Rogue
                     spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
             }
-
         }
+
         //This method handles updating the enemy's current frame based on the gametime
         public void UpdateFrame(GameTime gameTime)
         {

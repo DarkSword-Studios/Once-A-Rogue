@@ -177,9 +177,9 @@ namespace Once_A_Rogue
             rogueSkillList.Add(new MeleeAttack(this));
 
             rangerSkillList.Add(new StandardShot(4, this));
-            rangerSkillList.Add(new PiercingShot(5, this));
-            rogueSkillList.Add(new FanOfKnives(5, this));
-            mageSkillList.Add(new Fireball(5, this));
+            rangerSkillList.Add(new PiercingShot(6, this));
+            rogueSkillList.Add(new FanOfKnives(6, this));
+            mageSkillList.Add(new Fireball(4, this));
             mageSkillList.Add(new OilThrow(this));
 
             //Initializing the weapon array

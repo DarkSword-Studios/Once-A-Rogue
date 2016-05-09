@@ -22,7 +22,6 @@ namespace Once_A_Rogue
             RangeY = 0;
             BurstRadius = 0;
             Cost = 10;
-            Damage = dam;
             Name = "Fan of Knives";
         }
 
