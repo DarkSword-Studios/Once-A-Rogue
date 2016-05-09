@@ -49,6 +49,7 @@ namespace Once_A_Rogue
         //Stage locking /unlocking a room
         Boolean lockRoom = false;
         Boolean unlockRoom = false;
+        Boolean transitionToGame = false;
         bool debugMode = false;
 
         //Declare a number of rooms for a level
@@ -360,9 +361,7 @@ namespace Once_A_Rogue
 
                 if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))) || ((arrowState == ArrowState.menu1) && gPadState.IsButtonDown(Buttons.A)))
                 {
-                    gameState = GameState.Playing;
-                    CurrProjectiles.Clear();
-                    NewLevelGen(true);
+                    transitionToGame = true;
                 }
                 if ((arrowState == ArrowState.menu1) && kbs.IsKeyDown(Keys.S) || (mouseState.X >= 405 && mouseState.X <= 1531) && (mouseState.Y >= 652 && mouseState.Y <= 728) || ((arrowState == ArrowState.menu1) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                 {
@@ -394,32 +393,6 @@ namespace Once_A_Rogue
                         {
                             Atmosphere.IncreaseThirdIntensity();
 
-                            if (player.PosX < 1170)
-                            {
-                                if (player.PlayerStates == Player.PlayerState.IdleRight)
-                                {
-                                    player.PlayerStates = Player.PlayerState.WalkingRight;
-                                }
-
-                                player.PosX += 3;
-                            }
-                            else
-                            {
-                                if (player.PlayerStates == Player.PlayerState.WalkingRight)
-                                {
-                                    player.PlayerStates = Player.PlayerState.IdleRight;
-                                }
-
-                                if (player.colorPhase > 0)
-                                {
-                                    player.color = Color.White * player.colorPhase;
-                                    player.colorPhase -= (float)0.05;
-                                }
-                                else
-                                {
-                                    player.color = Color.Transparent;
-                                }
-                            }
                         }
                     }
                     if(timer > 100000)
@@ -428,11 +401,64 @@ namespace Once_A_Rogue
                         MediaPlayer.Play(transientLoop);
                         MediaPlayer.IsRepeating = true;
                     }   
-                }          
+                }
+                if (transitionToGame)
+                {
+                    if (player.PosX < 1170)
+                    {
+                        if (player.PlayerStates == Player.PlayerState.IdleRight)
+                        {
+                            player.PlayerStates = Player.PlayerState.WalkingRight;
+                        }
+
+                        player.PosX += 3;
+                    }
+                    else
+                    {
+                        if (player.PlayerStates == Player.PlayerState.WalkingRight)
+                        {
+                            player.PlayerStates = Player.PlayerState.IdleRight;
+                        }
+
+                        if (player.colorPhase > 0)
+                        {
+                            player.color = Color.White * player.colorPhase;
+                            player.colorPhase -= (float)0.05;
+                        }
+                        else
+                        {
+                            player.color = Color.Transparent;
+                        }
+                    }
+
+                    if (player.color == Color.Transparent && Atmosphere.Intensity < 1)
+                    {
+                        Atmosphere.RapidIncreaseIntensity();
+                        if(MediaPlayer.Volume > 0)
+                        {
+                            MediaPlayer.Volume -= (float) 0.01;
+                        }                       
+                    }
+                    else if (player.color == Color.Transparent)
+                    {
+                        gameState = GameState.Playing;
+                        CurrProjectiles.Clear();
+                        NewLevelGen(true);
+                    }
+                }       
             }
 
             if(gameState == GameState.Playing && this.IsActive)
             {
+                if (Atmosphere.Intensity > 0)
+                {
+                    Atmosphere.AnimateResetIntensities();
+                }
+                else
+                {
+                    transitionToGame = false;
+                }
+
                 //Extremely important call to update all active rooms
                 UpdateRooms(gameTime);
                 
@@ -473,6 +499,7 @@ namespace Once_A_Rogue
                 {
                     camera.Update();
                 }
+
                 else
                 {
                     shifting = false;
@@ -704,6 +731,8 @@ namespace Once_A_Rogue
                     MediaPlayer.IsRepeating = false;
                     MediaPlayer.Play(mainMusic);
                     currentSong = "mainMusic";
+                    transitionToGame = false;
+                    MediaPlayer.Volume = (float) 0.40;
                 }
                 if ((arrowState == ArrowState.pos3) && (SingleKeyPress(Keys.W)) || (mouseState.X >= 100 && mouseState.X <= 338) && (mouseState.Y >= 426 && mouseState.Y <= 480) || ((arrowState == ArrowState.pos3) && SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                 {
@@ -847,6 +876,11 @@ namespace Once_A_Rogue
                 {
                     //Draw the notification on screen
                     Notification.DrawAlert(spriteBatch);
+                }
+
+                if(transitionToGame)
+                {
+                    Atmosphere.Darken(spriteBatch, 0, 0);
                 }
        
             }
@@ -1002,6 +1036,7 @@ namespace Once_A_Rogue
                             if(activeRoom.Boss && activeRoom.enemyList.Count == 0 && !camera.isMoving)
                             {
                                 activeRoom.SpawnUlmog(player, goblinEnemy, camera);
+                                done = true;
                             }
 
                             levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
