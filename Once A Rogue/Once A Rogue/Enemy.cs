@@ -248,6 +248,13 @@ namespace Once_A_Rogue
 
         bool hasHit;
 
+        int ranSpell;
+
+        Vector2 target;
+
+        int startingPosX;
+        int startingPosY;
+
         //Do we even need this constructor?
         public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
         {
@@ -480,10 +487,9 @@ namespace Once_A_Rogue
                 //pathSpeedX = 0;
                 //pathSpeedY = 0;
 
-                int ranSpell = rgen.Next(0, SkillList.Count - 1);
-
                 if (Cooldown == 0)
                 {
+                    ranSpell = rgen.Next(0, SkillList.Count);
                     SkillList[ranSpell].OnActivated();
                     if (eState == enemyState.IdleLeft)
                     {
@@ -544,7 +550,7 @@ namespace Once_A_Rogue
 
                         Vector2 updatedTarget = Vector2.Transform(whirlwind.target, Matrix.CreateRotationZ(0.261799f * whirlwind.rotations));
 
-                        Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, 5, false));
 
                         if (whirlwind.rotations > 24)
                         {
@@ -568,20 +574,28 @@ namespace Once_A_Rogue
             {
                 if(CurrHealth/TotalHealth <= 30)
                 {
+                    MoveSpeedTotal = 10;
                     MoveSpeed = 10;
                 }
 
                 else if (CurrHealth / TotalHealth <= 70)
                 {
+                    MoveSpeedTotal = 7;
                     MoveSpeed = 7;
                 }
                 else
                 {
+                    MoveSpeedTotal = 5;
                     MoveSpeed = 5;
                 }
 
                 //Create a vector between the enemy and player
-                Vector2 target = new Vector2(player.PosX + (player.PosRect.Width / 2), player.PosY + (player.PosRect.Height / 2)) - new Vector2(PosX + PosRect.Width / 2, PosY + PosRect.Height / 2);
+                if(target == Vector2.Zero)
+                {
+                    target = new Vector2(player.PosX + (player.PosRect.Width / 2), player.PosY + (player.PosRect.Height / 2)) - new Vector2(PosX + PosRect.Width / 2, PosY + PosRect.Height / 2);
+                    startingPosX = PosX;
+                    startingPosY = PosY;
+                }
 
                 if (target != Vector2.Zero)
                 {
@@ -591,7 +605,8 @@ namespace Once_A_Rogue
                 PosX += (int)(target.X * MoveSpeed);
                 PosY += (int)(target.Y * MoveSpeed);
 
-                distanceTrav = Math.Sqrt(Math.Pow((int)(target.X * MoveSpeed), 2) + Math.Pow((int)(target.Y * MoveSpeed), 2));
+                distanceTrav += Math.Sqrt(Math.Pow((int)(target.X * MoveSpeed), 2) + Math.Pow((int)(target.Y * MoveSpeed), 2));
+
 
                 if(PosRect.Intersects(player.PosRect) && !hasHit)
                 {
@@ -599,16 +614,38 @@ namespace Once_A_Rogue
                     hasHit = true;
                 }
 
-                if (distanceTrav >= 2203)
+                if (Math.Abs((PosX - startingPosX)) >= 1203)
                 {
-                    PosX -= 4406;
+                    if((PosX - startingPosX) > 0)
+                    {
+                        PosX -= 2406;
+                    }
+
+                    else if((PosX - startingPosX) < 0)
+                    {
+                        PosX += 2406;
+                    }
+
+                    if (PosY < startingPosY)
+                    {
+                        PosY += 2 * Math.Abs(PosY - startingPosY);
+                    }
+
+                    else
+                    {
+                        PosY -= 2 * Math.Abs(PosY - startingPosY);
+                    }
+
                     hasHit = false;
                 }
 
-                if (distanceTrav == 4406)
+                if (distanceTrav >= 2406)
                 {
-                    IsCharging = false;
+                    distanceTrav = 0;
+                    MoveSpeedTotal = 0;
                     MoveSpeed = 0;
+                    target = Vector2.Zero;
+                    IsCharging = false;
                 }
             }
         }

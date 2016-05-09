@@ -109,7 +109,7 @@ namespace Once_A_Rogue
                                 vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
 
                                 //Add the projectile to the list
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 10, false));
                             }
 
                             if (stickInput.X > 0 || (player.PlayerStates == Player.PlayerState.AttackRight && gPadState.IsButtonDown(Buttons.A)))
@@ -130,7 +130,7 @@ namespace Once_A_Rogue
                                 vectorLength.X = (vectorLength.X * RangeX * 120) - (60 * RangeX);
                                 vectorLength.Y = (vectorLength.Y * RangeY * 120) - (60 * RangeY);
 
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, 10, false));
                             }
 
                             return;
@@ -158,7 +158,7 @@ namespace Once_A_Rogue
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
 
                         //Add the projectile to the list
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 10, false));
                     }
 
                     else
@@ -179,7 +179,7 @@ namespace Once_A_Rogue
                         vectorLength.X = (vectorLength.X * RangeX * 120) - (60 * RangeX);
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - (60 * RangeY);
 
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, 10, false));
                     }
                 }
             }

@@ -999,6 +999,11 @@ namespace Once_A_Rogue
                                 done = true;
                             }
 
+                            if(activeRoom.Boss && activeRoom.enemyList.Count == 0 && !camera.isMoving)
+                            {
+                                activeRoom.SpawnUlmog(player, goblinEnemy, camera);
+                            }
+
                             levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
 
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary
@@ -1224,14 +1229,7 @@ namespace Once_A_Rogue
                 {
                     if (enemy.IsHostile)
                     {
-                        if (enemy is Ulmog)
-                        {
-
-                        }
-                        else
-                        {
-                            spriteBatch.Draw(health, new Rectangle(enemy.PosX, enemy.PosY - 20, (int)(120f * (enemy.CurrHealth / enemy.TotalHealth)), 10), Color.White);
-                        }
+                        spriteBatch.Draw(health, new Rectangle(enemy.PosX, enemy.PosY - 20, (int)((float)enemy.PosRect.Width * (enemy.CurrHealth / enemy.TotalHealth)), 10), Color.White);
                     }
                 }
             }

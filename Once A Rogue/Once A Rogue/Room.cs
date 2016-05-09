@@ -1020,5 +1020,16 @@ namespace Once_A_Rogue
             enemyList.Add(kobold);
             
         }
+
+        public void SpawnUlmog(Player play, Texture2D tex, Camera camera)
+        {
+            int x = camera.xMod;
+            int y = camera.yMod;
+            x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+            y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+            Ulmog ulmog = new Ulmog(play, camera, x, y, 120, 120, tex);
+            enemyList.Add(ulmog);
+            ulmog.IsHostile = true;
+        }
     }
 }

@@ -63,7 +63,6 @@ namespace Once_A_Rogue
                     //Adjust both the coordinate and the progress indicator
                     progress += panSpeed;
                     yMod += panSpeed;
-
                     //If the progress has reached its desired value - indicate that the camera should stop moving
                     if (progress >= screenHeight)
                     {
