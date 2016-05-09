@@ -15,6 +15,7 @@ namespace Once_A_Rogue
         public Vector2 origVector;
         public int totalNumSpins;
         public int numSpins;
+        public int totalRotations;
         public int rotations;
 
         public Whirlwind(int dam, Character own) : base(dam, own)
@@ -36,7 +37,7 @@ namespace Once_A_Rogue
             numSpins = totalNumSpins;
             rotations = 0;
             Cooldown = 0;
-            CooldownTotal = 5000 + (100 * 24);
+            CooldownTotal = 5000 + (100 * totalRotations);
         }
 
         public override void OnActivated()
@@ -70,7 +71,7 @@ namespace Once_A_Rogue
                     target.Normalize();
                 }
 
-                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, Owner.PosX + Owner.PosRect.Width / 2, Owner.PosY + Owner.PosRect.Height / 2, 5, false));
+                //Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, Owner.PosX + Owner.PosRect.Width / 2, Owner.PosY + Owner.PosRect.Height / 2, 5, false));
 
                 enemy.IsSpinning = true;
             }

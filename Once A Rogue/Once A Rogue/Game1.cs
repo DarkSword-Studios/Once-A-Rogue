@@ -1328,6 +1328,8 @@ namespace Once_A_Rogue
             //Update beginning room peripherals - every subsequent room can be updated on the map in a different location
             Minimap.UpdatePeripherals(levelAnnex, levelAnnex.GetLength(0) / 2, levelAnnex.GetLength(1) / 2);
 
+            bossSpawned = false;
+
             if(reset)
             {
                 //Initializing the player

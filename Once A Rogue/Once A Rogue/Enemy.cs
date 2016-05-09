@@ -235,6 +235,7 @@ namespace Once_A_Rogue
         }
 
         int timeTilSpin;
+        int spinSelection;
 
         private bool isCharging;
 
@@ -254,6 +255,7 @@ namespace Once_A_Rogue
 
         int startingPosX;
         int startingPosY;
+        private bool wrappedAround;
 
         //Do we even need this constructor?
         public Enemy(Texture2D tex, Player play, Camera camera, int x, int y, int width, int height) : base()//Add code here
@@ -276,6 +278,8 @@ namespace Once_A_Rogue
             rgen = new Random();
             Cooldown = 2000;
             timeTilSpin = 0;
+            spinSelection = 0;
+            wrappedAround = false;
         }
         //This method handles drawing the enemy based onthe current animation
         public void Draw(SpriteBatch spritebatch, int frameWidth, int frameHeight)
@@ -495,17 +499,16 @@ namespace Once_A_Rogue
                     {
                         eState = enemyState.AttackLeft;
                     }
+
                     else
                     {
                         eState = enemyState.AttackRight;
                     }
 
-                    Cooldown += SkillList[ranSpell].CooldownTotal + 500;
-
                     if (SkillList[0] is Whirlwind && CurrHealth / TotalHealth <= .70)
                     {
                         Whirlwind whirlwind = (Whirlwind)SkillList[0];
-                        whirlwind.totalNumSpins++;
+                        whirlwind.CooldownTotal = 2000 + (100 * whirlwind.totalRotations);
                         whirlwind.numSpins = whirlwind.totalNumSpins;
                         
                         if(CurrHealth / TotalHealth <= .30)
@@ -514,6 +517,8 @@ namespace Once_A_Rogue
                             whirlwind.numSpins = whirlwind.totalNumSpins;
                         }
                     }
+
+                    Cooldown += SkillList[ranSpell].CooldownTotal + 500;
                 }
             }
 
@@ -538,24 +543,35 @@ namespace Once_A_Rogue
             {
                 timeTilSpin += gt.ElapsedGameTime.Milliseconds;
 
-                if (CurrHealth != 0 || timeTilSpin >= 1500)
+                if (CurrHealth != 0 && timeTilSpin >= 1000)
                 {
                     MoveSpeed = 0;
 
-                    if(SkillList[0] is Whirlwind)
+                    if (spinSelection > 2)
+                    {
+                        spinSelection = 0;
+                    }
+
+                    if (SkillList[0] is Whirlwind)
                     {
                         Whirlwind whirlwind = (Whirlwind)SkillList[0];
 
                         whirlwind.rotations++;
 
-                        Vector2 updatedTarget = Vector2.Transform(whirlwind.target, Matrix.CreateRotationZ(0.261799f * whirlwind.rotations));
+                        float angle = 0.261799f + (0.1309f * spinSelection);
+                        double angleDegrees = angle * (180 / Math.PI);
+                        whirlwind.totalRotations = (int)(360 / angleDegrees);
+
+                        Vector2 updatedTarget = Vector2.Transform(whirlwind.target, Matrix.CreateRotationZ(angle * whirlwind.rotations));
 
                         Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, 5, false));
 
-                        if (whirlwind.rotations > 24)
+                        if (whirlwind.rotations >= whirlwind.totalRotations)
                         {
                             whirlwind.numSpins -= 1;
                             whirlwind.rotations = 0;
+                            timeTilSpin = 0;
+                            spinSelection++;
                         }
 
                         if (whirlwind.numSpins == 0)
@@ -564,29 +580,27 @@ namespace Once_A_Rogue
                             whirlwind.numSpins = whirlwind.totalNumSpins;
                             whirlwind.rotations = 0;
                         }
-
-                        timeTilSpin = 0;
                     }
                 }
             }
 
             if (IsCharging)
             {
-                if(CurrHealth/TotalHealth <= 30)
+                if(CurrHealth/TotalHealth <= .30)
+                {
+                    MoveSpeedTotal = 12;
+                    MoveSpeed = 12;
+                }
+
+                else if (CurrHealth / TotalHealth <= .70 && CurrHealth / TotalHealth >= .30)
                 {
                     MoveSpeedTotal = 10;
                     MoveSpeed = 10;
                 }
-
-                else if (CurrHealth / TotalHealth <= 70)
-                {
-                    MoveSpeedTotal = 7;
-                    MoveSpeed = 7;
-                }
                 else
                 {
-                    MoveSpeedTotal = 5;
-                    MoveSpeed = 5;
+                    MoveSpeedTotal = 8;
+                    MoveSpeed = 8;
                 }
 
                 //Create a vector between the enemy and player
@@ -614,16 +628,16 @@ namespace Once_A_Rogue
                     hasHit = true;
                 }
 
-                if (Math.Abs((PosX - startingPosX)) >= 2203)
+                if (distanceTrav >= 2203 && !wrappedAround)
                 {
-                    if((PosX - startingPosX) > 0)
+                    if(PosX > startingPosX)
                     {
-                        PosX -= 4406;
+                        PosX -= 2 * Math.Abs(PosX - startingPosX);
                     }
 
-                    else if((PosX - startingPosX) < 0)
+                    else if(PosX < startingPosX)
                     {
-                        PosX += 4406;
+                        PosX += 2 * Math.Abs(PosX - startingPosX);
                     }
 
                     if (PosY < startingPosY)
@@ -637,6 +651,7 @@ namespace Once_A_Rogue
                     }
 
                     hasHit = false;
+                    wrappedAround = true;
                 }
 
                 if (distanceTrav >= 4406)
@@ -646,6 +661,7 @@ namespace Once_A_Rogue
                     MoveSpeed = 0;
                     target = Vector2.Zero;
                     IsCharging = false;
+                    wrappedAround = false;
                 }
             }
         }
