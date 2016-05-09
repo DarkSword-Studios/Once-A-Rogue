@@ -156,6 +156,8 @@ namespace Once_A_Rogue
         float manaBarWidth;
         float healthBarWidth;
 
+        bool bossSpawned;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -199,6 +201,8 @@ namespace Once_A_Rogue
 
             //Rig environment port
             Atmosphere.Camera = camera;
+
+            bossSpawned = false;
 
             base.Initialize();
         }
@@ -1033,10 +1037,11 @@ namespace Once_A_Rogue
                                 done = true;
                             }
 
-                            if(activeRoom.Boss && activeRoom.enemyList.Count == 0 && !camera.isMoving)
+                            if(activeRoom.Boss && activeRoom.enemyList.Count == 0 && !camera.isMoving && bossSpawned == false)
                             {
                                 activeRoom.SpawnUlmog(player, goblinEnemy, camera);
                                 done = true;
+                                bossSpawned = true;
                             }
 
                             levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);

@@ -92,7 +92,7 @@ namespace Once_A_Rogue
                         {
                             if (player.PlayerStates == Player.PlayerState.AttackLeft)
                             {
-                                Vector2 target = new Vector2(player.PosX - (RangeX * 120), 0) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+                                Vector2 target = new Vector2(player.PosX - (RangeX * 120), player.PosY) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
 
                                 //If the vector is not zero
                                 if (target != Vector2.Zero)
@@ -115,7 +115,7 @@ namespace Once_A_Rogue
                             if (stickInput.X > 0 || (player.PlayerStates == Player.PlayerState.AttackRight && gPadState.IsButtonDown(Buttons.A)))
                             {
                                 //Create a vector between the player and the position 120 units to the right
-                                Vector2 target = new Vector2(player.PosX + player.PosRect.Width + 10 + (RangeX * 120), 0) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
+                                Vector2 target = new Vector2(player.PosX + player.PosRect.Width + 10 + (RangeX * 120), player.PosY) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
 
                                 //Normalizing the vector
                                 if (target != Vector2.Zero)
@@ -141,7 +141,7 @@ namespace Once_A_Rogue
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)
                     {
                         //Create a vector between the player and the position 120 units to the left
-                        Vector2 target = new Vector2(player.PosX - (RangeX * 120), 0) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+                        Vector2 target = new Vector2(player.PosX - (RangeX * 120), player.PosY) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
 
                         //If the vector is not zero
                         if (target != Vector2.Zero)
@@ -164,7 +164,7 @@ namespace Once_A_Rogue
                     else
                     {
                         //Create a vector between the player and the position 120 units to the right
-                        Vector2 target = new Vector2(player.PosX + player.PosRect.Width + 10 + ( RangeX * 120 ), 0) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
+                        Vector2 target = new Vector2(player.PosX + player.PosRect.Width + 10 + ( RangeX * 120 ), player.PosY) - new Vector2(player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2);
 
                         //Normalizing the vector
                         if (target != Vector2.Zero)

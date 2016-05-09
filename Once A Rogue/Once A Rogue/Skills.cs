@@ -131,18 +131,32 @@ namespace Once_A_Rogue
             MouseState msState = Mouse.GetState();
 
             //Handles the player animation based on player position vs mouse position.
-            if (msState.X <= player.PosX + player.PosRect.Width / 2 || (player.rightStickInput.Length() <= .25f && player.CurrSkill.Name != "Swing"))
+            if (msState.X <= player.PosX + player.PosRect.Width / 2)
             {
+                if(player.rightStickInput.Length() <= .25f && player.CurrSkill.Name != "Swing")
+                {
+                    player.PlayerStates = Player.PlayerState.AttackLeft;
+                }
+                else if(player.CurrSkill.Name == "Swing")
+                {
+                    player.PlayerStates = Player.PlayerState.AttackLeft;
+                }
                 player.CurrentFrame = 0;
                 player.framesElapsed = 0;
                 player.timeElapsed = 0;
                 Cooldown = CooldownTotal;
-                player.PlayerStates = Player.PlayerState.AttackLeft;
             }
 
             else
             {
-                player.PlayerStates = Player.PlayerState.AttackRight;
+                if (player.rightStickInput.Length() <= .25f && player.CurrSkill.Name != "Swing")
+                {
+                    player.PlayerStates = Player.PlayerState.AttackRight;
+                }
+                else if (player.CurrSkill.Name == "Swing")
+                {
+                    player.PlayerStates = Player.PlayerState.AttackRight;
+                }
                 player.CurrentFrame = 0;
                 player.framesElapsed = 0;
                 player.timeElapsed = 0;

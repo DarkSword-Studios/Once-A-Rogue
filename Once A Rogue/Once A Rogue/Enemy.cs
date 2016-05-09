@@ -614,16 +614,16 @@ namespace Once_A_Rogue
                     hasHit = true;
                 }
 
-                if (Math.Abs((PosX - startingPosX)) >= 1203)
+                if (Math.Abs((PosX - startingPosX)) >= 2203)
                 {
                     if((PosX - startingPosX) > 0)
                     {
-                        PosX -= 2406;
+                        PosX -= 4406;
                     }
 
                     else if((PosX - startingPosX) < 0)
                     {
-                        PosX += 2406;
+                        PosX += 4406;
                     }
 
                     if (PosY < startingPosY)
@@ -639,7 +639,7 @@ namespace Once_A_Rogue
                     hasHit = false;
                 }
 
-                if (distanceTrav >= 2406)
+                if (distanceTrav >= 4406)
                 {
                     distanceTrav = 0;
                     MoveSpeedTotal = 0;
