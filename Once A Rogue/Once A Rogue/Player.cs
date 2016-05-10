@@ -16,10 +16,10 @@ namespace Once_A_Rogue
         //Attributes
 
         //Lists containing known skills
-        List<Skills> mageSkillList;
-        List<Skills> rogueSkillList;
-        List<Skills> rangerSkillList;
-        List<Skills> warriorSkillList;
+        public List<Skills> mageSkillList;
+        public List<Skills> rogueSkillList;
+        public List<Skills> rangerSkillList;
+        public List<Skills> warriorSkillList;
 
         //String array of weapon choices
         string[] weaponArray;
