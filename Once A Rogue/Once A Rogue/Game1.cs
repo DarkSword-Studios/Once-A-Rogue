@@ -57,7 +57,7 @@ namespace Once_A_Rogue
 
         //Lore tracking
         int loreIndex;
-        int buffer = 20;
+        int buffer = 15;
         int windowBuffer = 10;
         List<GameObject> loreEntries = new List<GameObject>();
         Note note;
@@ -678,7 +678,15 @@ namespace Once_A_Rogue
             {
                 if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Keys.Escape))
                 {
-                    gameState = GameState.Playing;
+                    if (readingNote)
+                    {
+                        note = null;
+                        readingNote = false;
+                    }
+                    else
+                    {
+                        gameState = GameState.Playing;
+                    }   
                 }
 
                 
@@ -699,8 +707,11 @@ namespace Once_A_Rogue
                     if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
                     {
                         contextState = ContextState.Skills;
+                        readingNote = false;
+                        note = null;
+                        scrollLines = 0;
                     }
-                    else if (mouseState.LeftButton == ButtonState.Pressed)
+                    else if (mouseState.LeftButton == ButtonState.Pressed && !readingNote)
                     {
                         foreach(GameObject entry in loreEntries)
                         {
@@ -709,6 +720,9 @@ namespace Once_A_Rogue
                                 int index = loreIndex + loreEntries.IndexOf(entry);
 
                                 note = Notes.gatheredNotes[index];
+                                note.read = true;
+                                Notes.gatheredNotes.RemoveAt(index);
+                                Notes.gatheredNotes.Add(note);
 
                                 readingNote = true;
                             }
@@ -1034,6 +1048,7 @@ namespace Once_A_Rogue
                                     if (lineNumber < scrollLines)
                                     {
                                         lineNumber++;
+                                        startChar = numChars;
                                         continue;
                                     }
                                     if (lineNumber - scrollLines > 18)
@@ -1059,7 +1074,18 @@ namespace Once_A_Rogue
                                     lineNumber++;
                                 }
                             }
-                            if(startChar == 0)
+
+                            if (lineNumber < scrollLines)
+                            {
+                                lineNumber++;
+                                continue;
+                            }
+                            if (lineNumber - scrollLines > 18)
+                            {
+                                break;
+                            }
+
+                            if (startChar == 0)
                             {
                                 //Center the text so that the anchor point is the center of the message
                                 Vector2 measuredString = alertText.MeasureString(line);

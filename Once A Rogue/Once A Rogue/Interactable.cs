@@ -153,7 +153,11 @@ namespace Once_A_Rogue
                     if(Notes.entriesToDiscover.Count > 0)
                     {
                         //Spawn a new notification to alert the player that they have picked up the note
-                        Notification.Alert(Notes.DiscoverNote(), Color.Black, 120, false);                    
+                        Notification.Alert("You Discovered: " + Notes.DiscoverNote(), Color.Black, 120, false);
+                        if (Notes.gatheredNotes.Count < 2)
+                        {
+                            Notification.Alert("Press TAB to read lore!", Color.Blue, 120, true);
+                        }                
                     }
                     else
                     {

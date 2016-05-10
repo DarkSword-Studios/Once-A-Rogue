@@ -44,7 +44,7 @@ namespace Once_A_Rogue
 
             entriesToDiscover.Remove(newNote);
 
-            gatheredNotes.Add(newNote);
+            gatheredNotes.Insert(0, newNote);
 
             return newNote.title;
         }
