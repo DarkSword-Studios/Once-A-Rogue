@@ -93,12 +93,14 @@ namespace Once_A_Rogue
                 }
             }
         }
+
         public int FearLevelTotal
         {
             get { return FearLevelTotal; }
 
             set { fearLevelTotal = value; }
         }
+
         //BRAINSTORM: Based on the armor level of enemies, the players will do reduced damage to them
         private int armorLevel;
 
