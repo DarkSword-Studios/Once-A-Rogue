@@ -320,6 +320,14 @@ namespace Once_A_Rogue
 
             if (startingRoom)
             {
+                int tileY = 81 / 16;
+                int tileX = 81 % 16;
+
+                //Locate the specified interactable texture
+                Rectangle imageLocal = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
+
+                finalRoomAnnex[7, 11].Interactable = new Interactable("Note", finalRoomAnnex[7, 11].RelativeLocation, imageLocal, true, true, true);
+                interactables.Add(finalRoomAnnex[7, 11].Interactable);
                 return;
             }
 

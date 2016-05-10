@@ -10,12 +10,14 @@ namespace Once_A_Rogue
 
 
         public string title;
-        public string message;
+        public List<String> message;
+        public Boolean read;
 
-        public Note(string title, string message)
+        public Note(string title)
         {
             this.title = title;
-            this.message = message;
+            this.message = new List<string>();
+            read = false;
         }
     }
 }

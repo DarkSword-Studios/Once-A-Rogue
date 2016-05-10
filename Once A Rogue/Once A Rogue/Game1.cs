@@ -54,7 +54,16 @@ namespace Once_A_Rogue
 
         //Declare a number of rooms for a level
         int numRooms;
-        
+
+        //Lore tracking
+        int loreIndex;
+        int buffer = 20;
+        int windowBuffer = 10;
+        List<GameObject> loreEntries = new List<GameObject>();
+        Note note;
+        Boolean readingNote = false;
+        int scrollLines = 0;
+
         //Track room structure via the grid system
         Room[,] levelAnnex;
 
@@ -204,6 +213,8 @@ namespace Once_A_Rogue
 
             bossSpawned = false;
 
+            Notes.GatherNotes();
+
             base.Initialize();
         }
 
@@ -263,7 +274,7 @@ namespace Once_A_Rogue
             skillRanger = Content.Load<Texture2D>("HUDStuff/HUDskillranger");
             skillWarrior = Content.Load<Texture2D>("HUDStuff/HUDskillwarrior");
             skillRogue = Content.Load<Texture2D>("HUDStuff/HUDskillrogue");
-            //loreEntry = Content.Load<Texture2D>("HUDStuff/LoreEntry");
+            loreEntry = Content.Load<Texture2D>("HUDStuff/LoreEntry.png");
 
             //Initialize MiniMap textures and add them to the map texture dictionary
             mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
@@ -652,6 +663,14 @@ namespace Once_A_Rogue
                 {
                     gameState = GameState.MainMenu;
                     arrowState = ArrowState.menu1;
+                    player = null;
+                    Atmosphere.ResetIntensities();
+                    timer = 0;
+                    MediaPlayer.IsRepeating = false;
+                    MediaPlayer.Play(mainMusic);
+                    currentSong = "mainMusic";
+                    transitionToGame = false;
+                    MediaPlayer.Volume = (float)0.40;
                 }
             }
 
@@ -680,6 +699,35 @@ namespace Once_A_Rogue
                     if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
                     {
                         contextState = ContextState.Skills;
+                    }
+                    else if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        foreach(GameObject entry in loreEntries)
+                        {
+                            if(new Rectangle(mouseState.Position.X, mouseState.Position.Y, 1, 1).Intersects(entry.PosRect))
+                            {
+                                int index = loreIndex + loreEntries.IndexOf(entry);
+
+                                note = Notes.gatheredNotes[index];
+
+                                readingNote = true;
+                            }
+                        }
+                    }
+
+                    if(SingleKeyPress(Keys.Up))
+                    {
+                        if(scrollLines < 10)
+                        {
+                            scrollLines++;
+                        }
+                    }
+                    else if(SingleKeyPress(Keys.Down))
+                    {
+                        if(scrollLines > 0)
+                        {
+                            scrollLines--;
+                        }
                     }
                 }
                 
@@ -934,6 +982,107 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(contextLore, new Vector2(0, 0), Color.White);
                     spriteBatch.Draw(skillSwitch, new Vector2(313, 350), Color.White);
+
+                    if (!readingNote)
+                    {
+                        loreEntries.Clear();
+
+                        for (int i = loreIndex; i < Notes.gatheredNotes.Count; i++)
+                        {
+                            int pos = i - loreIndex;
+
+                            Note currentNote = Notes.gatheredNotes[i];
+                            string title = currentNote.title;
+
+                            if (currentNote.read)
+                            {
+                                spriteBatch.Draw(loreEntry, new Vector2(SCREEN_WIDTH - loreEntry.Width - 10, pos * loreEntry.Height + pos * buffer + windowBuffer), Color.White);
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(loreEntry, new Vector2(SCREEN_WIDTH - loreEntry.Width - 10, pos * loreEntry.Height + pos * buffer + windowBuffer), Color.Gold);
+                            }
+
+                            //Center the text so that the anchor point is the center of the message
+                            Vector2 measuredString = alertText.MeasureString(title);
+                            Vector2 position = new Vector2(SCREEN_WIDTH - (loreEntry.Width / 2), pos * loreEntry.Height + pos * buffer + windowBuffer + (loreEntry.Height / 2));
+                            Vector2 origin = measuredString * 0.5f;
+
+                            spriteBatch.DrawString(alertText, title, position, Color.White, 0, origin, 1, SpriteEffects.None, 1);
+
+                            GameObject entry = new GameObject();
+                            int x = SCREEN_WIDTH - loreEntry.Width - 10;
+                            int y = pos * loreEntry.Height + pos * buffer + windowBuffer;
+                            entry.PosRect = new Rectangle(x, y, loreEntry.Width, loreEntry.Height);
+                            loreEntries.Add(entry);
+                        }
+                    }
+                    else
+                    {
+                        int lineNumber = 0;
+                
+                        foreach(string line in note.message)
+                        {
+                            List<string> lines = new List<string>();
+                            int startChar = 0;
+                            int numChars = 0;
+
+                            for(numChars = 0; numChars < line.Length; numChars++)
+                            {
+                                if(numChars % 80 == 0 && numChars != 0)
+                                {
+                                    if (lineNumber < scrollLines)
+                                    {
+                                        lineNumber++;
+                                        continue;
+                                    }
+                                    if (lineNumber - scrollLines > 18)
+                                    {
+                                        break;
+                                    }
+                                    string newLine = line.Substring(startChar, 80);
+
+                                    if(newLine[79] != ' ' && line[numChars] != ' ')
+                                    {
+                                        newLine += '-';
+                                    }
+
+                                    //Center the text so that the anchor point is the center of the message
+                                    Vector2 stringLength = alertText.MeasureString(newLine);
+                                    Vector2 pos = new Vector2(SCREEN_WIDTH - (loreEntry.Width / 2), windowBuffer + alertText.LineSpacing + (lineNumber - scrollLines) * alertText.LineSpacing * 0.8f);
+                                    Vector2 org = stringLength * 0.5f;
+
+                                    spriteBatch.DrawString(alertText, newLine, pos, Color.White, 0, org, 0.8f, SpriteEffects.None, 1);
+
+                                    startChar = numChars;
+
+                                    lineNumber++;
+                                }
+                            }
+                            if(startChar == 0)
+                            {
+                                //Center the text so that the anchor point is the center of the message
+                                Vector2 measuredString = alertText.MeasureString(line);
+                                Vector2 position = new Vector2(SCREEN_WIDTH - (loreEntry.Width / 2), windowBuffer + alertText.LineSpacing + (lineNumber - scrollLines) * alertText.LineSpacing * 0.8f);
+                                Vector2 origin = measuredString * 0.5f;
+
+                                spriteBatch.DrawString(alertText, line, position, Color.White, 0, origin, 0.8f, SpriteEffects.None, 1);
+                                lineNumber++;
+                            }  
+                            else if(numChars % 80 != 0)
+                            {
+                                string lineSegment = line.Substring(startChar, line.Length - startChar);
+
+                                Vector2 measuredString = alertText.MeasureString(lineSegment);
+                                Vector2 position = new Vector2(SCREEN_WIDTH - (loreEntry.Width / 2), windowBuffer + alertText.LineSpacing + (lineNumber - scrollLines) * alertText.LineSpacing * 0.8f);
+                                Vector2 origin = measuredString * 0.5f;
+
+                                spriteBatch.DrawString(alertText, lineSegment, position, Color.White, 0, origin, 0.8f, SpriteEffects.None, 1);
+                                lineNumber++;
+                            }
+                        }
+                    }
+                    
                 }
 
             }
@@ -1333,7 +1482,7 @@ namespace Once_A_Rogue
             if(reset)
             {
                 //Initializing the player
-                player = new Player(120, 120, 110, 110);
+                player = new Player((SCREEN_WIDTH / 2) - 110, (SCREEN_HEIGHT / 2) - 110, 110, 110);
             }
         }
     }

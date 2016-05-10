@@ -136,6 +136,9 @@
     <Content Include="Content\HUDStuff\HUDcontext_lore.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\HUDStuff\LoreEntry.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\HUDStuff\MainMenuBG.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

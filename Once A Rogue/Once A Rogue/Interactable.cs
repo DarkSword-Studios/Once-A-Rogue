@@ -150,8 +150,16 @@ namespace Once_A_Rogue
                 //If the player is intersecting with the note
                 if (player.PosRect.Intersects(adjustedLocal))
                 {
-                    //Spawn a new notification to alert the player that they have picked up the note
-                    Notification.Alert("New Journal Entry Added: Unsent Love Letter", Color.Black, 120, false);
+                    if(Notes.entriesToDiscover.Count > 0)
+                    {
+                        //Spawn a new notification to alert the player that they have picked up the note
+                        Notification.Alert(Notes.DiscoverNote(), Color.Black, 120, false);                    
+                    }
+                    else
+                    {
+                        Notification.Alert("You've found all existing entries!", Color.Black, 120, false);
+                    }
+
                     //Make sure the note cannot be interacted with twice
                     this.interactable = false;
                 }
