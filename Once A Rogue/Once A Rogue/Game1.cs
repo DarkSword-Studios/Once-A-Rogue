@@ -649,11 +649,11 @@ namespace Once_A_Rogue
                 }
             }
 
-            if (gameState == GameState.Playing && !this.IsActive)
-            {
-                gameState = GameState.paused;
-                arrowState = ArrowState.pos1;
-            }
+            //if (gameState == GameState.Playing && !this.IsActive)
+            //{
+            //    gameState = GameState.paused;
+            //    arrowState = ArrowState.pos1;
+            //}
 
             //If you hit enter on the Game over screen it sends you to the main menu
             if (gameState == GameState.GameOver)
@@ -1051,6 +1051,7 @@ namespace Once_A_Rogue
                                         startChar = numChars;
                                         continue;
                                     }
+
                                     if (lineNumber - scrollLines > 18)
                                     {
                                         break;
