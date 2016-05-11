@@ -158,7 +158,7 @@ namespace Once_A_Rogue
         {
             //spriteBatch.Draw(Texture, PosRect, Color.White);
             
-
+            //For some reason projectiles spawn with an extra pixel row? (Currently fixed - take a look at soon)
             Rectangle frame = new Rectangle(currentFrame * FRAMEWIDTH, FRAMEHEIGHT * rowY, FRAMEWIDTH, FRAMEHEIGHT - 1);
             spriteBatch.Draw(texture, PosRect, frame, Color.White, (float) Math.Atan2(vector.Y, vector.X), Vector2.Zero, SpriteEffects.None, 1);
         }
