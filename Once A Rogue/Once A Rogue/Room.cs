@@ -331,18 +331,6 @@ namespace Once_A_Rogue
                 finalRoomAnnex[7, 11].Interactable = new Interactable("Note", finalRoomAnnex[7, 11].RelativeLocation, imageLocal, true, true, true);
                 interactables.Add(finalRoomAnnex[7, 11].Interactable);
 
-                finalRoomAnnex[5, 11].Interactable = new Interactable("Note", finalRoomAnnex[5, 11].RelativeLocation, imageLocal, true, true, true);
-                interactables.Add(finalRoomAnnex[5, 11].Interactable);
-
-                finalRoomAnnex[3, 11].Interactable = new Interactable("Note", finalRoomAnnex[3, 11].RelativeLocation, imageLocal, true, true, true);
-                interactables.Add(finalRoomAnnex[3, 11].Interactable);
-
-                finalRoomAnnex[7, 9].Interactable = new Interactable("Note", finalRoomAnnex[7, 9].RelativeLocation, imageLocal, true, true, true);
-                interactables.Add(finalRoomAnnex[7, 9].Interactable);
-
-                finalRoomAnnex[1, 11].Interactable = new Interactable("Note", finalRoomAnnex[1, 11].RelativeLocation, imageLocal, true, true, true);
-                interactables.Add(finalRoomAnnex[1, 11].Interactable);
-
                 return;
             }
 

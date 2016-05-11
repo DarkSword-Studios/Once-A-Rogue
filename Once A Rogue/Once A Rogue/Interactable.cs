@@ -157,7 +157,8 @@ namespace Once_A_Rogue
                         if (Notes.gatheredNotes.Count < 2)
                         {
                             Notification.Alert("Press TAB to read lore!", Color.Blue, 120, true);
-                        }                
+                        }
+                        doDraw = false;     
                     }
                     else
                     {
