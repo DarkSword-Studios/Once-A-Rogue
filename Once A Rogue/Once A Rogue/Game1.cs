@@ -627,13 +627,13 @@ namespace Once_A_Rogue
                     arrowState = ArrowState.pos1;
                 }
 
-                if(SingleKeyPress(Keys.Tab))
+                if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Buttons.Back))
                 {
                     gameState = GameState.Context;
                 }
 
                 //If M is pressed, toggle the visibility of the minimap
-                if (SingleKeyPress(Keys.M) || (prevGPadState.IsButtonUp(Buttons.Back) && gPadState.IsButtonDown(Buttons.Back)))
+                if (SingleKeyPress(Keys.M) || SingleKeyPress(Buttons.Y))
                 {
                     Minimap.Visible = !Minimap.Visible;
                 }
@@ -711,7 +711,7 @@ namespace Once_A_Rogue
                     currentSong = "Oasis";
                 }
 
-                if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Keys.Escape))
+                if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.Back) || SingleKeyPress(Buttons.B))
                 {
                     if (readingNote)
                     {
@@ -729,7 +729,7 @@ namespace Once_A_Rogue
                 {
                     mouseState = Mouse.GetState();
 
-                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565))
+                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                     {
                         contextState = ContextState.Lore;
                     }
@@ -739,7 +739,7 @@ namespace Once_A_Rogue
                 {
                     mouseState = Mouse.GetState();
 
-                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440))
+                    if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                     {
                         contextState = ContextState.Skills;
                         readingNote = false;
