@@ -37,6 +37,10 @@ namespace Once_A_Rogue
         enum ContextState { Skills, Lore }
         ContextState contextState;
 
+        //Enums for control menu state
+        enum ControlState { kb, gp }
+        ControlState controlState;
+
         //Declare a grid to keep track of level space
         string [,] gridSystem;       
         const int ROWS = 9;
@@ -112,7 +116,7 @@ namespace Once_A_Rogue
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
         //Declare HUD Textures
-        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, sky, play, exitM, mana, health, container;
+        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, sky, play, exitM, mana, health, container, controlsGP;
         Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger, loreEntry;
 
         //Keyboard states
@@ -252,11 +256,12 @@ namespace Once_A_Rogue
 
             //Initialize HUD textures
             pause = Content.Load<Texture2D>("HUDStuff/HUDpause.png");
-            exit = Content.Load<Texture2D>("HUDStuff/HUDexittowindowsbutton.png");
+            exit = Content.Load<Texture2D>("HUDStuff/HUDexitmain.png");
             select = Content.Load<Texture2D>("HUDStuff/HUDselect.png");
             resume = Content.Load<Texture2D>("HUDStuff/HUDresume.png");
             control = Content.Load<Texture2D>("HUDStuff/HUDcontrol.png");
             controls = Content.Load<Texture2D>("HUDStuff/HUDcontrols.png");
+            controlsGP = Content.Load<Texture2D>("HUDStuff/HUDcontrolsgp.png");
             sword = Content.Load<Texture2D>("HUDStuff/HUDsword.png");
             rogue = Content.Load<Texture2D>("HUDStuff/HUDrogue.png");
             mage = Content.Load<Texture2D>("HUDStuff/HUDmage.png");
@@ -279,6 +284,7 @@ namespace Once_A_Rogue
             skillWarrior = Content.Load<Texture2D>("HUDStuff/HUDskillwarrior");
             skillRogue = Content.Load<Texture2D>("HUDStuff/HUDskillrogue");
             loreEntry = Content.Load<Texture2D>("HUDStuff/LoreEntry.png");
+
 
             //Initialize MiniMap textures and add them to the map texture dictionary
             mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
@@ -630,6 +636,7 @@ namespace Once_A_Rogue
                 if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Buttons.Back))
                 {
                     gameState = GameState.Context;
+                    contextState = ContextState.Skills;
                 }
 
                 //If M is pressed, toggle the visibility of the minimap
@@ -784,13 +791,40 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.howTo)
             {
-                if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
+                mouseState = Mouse.GetState();
+
+                if (controlState == ControlState.kb)
                 {
-                    gameState = GameState.paused;
+                    if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
+                    {
+                        gameState = GameState.paused;
+                    }
+
+                    if ((mouseState.LeftButton == ButtonState.Pressed && previousMS.LeftButton == ButtonState.Released) && (mouseState.X >= 858 && mouseState.X <= 1025) && (mouseState.Y >= 619 && mouseState.Y <= 723))
+                    {
+                        controlState = ControlState.gp;
+                    }
+
+                    previousMS = mouseState;
+                }
+
+                if (controlState == ControlState.gp)
+                {
+                    if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
+                    {
+                        gameState = GameState.paused;
+                    }
+
+                    if ((mouseState.LeftButton == ButtonState.Pressed && previousMS.LeftButton == ButtonState.Released) && (mouseState.X >= 885 && mouseState.X <= 1014) && (mouseState.Y >= 694 && mouseState.Y <= 765))
+                    {
+                        controlState = ControlState.kb;
+                    }
+
+                    previousMS = mouseState;
                 }
             }
 
-            if(gameState == GameState.paused)
+            if (gameState == GameState.paused)
             {
                 mouseState = Mouse.GetState();
 
@@ -813,7 +847,7 @@ namespace Once_A_Rogue
                     {
                         arrowState = ArrowState.pos1;
                     }
-                    if (SingleKeyPress(Keys.S) || (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
+                    if (SingleKeyPress(Keys.S) || (mouseState.X >= 100 && mouseState.X <= 598) && (mouseState.Y >= 501 && mouseState.Y <= 555) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                     {
                         arrowState = ArrowState.pos3;
                     }
@@ -822,7 +856,7 @@ namespace Once_A_Rogue
                 {
                     gameState = GameState.howTo;
                 }
-                if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))) || ((arrowState == ArrowState.pos3) && (gPadState.IsButtonDown(Buttons.A))))
+                if ((arrowState == ArrowState.pos3) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 598) && (mouseState.Y >= 501 && mouseState.Y <= 555))) || ((arrowState == ArrowState.pos3) && (gPadState.IsButtonDown(Buttons.A))))
                 {
                     gameState = GameState.MainMenu;
                     arrowState = ArrowState.menu1;
@@ -848,7 +882,7 @@ namespace Once_A_Rogue
                 {
                     arrowState = ArrowState.pos2;
                 }
-                if((mouseState.X >= 100 && mouseState.X <= 563) && (mouseState.Y >= 501 && mouseState.Y <= 555))
+                if((mouseState.X >= 100 && mouseState.X <= 598) && (mouseState.Y >= 501 && mouseState.Y <= 555))
                 {
                     arrowState = ArrowState.pos3;
                 }
@@ -1007,12 +1041,18 @@ namespace Once_A_Rogue
                     spriteBatch.Draw(select, new Vector2(30, 504), Color.White);
                 }
             }
-
-            if(gameState == GameState.howTo)
+            if (gameState == GameState.howTo)
             {
-                spriteBatch.Draw(controls, new Vector2(0, 0), Color.White);
-            }
+                if (controlState == ControlState.kb)
+                {
+                    spriteBatch.Draw(controls, new Vector2(0, 0), Color.White);
+                }
 
+                if (controlState == ControlState.gp)
+                {
+                    spriteBatch.Draw(controlsGP, new Vector2(0, 0), Color.White);
+                }
+            }
             if (gameState == GameState.GameOver)
             {
                 spriteBatch.DrawString(alertText, "Level(s) acheived: " + player.Level, new Vector2(740, 400), Color.White);

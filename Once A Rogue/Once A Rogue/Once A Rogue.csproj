@@ -108,6 +108,15 @@
     <Content Include="Content\HUDStuff\HUDContainer.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\HUDStuff\HUDcontrols.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDcontrolsgp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HUDStuff\HUDexitmain.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\HUDStuff\HUDHealthBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -177,13 +186,7 @@
     <Content Include="Content\HUDStuff\HUDcontrol.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\HUDStuff\HUDcontrols.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\HUDStuff\HUDexit.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\HUDStuff\HUDexittowindowsbutton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\HUDStuff\HUDmage.png">
