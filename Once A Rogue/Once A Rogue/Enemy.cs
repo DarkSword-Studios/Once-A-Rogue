@@ -320,25 +320,25 @@ namespace Once_A_Rogue
 
                 case enemyState.WalkingRight:
 
-                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
 
                 case enemyState.WalkingLeft:
 
-                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackLeft:
 
-                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, color, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                     break;
 
                 case enemyState.AttackRight:
 
-                    frame = new Rectangle(currentFrame * 140, 140, frameWidth, frameHeight);
+                    frame = new Rectangle(currentFrame * 140, 0, frameWidth, frameHeight);
                     spritebatch.Draw(Texture, PosRect, frame, color);
                     break;
             }

@@ -61,6 +61,8 @@ namespace Once_A_Rogue
         public List<Enemy> enemyList = new List<Enemy>();
         List<Enemy> enemiesToRemove = new List<Enemy>();
 
+        Random rand = new Random();
+
         //Boolean clear = false;
 
         //Properties to access (sometimes just get) private room attributes
@@ -383,6 +385,29 @@ namespace Once_A_Rogue
                         int tileY = interactableLayer[row, col] / 16;
                         int tileX = interactableLayer[row, col] % 16;
 
+                        if (interactableLayer[row, col] == 80 || interactableLayer[row, col] == 64)
+                        {
+                            
+                            //System.Threading.Thread.Sleep(1);
+                            int randomNum = rand.Next(0, 2);
+
+                            if(randomNum == 1)
+                            {
+                                tileY = 64 / 16;
+                                tileX = 64 % 16;
+                            }
+                            else
+                            {
+                                tileY = interactableLayer[row, col] / 16;
+                                tileX = interactableLayer[row, col] % 16;
+                            }
+                        }
+                        else
+                        {
+                            tileY = interactableLayer[row, col] / 16;
+                            tileX = interactableLayer[row, col] % 16;
+                        }
+
                         //Locate the specified interactable texture
                         Rectangle imageLocal = new Rectangle(tileX * TILESIZE, tileY * TILESIZE, TILESIZE, TILESIZE);
 
@@ -392,7 +417,7 @@ namespace Once_A_Rogue
                         if (tileTag == 82 || (tileTag >= 85 && tileTag < 89))
                         {
                             //It is a spawn tile, so create a new spawn tile interactable
-                            finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Spawn", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, false);
 
                             //Spawn tile interactables need to be assigned a subtype
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
@@ -403,7 +428,7 @@ namespace Once_A_Rogue
                         else if(tileTag >= 96 && tileTag < 104)
                         {
                             //It is a post tile, so create a new post interactable
-                            finalRoomAnnex[row, col].Interactable = new Interactable("Post", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+                            finalRoomAnnex[row, col].Interactable = new Interactable("Post", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, false);
 
                             //Post tiles need to be assigned a subtype
                             finalRoomAnnex[row, col].Interactable.AssignSubType(tileTag);
@@ -419,7 +444,7 @@ namespace Once_A_Rogue
                         else if(tileTag == 84)
                         {
                             //It is a checkpoint, so create a new checkpoint interactable
-                            finalRoomAnnex[row, col].Interactable = new Interactable("CheckPoint", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, true);
+                            finalRoomAnnex[row, col].Interactable = new Interactable("CheckPoint", finalRoomAnnex[row, col].RelativeLocation, imageLocal, true, false, false);
 
                             //Add it to the room's list of checkpoints
                             checkPoints.Add(finalRoomAnnex[row, col]);

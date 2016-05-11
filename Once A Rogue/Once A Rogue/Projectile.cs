@@ -151,15 +151,16 @@ namespace Once_A_Rogue
 
             timeElapsed += gameTime.ElapsedGameTime.Milliseconds;
             framesElapsed = (int)(timeElapsed / timePerFrame);
-            currentFrame = framesElapsed % numFrames + 1;
+            currentFrame = framesElapsed % numFrames;
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
             //spriteBatch.Draw(Texture, PosRect, Color.White);
+            
 
-            Rectangle frame = new Rectangle(currentFrame * FRAMEWIDTH, FRAMEHEIGHT * rowY, FRAMEWIDTH, FRAMEHEIGHT);
-            spriteBatch.Draw(texture, projPos, frame, Color.White);
+            Rectangle frame = new Rectangle(currentFrame * FRAMEWIDTH, FRAMEHEIGHT * rowY, FRAMEWIDTH, FRAMEHEIGHT - 1);
+            spriteBatch.Draw(texture, PosRect, frame, Color.White, (float) Math.Atan2(vector.Y, vector.X), Vector2.Zero, SpriteEffects.None, 1);
         }
 
         public void OnCollision(Character target)
