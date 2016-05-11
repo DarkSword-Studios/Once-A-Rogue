@@ -64,7 +64,7 @@ namespace Once_A_Rogue
                             {
                                 player.PlayerStates = Player.PlayerState.AttackLeft;
                                 player.CurrMana -= Cost;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, stickInput, 0, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 10, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, stickInput, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 10, false));
                             }
 
                             if (stickInput.X > 0)
@@ -82,7 +82,7 @@ namespace Once_A_Rogue
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)
                     {
                         //Create a vector between the player and the mouse
-                        Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+                        Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
 
                         //If the vector is not zero
                         if (target != Vector2.Zero)
