@@ -51,7 +51,7 @@ namespace Once_A_Rogue
                             if (stickInput.X < 0)
                             {
                                 player.PlayerStates = Player.PlayerState.AttackLeft;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 5, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 5, false));
                             }
 
                             if (stickInput.X > 0)
@@ -68,7 +68,7 @@ namespace Once_A_Rogue
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)
                     {
                         //Create a vector between the player and the mouse
-                        Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+                        Vector2 target = new Vector2(ms.X, ms.Y) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
 
                         //If the vector is not zero
                         if (target != Vector2.Zero)
@@ -78,7 +78,7 @@ namespace Once_A_Rogue
                         }
 
                         //Add the projectile to the list
-                        Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 10, 10, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 5, false));
+                        Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 5, false));
                     }
 
                     else
@@ -111,7 +111,7 @@ namespace Once_A_Rogue
                 if (enemy.player.PosX <= enemy.PosX)
                 {
                     //Create a vector between the player and the mouse
-                    Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX - 40, enemy.PosY + enemy.PosRect.Height / 2);
+                    Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX - 10, enemy.PosY + enemy.PosRect.Height / 2);
 
                     //If the vector is not zero
                     if (target != Vector2.Zero)
@@ -125,13 +125,13 @@ namespace Once_A_Rogue
                         return;
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX - 40, enemy.PosY + enemy.PosRect.Height / 2, 5, true));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX - 10, enemy.PosY + enemy.PosRect.Height / 2, 5, true));
                 }
 
                 else
                 {
                     //Create a vector between the player and the mouse
-                    Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX - 40, enemy.PosY + enemy.PosRect.Height / 2);
+                    Vector2 target = new Vector2(enemy.player.PosX + (enemy.player.PosRect.Width / 2), enemy.player.PosY + (enemy.player.PosRect.Height / 2)) - new Vector2(enemy.PosX - 10, enemy.PosY + enemy.PosRect.Height / 2);
 
                     //If the vector is not zero
                     if (target != Vector2.Zero)

@@ -355,10 +355,10 @@ namespace Once_A_Rogue
                 CurrSkill.OnActivated();
             }
 
-            else if(CurrSkill.Name == "Swing" && gPadState.IsButtonDown(Buttons.A))
-            {
-                CurrSkill.OnActivated();
-            }
+            //else if(CurrSkill.Name == "Swing" && gPadState.IsButtonDown(Buttons.A))
+            //{
+            //    CurrSkill.OnActivated();
+            //}
 
             if (PosY > (roomHeight - PosRect.Height - 120))
             {

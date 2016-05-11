@@ -92,7 +92,7 @@ namespace Once_A_Rogue
                         {
                             if (player.PlayerStates == Player.PlayerState.AttackLeft)
                             {
-                                Vector2 target = new Vector2(player.PosX - (RangeX * 120), player.PosY) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+                                Vector2 target = new Vector2(player.PosX - (RangeX * 120), player.PosY) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
 
                                 //If the vector is not zero
                                 if (target != Vector2.Zero)
@@ -109,7 +109,7 @@ namespace Once_A_Rogue
                                 vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
 
                                 //Add the projectile to the list
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 10, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 10, false));
                             }
 
                             if (stickInput.X > 0 || (player.PlayerStates == Player.PlayerState.AttackRight && gPadState.IsButtonDown(Buttons.A)))
@@ -141,7 +141,7 @@ namespace Once_A_Rogue
                     if (player.PlayerStates == Player.PlayerState.AttackLeft)
                     {
                         //Create a vector between the player and the position 120 units to the left
-                        Vector2 target = new Vector2(player.PosX - (RangeX * 120), player.PosY) - new Vector2(player.PosX - 40, player.PosY + player.PosRect.Height / 2);
+                        Vector2 target = new Vector2(player.PosX - (RangeX * 120), player.PosY) - new Vector2(player.PosX - 10, player.PosY + player.PosRect.Height / 2);
 
                         //If the vector is not zero
                         if (target != Vector2.Zero)
@@ -158,7 +158,7 @@ namespace Once_A_Rogue
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) + (60 * RangeY);
 
                         //Add the projectile to the list
-                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 40, player.PosY + player.PosRect.Height / 2, 10, false));
+                        Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, vectorLength, 0, 7, 40, 40, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 10, false));
                     }
 
                     else
