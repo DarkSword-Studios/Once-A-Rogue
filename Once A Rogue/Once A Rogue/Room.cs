@@ -942,7 +942,7 @@ namespace Once_A_Rogue
         }
 
         //This method will call the room's private unlock method if the conditions are met
-        public void RequestUnlock(Player player, Camera camera)
+        public Boolean RequestUnlock(Player player, Camera camera)
         {
             //Put room clearing code here... e.g. have all of the enemies been killed yet?
             
@@ -950,17 +950,18 @@ namespace Once_A_Rogue
             if(enemyList.Count == 0)
             {
                 //Call the room's private unlock method
-                Unlock(player, camera);
+                return Unlock(player, camera);
             }
+            return false;
             
         }
         //This method handles actually unlocking the room
-        private void Unlock(Player player, Camera camera)
+        private Boolean Unlock(Player player, Camera camera)
         {
             //If the room is currently locking, unlocking, or is unlocked, ignore redundant / illegal calls
             if(isLocking || !locked || isUnlocking)
             {
-                return;
+                return false;
             }
             //The room is now unlocking
             isUnlocking = true;
@@ -993,6 +994,8 @@ namespace Once_A_Rogue
                 //Let the player know they have cleared the room (by creating a new alert)
                 Notification.Alert("Room Cleared!", Color.Green, 60, false);
             }
+
+            return true;
             
         }
 

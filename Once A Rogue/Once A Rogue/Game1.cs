@@ -131,10 +131,14 @@ namespace Once_A_Rogue
         //Level builder to create and connect rooms
         LevelBuilder builderAlpha;
 
+        //Bool for music switch
+        Boolean musicTransition = false;
+        string oldSong = "";
+
         Cursor cur;
 
         //Songs for music
-        Song mainMusic, bossMusic, transientLoop;
+        Song mainMusic, bossMusic, transientLoop, castleTheme, oasis, battleTheme;
 
         //Keep track of current song
         string currentSong;
@@ -312,6 +316,9 @@ namespace Once_A_Rogue
             mainMusic = Content.Load<Song>("Music/A Hero is Born.wav");
             bossMusic = Content.Load<Song>("Music/RogueRequiem.wav");
             transientLoop = Content.Load<Song>("Music/Transient Loop.wav");
+            castleTheme = Content.Load<Song>("Music/Castle Theme.wav");
+            oasis = Content.Load<Song>("Music/Oasis2.wav");
+            battleTheme = Content.Load<Song>("Music/BattleTheme.wav");
             MediaPlayer.Play(mainMusic);
             MediaPlayer.Volume = (float)(MediaPlayer.Volume * .40);
             MediaPlayer.IsRepeating = true;
@@ -458,7 +465,12 @@ namespace Once_A_Rogue
                     {
                         gameState = GameState.Playing;
                         CurrProjectiles.Clear();
-                        NewLevelGen(true);
+                        MediaPlayer.Play(castleTheme);
+                        MediaPlayer.Volume = 0.4f;
+                        currentSong = "CastleTheme";
+                        oldSong = currentSong;
+                        MediaPlayer.IsRepeating = false;
+                        NewLevelGen(true);     
                     }
                 }       
             }
@@ -473,6 +485,22 @@ namespace Once_A_Rogue
                 {
                     transitionToGame = false;
                 }
+                if (!musicTransition & activeRoom != null)
+                {
+                    if(activeRoom.enemyList.Count != 0 && !activeRoom.Boss)
+                    {
+                        UpdateSongBattle();
+                    }
+                    else if(activeRoom.enemyList.Count == 0)
+                    {
+                        UpdateSongPassive(gameTime);
+                    }
+                }
+                else if(activeRoom != null)
+                {
+                    SongTransition();
+                }
+                
 
                 //Extremely important call to update all active rooms
                 UpdateRooms(gameTime);
@@ -676,6 +704,13 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.Context)
             {
+                if(currentSong != "Oasis")
+                {
+                    MediaPlayer.Play(oasis);
+                    MediaPlayer.IsRepeating = true;
+                    currentSong = "Oasis";
+                }
+
                 if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Keys.Escape))
                 {
                     if (readingNote)
@@ -1207,6 +1242,7 @@ namespace Once_A_Rogue
                             //If there are spawn points left in the room
                             while (levelAnnex[columnIndex, rowIndex].spawnTiles.Count != 0)
                             {
+                                musicTransition = true;
                                 //Spawn a goblin on that tile (The default enemy for now)
                                 levelAnnex[columnIndex, rowIndex].SpawnGoblin(player, goblinEnemy, camera);
                                 System.Threading.Thread.Sleep(1);
@@ -1220,7 +1256,10 @@ namespace Once_A_Rogue
                                 bossSpawned = true;
                             }
 
-                            levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera);
+                            if(levelAnnex[columnIndex, rowIndex].RequestUnlock(player, camera))
+                            {
+                                musicTransition = true;
+                            }
 
                             //Two birds with one stone; update collisions check and adjust active rooms if necessary
                             //Cannot run check if the frame is shifting
@@ -1256,11 +1295,11 @@ namespace Once_A_Rogue
                                     currentSong = "bossMusic";
                                 }
 
-                                else if (!levelAnnex[columnIndex, rowIndex].Boss && currentSong != "mainMusic")
-                                {
-                                    MediaPlayer.Play(mainMusic);
-                                    currentSong = "mainMusic";
-                                }
+                                //else if (!levelAnnex[columnIndex, rowIndex].Boss && currentSong != "mainMusic")
+                                //{
+                                //    MediaPlayer.Play(mainMusic);
+                                //    currentSong = "mainMusic";
+                                //}
 
                                 if(levelAnnex[columnIndex, rowIndex].LevelTrigger)
                                 {
@@ -1510,6 +1549,63 @@ namespace Once_A_Rogue
             {
                 //Initializing the player
                 player = new Player((SCREEN_WIDTH / 2) - 110, (SCREEN_HEIGHT / 2) - 110, 110, 110);
+            }
+        }
+        public void UpdateSongPassive(GameTime gameTime)
+        {
+            timer += gameTime.ElapsedGameTime.Milliseconds;
+            if (currentSong == "CastleTheme" && timer > 140000)
+            {
+                timer = 0;
+                MediaPlayer.Play(transientLoop);
+                currentSong = "TransientLoop";
+                oldSong = "TransientLoop";
+            }
+            else if (currentSong == "TransientLoop" && timer > 222000)
+            {
+                timer = 0;
+                MediaPlayer.Play(castleTheme);
+                currentSong = "CastleTheme";
+                oldSong = "CastleTheme";
+            }
+
+            if(currentSong == "BattleTheme" || currentSong == "Oasis")
+            {
+                if(oldSong == "CastleTheme")
+                {
+                    MediaPlayer.IsRepeating = false;
+                    MediaPlayer.Play(castleTheme);
+                    currentSong = "CastleTheme";
+                }
+                else if(oldSong == "TransientLoop")
+                {
+                    MediaPlayer.IsRepeating = false;
+                    MediaPlayer.Play(transientLoop);
+                    currentSong = "TransientLoop";
+                }
+                
+            }
+        }
+        public void UpdateSongBattle()
+        {
+            if(currentSong != "BattleTheme")
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(battleTheme);
+                currentSong = "BattleTheme";
+            }
+        }
+
+        public void SongTransition()
+        {
+            if (MediaPlayer.Volume > 0)
+            {
+                MediaPlayer.Volume -= (float)0.01;
+            }
+            else
+            {
+                MediaPlayer.Volume = 0.4f;
+                musicTransition = false;
             }
         }
     }
