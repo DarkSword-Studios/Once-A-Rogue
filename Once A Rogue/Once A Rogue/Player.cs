@@ -257,8 +257,24 @@ namespace Once_A_Rogue
                     if(kbs.IsKeyUp(Keys.W) && kbs.IsKeyUp(Keys.A) && kbs.IsKeyUp(Keys.S) && kbs.IsKeyUp(Keys.D))
                     {
                         leftStickInput.Normalize();
-                        PosX += (int)(leftStickInput.X * MoveSpeed);
-                        PosY += (int)(leftStickInput.Y * MoveSpeed);
+                        if(leftStickInput.X > deadZone)
+                        {
+                            PosX += MoveSpeed;
+                        }
+                        if(leftStickInput.X <= -deadZone)
+                        {
+                            PosX -= MoveSpeed;
+                        }
+
+                        if (leftStickInput.Y > deadZone)
+                        {
+                            PosY += MoveSpeed;
+                        }
+
+                        if (leftStickInput.Y <= -deadZone)
+                        {
+                            PosY -= MoveSpeed;
+                        }
                     }
                 }
             }
