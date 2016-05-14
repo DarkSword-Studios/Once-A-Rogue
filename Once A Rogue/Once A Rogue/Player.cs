@@ -159,6 +159,28 @@ namespace Once_A_Rogue
         public Vector2 leftStickInput;
         public float deadZone;
 
+        private Rectangle hitBox;
+
+        public Rectangle HitBox
+        {
+            get { return hitBox; }
+            set { hitBox = value; }
+        }
+
+        public int HitBoxX
+        {
+            get { return hitBox.X; }
+            set { hitBox.X = value; }
+        }
+
+        public int HitBoxY
+        {
+            get { return hitBox.Y; }
+            set { hitBox.Y = value; }
+        }
+
+
+
         public Player(int x, int y, int width, int height)
         {
             Level = 1;
@@ -205,6 +227,7 @@ namespace Once_A_Rogue
             ManaRegen = 1;
             timePassed = 0;
             PosRect = new Rectangle(x, y, width, height);
+            HitBox = new Rectangle(x + 20, y + 30, width - 60, height - 40);
             currWeapon = weaponArray[0];
             currSkillList = warriorSkillList;
             CurrSkill = currSkillList[0];
@@ -260,20 +283,24 @@ namespace Once_A_Rogue
                         if(leftStickInput.X > deadZone)
                         {
                             PosX += MoveSpeed;
+                            HitBoxX += MoveSpeed;
                         }
                         if(leftStickInput.X <= -deadZone)
                         {
                             PosX -= MoveSpeed;
+                            HitBoxX -= MoveSpeed;
                         }
 
                         if (leftStickInput.Y > deadZone)
                         {
                             PosY += MoveSpeed;
+                            HitBoxY += MoveSpeed;
                         }
 
                         if (leftStickInput.Y <= -deadZone)
                         {
                             PosY -= MoveSpeed;
+                            HitBoxY -= MoveSpeed;
                         }
                     }
                 }
@@ -286,18 +313,23 @@ namespace Once_A_Rogue
             if (kbs.IsKeyDown(Keys.A))
             {
                 PosX -= MoveSpeed;
+                HitBoxX -= MoveSpeed;
+
                 playerState = PlayerState.WalkingLeft;
             }
 
             if (kbs.IsKeyDown(Keys.D))
             {
                 PosX += MoveSpeed;
+                HitBoxX += MoveSpeed;
+
                 playerState = PlayerState.WalkingRight;
             }
 
             if (kbs.IsKeyDown(Keys.S))
             {
                 PosY += MoveSpeed;
+                HitBoxY += MoveSpeed;
 
                 if (playerState == PlayerState.IdleRight)
                 {
@@ -312,6 +344,7 @@ namespace Once_A_Rogue
             if (kbs.IsKeyDown(Keys.W))
             {
                 PosY -= MoveSpeed;
+                HitBoxY -= MoveSpeed;
 
                 if (playerState == PlayerState.IdleRight)
                 {
@@ -378,6 +411,16 @@ namespace Once_A_Rogue
             if (PosX < 80)
             {
                 PosX = 80;
+            }
+
+            if (playerState == PlayerState.AttackLeft || playerState == PlayerState.IdleLeft || playerState == PlayerState.WalkingLeft)
+            {
+                HitBox = new Rectangle(PosX + 40, PosY + 30, PosRect.Width - 60, PosRect.Height - 40);
+            }
+
+            else
+            {
+                HitBox = new Rectangle(PosX + 20, PosY + 30, PosRect.Width - 60, PosRect.Height - 40);
             }
 
             //Weapon switching
@@ -661,6 +704,8 @@ namespace Once_A_Rogue
                     spritebatch.Draw(texture, PosRect, frame, color);
                     break;
             }
+
+            spritebatch.Draw(texture, HitBox, color);
         }
         //This method handles updating the player's frame based on gametime
         public void UpdateFrame(GameTime gameTime)
@@ -712,11 +757,14 @@ namespace Once_A_Rogue
                         if (cam.progress <= (1080 / 2))
                         {
                             PosX -= cam.panSpeed - 5;
+                            HitBoxX -= cam.panSpeed - 5;
                         }
 
                         if (cam.progress > (1080 / 2))
                         {
                             PosX -= cam.panSpeed;
+                            HitBoxX -= cam.panSpeed;
+
                             playerState = PlayerState.IdleRight;
                         }
                         break;
@@ -725,11 +773,13 @@ namespace Once_A_Rogue
                         if (cam.progress <= (1080 / 2))
                         {
                             PosX += cam.panSpeed - 5;
+                            HitBoxX += cam.panSpeed - 5;
                         }
 
                         if (cam.progress > (1080 / 2))
                         {
                             PosX += cam.panSpeed;
+                            HitBoxX += cam.panSpeed;
                             playerState = PlayerState.IdleLeft;
                         }
                         break;
@@ -738,11 +788,14 @@ namespace Once_A_Rogue
                         if (cam.progress <= (1920 / 2))
                         {
                             PosY -= cam.panSpeed - 3;
+                            HitBoxY -= cam.panSpeed - 3;
                         }
 
                         if (cam.progress > (1920 / 2))
                         {
                             PosY -= cam.panSpeed;
+                            HitBoxY -= cam.panSpeed;
+
                             if (playerState == PlayerState.WalkingLeft)
                             {
                                 playerState = PlayerState.IdleLeft;
@@ -758,11 +811,14 @@ namespace Once_A_Rogue
                         if (cam.progress <= (1920 / 2))
                         {
                             PosY += cam.panSpeed - 3;
+                            HitBoxY += cam.panSpeed - 3;
                         }
 
                         if (cam.progress > (1920 / 2))
                         {
                             PosY += cam.panSpeed;
+                            HitBoxY += cam.panSpeed;
+
                             if (playerState == PlayerState.WalkingLeft)
                             {
                                 playerState = PlayerState.IdleLeft;

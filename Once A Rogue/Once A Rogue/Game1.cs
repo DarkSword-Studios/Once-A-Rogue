@@ -595,7 +595,7 @@ namespace Once_A_Rogue
                             removeProj.Add(project);
                         }
 
-                        if (project.PosRect.Intersects(player.PosRect) && project.Owner != player)
+                        if (project.PosRect.Intersects(player.HitBox) && project.Owner != player)
                         {
                             project.OnCollision(player);
                         }
