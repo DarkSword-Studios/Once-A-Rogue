@@ -597,7 +597,20 @@ namespace Once_A_Rogue
 
                         if (project.PosRect.Intersects(player.HitBox) && project.Owner != player)
                         {
-                            project.OnCollision(player);
+                            if((project.PosX + project.PosRect.Width <= player.HitBoxX + 20 && player.IsBlocking && player.Direction == "left") || (project.PosX >= (player.HitBoxX - player.HitBox.Width) + 20 && player.IsBlocking && player.Direction == "right"))
+                            {
+                                project.Damage = project.Damage - player.BlockAmount;
+                                if(project.Damage < 0)
+                                {
+                                    project.Damage = 0;
+                                }
+
+                                project.OnCollision(player);
+                            }
+                            else
+                            {
+                                project.OnCollision(player);
+                            }
                         }
 
                         foreach (Interactable interact in activeRoom.interactables)
