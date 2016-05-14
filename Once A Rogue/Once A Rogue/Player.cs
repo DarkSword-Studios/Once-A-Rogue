@@ -155,10 +155,13 @@ namespace Once_A_Rogue
             set { playerState = value; }
         }
 
+        //Gamepad variables
         public Vector2 rightStickInput;
         public Vector2 leftStickInput;
         public float deadZone;
 
+
+        //Creating a hitbox rectangle
         private Rectangle hitBox;
 
         public Rectangle HitBox
