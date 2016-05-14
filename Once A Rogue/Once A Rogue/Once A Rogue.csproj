@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Alert.cs" />
     <Compile Include="Atmosphere.cs" />
+    <Compile Include="Block.cs" />
     <Compile Include="Boss.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />

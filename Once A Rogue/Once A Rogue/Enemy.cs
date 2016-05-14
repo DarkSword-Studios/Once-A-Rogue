@@ -624,7 +624,7 @@ namespace Once_A_Rogue
                 distanceTrav += Math.Sqrt(Math.Pow((int)(target.X * MoveSpeed), 2) + Math.Pow((int)(target.Y * MoveSpeed), 2));
 
 
-                if(PosRect.Intersects(player.PosRect) && !hasHit)
+                if(PosRect.Intersects(player.HitBox) && !hasHit)
                 {
                     player.CurrHealth -= SkillList[0].Damage;
                     hasHit = true;
