@@ -182,6 +182,32 @@ namespace Once_A_Rogue
             set { hitBox.Y = value; }
         }
 
+        //Block variables
+        private bool isBlocking;
+
+        public bool IsBlocking
+        {
+            get { return isBlocking; }
+            set { isBlocking = value; }
+        }
+
+        private int blockAmt;
+
+        public int BlockAmount
+        {
+            get { return blockAmt; }
+            set { blockAmt = value; }
+        }
+
+        int costTimer;
+
+        private string direction;
+
+        public string Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
 
 
         public Player(int x, int y, int width, int height)
@@ -201,6 +227,7 @@ namespace Once_A_Rogue
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
 
+            warriorSkillList.Add(new Block(this));
             rangerSkillList.Add(new StandardShot(4, this));
             rangerSkillList.Add(new PiercingShot(6, this));
             rogueSkillList.Add(new FanOfKnives(6, this));
@@ -228,7 +255,9 @@ namespace Once_A_Rogue
             CurrMana = 100;
             CurrHealth = 100;
             ManaRegen = 1;
+            BlockAmount = 3;
             timePassed = 0;
+            costTimer = 0;
             PosRect = new Rectangle(x, y, width, height);
             HitBox = new Rectangle(x + 20, y + 30, width - 60, height - 40);
             currWeapon = weaponArray[0];
@@ -236,6 +265,8 @@ namespace Once_A_Rogue
             CurrSkill = currSkillList[0];
             currentFrame = 0;
             skillIndex = 0;
+            Direction = "right";
+            IsBlocking = false;
         }
 
         //Method for processing user input
@@ -419,11 +450,13 @@ namespace Once_A_Rogue
             if (playerState == PlayerState.AttackLeft || playerState == PlayerState.IdleLeft || playerState == PlayerState.WalkingLeft)
             {
                 HitBox = new Rectangle(PosX + 40, PosY + 30, PosRect.Width - 60, PosRect.Height - 40);
+                Direction = "left";
             }
 
             else
             {
                 HitBox = new Rectangle(PosX + 20, PosY + 30, PosRect.Width - 60, PosRect.Height - 40);
+                Direction = "right";
             }
 
             //Weapon switching
@@ -708,7 +741,10 @@ namespace Once_A_Rogue
                     break;
             }
 
-            spritebatch.Draw(texture, HitBox, color);
+            if(IsBlocking)
+            {
+                spritebatch.Draw(texture, HitBox, color);
+            }
         }
         //This method handles updating the player's frame based on gametime
         public void UpdateFrame(GameTime gameTime)
@@ -724,6 +760,7 @@ namespace Once_A_Rogue
             base.Update(gameTime);
 
             timePassed += gameTime.ElapsedGameTime.Milliseconds;
+            costTimer += gameTime.ElapsedGameTime.Milliseconds;
 
             if (CurrMana < TotalMana && timePassed >= 300)
             {
@@ -731,7 +768,18 @@ namespace Once_A_Rogue
                 timePassed = 0;
             }
 
-            if(Souls > SoulsNeeded)
+            if(IsBlocking && CurrMana < 3)
+            {
+                IsBlocking = false;
+            }
+
+            if (IsBlocking && costTimer >= 300)
+            {
+                CurrMana -= 2;
+                costTimer = 0;
+            }
+
+            if (Souls > SoulsNeeded)
             {
                 LevelUp();
             }
