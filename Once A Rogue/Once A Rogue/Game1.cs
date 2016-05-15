@@ -1096,7 +1096,7 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(contextSkill, new Vector2(0, 0), Color.White);
                     spriteBatch.Draw(loreSwitch, new Vector2(313, 474), Color.White);
-                    skillTree.DrawButtons(spriteBatch, alertText, 4, 600, 200);
+                    skillTree.DrawButtons(spriteBatch, alertText, 6, 600, 200);
                     spriteBatch.DrawString(alertText, "Skill Points To Spend: " + player.SkillPoints, new Vector2(600, 80), Color.White);
                 }
                 if(contextState == ContextState.Lore)
@@ -1688,15 +1688,16 @@ namespace Once_A_Rogue
 
         public void SongTransition()
         {
-            if (MediaPlayer.Volume > 0)
-            {
-                MediaPlayer.Volume -= (float)0.01;
-            }
-            else
-            {
-                MediaPlayer.Volume = 0.4f;
-                musicTransition = false;
-            }
+            //if (MediaPlayer.Volume > 0)
+            //{
+            //    MediaPlayer.Volume -= (float)0.01;
+            //}
+            //else
+            //{
+            //    MediaPlayer.Volume = 0.4f;
+            //    musicTransition = false;
+            //}
+            musicTransition = false;
         }
 
         public void SetupSkillTree()
