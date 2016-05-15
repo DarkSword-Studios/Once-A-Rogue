@@ -1719,6 +1719,10 @@ namespace Once_A_Rogue
             Button healthRegenRate2 = skillTree.Insert("Health Regen Rate 2", "healthRegenRate", 40, healthRegenRate1, player, whiteSlate);
 
             Button basicMage = skillTree.Insert("Basic Mage Abilities", "mage", 0, root, player, whiteSlate);
+            Button manaIncrease1 = skillTree.Insert("Max Mana Increase 1", "mana", 50, basicMage, player, whiteSlate);
+            Button manaIncrease2 = skillTree.Insert("Max Mana Increase 2", "mana", 50, manaIncrease1, player, whiteSlate);
+            Button manaRegen1 = skillTree.Insert("Mana Regen 1", "manaRegen", 1, basicMage, player, whiteSlate);
+            Button manaRegen2 = skillTree.Insert("Mana Regen 2", "manaRegen", 1, manaRegen1, player, whiteSlate);
 
             Button basicRanger = skillTree.Insert("Basic Ranger Abilities", "ranger", 0, root, player, whiteSlate);
         }

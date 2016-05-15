@@ -242,7 +242,7 @@ namespace Once_A_Rogue
         {
             Level = 1;
             SoulsNeeded = 1000;
-            SkillPoints = 1;
+            SkillPoints = 4;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();

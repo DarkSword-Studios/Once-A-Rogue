@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Graphics; //Needed for drawing tiles
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
@@ -41,6 +42,12 @@ namespace Once_A_Rogue
             set { parents = value; }
         }
 
+        public string Tag
+        {
+            get { return tag; }
+            set { tag = value; }
+        }
+
         //constructor sets the stuff 
         public Button(Button parent, Player pl, string description, string tag, int mod, Texture2D texture)
         {
@@ -50,7 +57,7 @@ namespace Once_A_Rogue
             parents = new List<Button>();
             parents.Add(parent);
             isBought = false;
-            this.tag = tag;
+            Tag = tag;
             this.description = description;
             this.mod = mod;
         }
@@ -68,7 +75,7 @@ namespace Once_A_Rogue
             }
             if (allBought || parents.Count == 0)
             {
-                if (tag == "damage")
+                if (Tag == "damage")
                 {
                     switch (skillList)
                     {
@@ -93,7 +100,7 @@ namespace Once_A_Rogue
 
 
                 //add tag and speed to skills
-                if (tag == "cooldown")
+                if (Tag == "cooldown")
                 {
                     switch (skillList)
                     {
@@ -131,61 +138,61 @@ namespace Once_A_Rogue
             }
             if (allBought || parents.Count == 0)
             {
-                if (tag == "health")
+                if (Tag == "health")
                 {
                     player.TotalHealth += mod;
                     player.CurrHealth = player.TotalHealth;
                 }
 
-                if (tag == "healthRegen")
+                if (Tag == "healthRegen")
                 {
                     player.HealthRegen += mod;
                 }
 
-                if (tag == "healthRegenRate")
+                if (Tag == "healthRegenRate")
                 {
                     player.HealthRegenRate -= mod;
                 }
 
-                if (tag == "manaRegen")
+                if (Tag == "manaRegen")
                 {
                     player.ManaRegen += mod;
                 }
 
-                if (tag == "manaRegenRate")
+                if (Tag == "manaRegenRate")
                 {
                     player.ManaRegenRate -= mod;
                 }
 
-                if (tag == "mana")
+                if (Tag == "mana")
                 {
                     player.TotalMana += mod;
                     player.CurrMana = player.TotalMana;
                 }
 
-                if (tag == "move")
+                if (Tag == "move")
                 {
                     player.MoveSpeedTotal += mod;
                     player.MoveSpeed = player.MoveSpeedTotal;
                 }
 
-                if (tag == "mage")
+                if (Tag == "mage")
                 {
                     player.mageSkillList.Add(new Fireball(4, player));
                     player.mageSkillList.Add(new OilThrow(player));
                 }
 
-                if (tag == "ranger")
+                if (Tag == "ranger")
                 {
                     player.rangerSkillList.Add(new PiercingShot(6, player));
                 }
 
-                if (tag == "rogue")
+                if (Tag == "rogue")
                 {
                     player.rogueSkillList.Add(new FanOfKnives(6, player));
                 }
 
-                if (tag == "warrior")
+                if (Tag == "warrior")
                 {
                     player.warriorSkillList.Add(new Block(player));
                 }
