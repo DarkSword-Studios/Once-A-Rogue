@@ -60,6 +60,7 @@ namespace Once_A_Rogue
         int numRooms;
 
         SkillTree skillTree;
+        Boolean released = true;
 
         //Lore tracking
         int loreIndex;
@@ -332,13 +333,6 @@ namespace Once_A_Rogue
             MediaPlayer.IsRepeating = true;
 
             currentSong = "mainMusic";
-
-            Button speed1 = new Button(player, "Increase Speed 1", whiteSlate);
-            skillTree = new SkillTree(speed1);
-            Button speed2 = skillTree.Insert("Increase Speed 2", speed1, player, whiteSlate);
-            Button speed3 = skillTree.Insert("Increase Speed 3", speed2, player, whiteSlate);
-            skillTree.Insert("Increase Speed 4", speed1, player, whiteSlate);
-            skillTree.Insert("Increase Speed 5", speed3, player, whiteSlate);
         }
 
         /// <summary>
@@ -686,11 +680,6 @@ namespace Once_A_Rogue
                 }
                 //---- END OF DEBUG CODE!!!! ----
 
-                mouseState = Mouse.GetState();
-                if (mouseState.LeftButton == ButtonState.Pressed)
-                {
-                    skillTree.UpdateButtons(new Rectangle(mouseState.Position, new Point(1,1)));
-                }
                 
                 //Make sure the notifications are getting updated properly
                 Notification.UpdateAlert();
@@ -764,9 +753,22 @@ namespace Once_A_Rogue
                 {
                     mouseState = Mouse.GetState();
 
+                    if(mouseState.LeftButton == ButtonState.Released)
+                    {
+                        released = true;
+                    }
+
                     if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                     {
                         contextState = ContextState.Lore;
+                    }
+                    else if (mouseState.LeftButton == ButtonState.Pressed && released)
+                    {
+                        if(skillTree.UpdateButtons(player, new Rectangle(mouseState.Position, new Point(1, 1))))
+                        {
+                            released = false;
+                        }
+                        
                     }
                 }
 
@@ -1045,7 +1047,6 @@ namespace Once_A_Rogue
                 {
                     Atmosphere.Darken(spriteBatch, 0, 0);
                 }
-                //skillTree.DrawTree(spriteBatch);
             }
 
             //draws the following if the game is paused
@@ -1094,6 +1095,8 @@ namespace Once_A_Rogue
                 {
                     spriteBatch.Draw(contextSkill, new Vector2(0, 0), Color.White);
                     spriteBatch.Draw(loreSwitch, new Vector2(313, 474), Color.White);
+                    skillTree.DrawButtons(spriteBatch, alertText, 4, 600, 200);
+                    spriteBatch.DrawString(alertText, "Skill Points To Spend: " + player.SkillPoints, new Vector2(600, 80), Color.White);
                 }
                 if(contextState == ContextState.Lore)
                 {
@@ -1633,6 +1636,8 @@ namespace Once_A_Rogue
             {
                 //Initializing the player
                 player = new Player((SCREEN_WIDTH / 2) - 110, (SCREEN_HEIGHT / 2) - 110, 110, 110);
+
+                SetupSkillTree();
             }
         }
         public void UpdateSongPassive(GameTime gameTime)
@@ -1691,6 +1696,26 @@ namespace Once_A_Rogue
                 MediaPlayer.Volume = 0.4f;
                 musicTransition = false;
             }
+        }
+
+        public void SetupSkillTree()
+        {
+            Button root = new Button(null, null, "NULL", "NULL", 0, null);
+            root.isBought = true;
+            skillTree = new SkillTree(root);
+
+
+            Button basicRogue = skillTree.Insert("Basic Rogue Abilities", "None", 0, root, player, whiteSlate);
+            Button speed1 = skillTree.Insert("Increase Speed 1", "move", 5, basicRogue, player, whiteSlate);
+            Button speed2 = skillTree.Insert("Increase Speed 2", "move", 5, speed1, player, whiteSlate);
+            Button speed3 = skillTree.Insert("Increase Speed 3", "move", 5, speed2, player, whiteSlate);
+            skillTree.Insert("Increase Speed 4", "move", 5, speed3, player, whiteSlate);
+
+            Button basicWarrior = skillTree.Insert("Basic Warrior Abilities", "None", 0, root, player, whiteSlate);
+
+            Button basicMage = skillTree.Insert("Basic Mage Abilities", "None", 0, root, player, whiteSlate);
+
+            Button basicRanger = skillTree.Insert("Basic Ranger Abilities", "None", 0, root, player, whiteSlate);
         }
     }
 }

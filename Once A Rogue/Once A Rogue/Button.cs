@@ -14,6 +14,7 @@ namespace Once_A_Rogue
         public bool isBought;
         string tag;
         int mod;
+        public string description;
 
         private Texture2D texture;
 
@@ -41,7 +42,7 @@ namespace Once_A_Rogue
         }
 
         //constructor sets the stuff 
-        public Button(Button parent, Player pl, string s, Texture2D texture)
+        public Button(Button parent, Player pl, string description, string tag, int mod, Texture2D texture)
         {
             player = pl;
             this.texture = texture;
@@ -49,27 +50,9 @@ namespace Once_A_Rogue
             parents = new List<Button>();
             parents.Add(parent);
             isBought = false;
-            tag = s;
-        }
-
-        public Button(List<Button> parents, Player pl, string s, Texture2D texture)
-        {
-            player = pl;
-            this.texture = texture;
-            children = new List<Button>();
-            this.parents = parents;
-            isBought = false;
-            tag = s;
-        }
-
-        public Button(Player pl, string s, Texture2D texture)
-        {
-            this.texture = texture;
-            player = pl;
-            children = new List<Button>();
-            parents = new List<Button>();
-            isBought = false;
-            tag = s;
+            this.tag = tag;
+            this.description = description;
+            this.mod = mod;
         }
 
         //modifies an ability
@@ -141,7 +124,7 @@ namespace Once_A_Rogue
             Boolean allBought = true;
             foreach (Button parent in parents)
             {
-                if (!parent.isBought)
+                if (parent != null && !parent.isBought)
                 {
                     allBought = false;
                 }
@@ -163,6 +146,7 @@ namespace Once_A_Rogue
                 if (tag == "move")
                 {
                     player.MoveSpeedTotal += mod;
+                    player.MoveSpeed = player.MoveSpeedTotal;
                 }
 
                 if (tag == "fireball")

@@ -214,7 +214,7 @@ namespace Once_A_Rogue
         {
             Level = 1;
             SoulsNeeded = 1000;
-            SkillPoints = 0;
+            SkillPoints = 4;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
@@ -946,7 +946,7 @@ namespace Once_A_Rogue
             CurrHealth = TotalHealth;
             TotalMana += 10;
             CurrMana = TotalMana;
-            SkillPoints++;
+            SkillPoints += 2;
         }
     }
 }
