@@ -59,6 +59,8 @@ namespace Once_A_Rogue
         //Declare a number of rooms for a level
         int numRooms;
 
+        SkillTree skillTree;
+
         //Lore tracking
         int loreIndex;
         int buffer = 15;
@@ -330,6 +332,13 @@ namespace Once_A_Rogue
             MediaPlayer.IsRepeating = true;
 
             currentSong = "mainMusic";
+
+            Button speed1 = new Button(player, "Increase Speed 1", whiteSlate);
+            skillTree = new SkillTree(speed1);
+            Button speed2 = skillTree.Insert("Increase Speed 2", speed1, player, whiteSlate);
+            Button speed3 = skillTree.Insert("Increase Speed 3", speed2, player, whiteSlate);
+            skillTree.Insert("Increase Speed 4", speed1, player, whiteSlate);
+            skillTree.Insert("Increase Speed 5", speed3, player, whiteSlate);
         }
 
         /// <summary>
@@ -676,6 +685,12 @@ namespace Once_A_Rogue
                     unlockRoom = true;
                 }
                 //---- END OF DEBUG CODE!!!! ----
+
+                mouseState = Mouse.GetState();
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    skillTree.UpdateButtons(new Rectangle(mouseState.Position, new Point(1,1)));
+                }
                 
                 //Make sure the notifications are getting updated properly
                 Notification.UpdateAlert();
@@ -1030,7 +1045,7 @@ namespace Once_A_Rogue
                 {
                     Atmosphere.Darken(spriteBatch, 0, 0);
                 }
-       
+                //skillTree.DrawTree(spriteBatch);
             }
 
             //draws the following if the game is paused
@@ -1283,6 +1298,22 @@ namespace Once_A_Rogue
                                 foreach (Enemy enemy in activeRoom.enemyList)
                                 {
                                     enemy.Update(gameTime, player);
+
+                                    if (enemy.pathFinding)
+                                    {
+                                        foreach (Enemy enemy2 in activeRoom.enemyList)
+                                        {
+                                            if (!enemy.Equals(enemy2) && enemy.PosRect.Intersects(enemy2.PosRect) && !enemy2.slowed)
+                                            {
+                                                if (!enemy.slowed)
+                                                {
+                                                    enemy.distanceSlowed = 10;
+                                                    enemy.MoveSpeed = 1;
+                                                    enemy.slowed = true;
+                                                }
+                                            }
+                                        }
+                                    }                                                                      
                                 }
                             }
 
@@ -1432,15 +1463,15 @@ namespace Once_A_Rogue
                                     {
                                         if (enemy.PosX % 120 != 0 || enemy.PosY % 120 != 0)
                                         {
-                                            enemy.UpdatePathPosition();
+                                            enemy.UpdatePathPosition(); 
+                                        }
 
-                                            if(enemy.PosX % 120 == 0 && enemy.PosY % 120 == 0)
-                                            {
-                                                enemy.pathFinding = true;
-                                                enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
-                                                enemy.pathIndex = -1;
-                                            }
-                                        }                    
+                                        if (enemy.PosX % 120 == 0 && enemy.PosY % 120 == 0)
+                                        {
+                                            enemy.pathFinding = true;
+                                            enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                            enemy.pathIndex = -1;
+                                        }
                                     }
                                     else if(enemy.path != null && enemy.path.Count > 0)
                                     {

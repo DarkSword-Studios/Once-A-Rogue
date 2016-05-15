@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics; //Needed for drawing tiles
+using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
 {
     class SkillTree
     {
         private Button rootButton;
-          
+
+        private Dictionary<int, int> layerDepth;  
+
         public Button RootButton
         {
             get { return rootButton; }
@@ -17,36 +21,92 @@ namespace Once_A_Rogue
 
         public SkillTree(Button butt)
         {
+            layerDepth = new Dictionary<int, int>();
             rootButton = butt;
         }
 
-        public void Insert(string s, Button root)
+        public Button Insert(string s, Button parent, Player player, Texture2D texture)
         {
-            ////Checking the data to make sure it is not the same as the root's data
-            //if (s != root)
-            //{
-            //    //If the left child is null
-            //    if (root.Child == null)
-            //    {
-            //        //Make the left child a node with the tossed in data
-            //        root.LeftChild = new Node(data, null, null);
-            //        return;
-            //    }
+            Button button = new Button(parent, player, s, texture);
+            parent.Children.Add(button);
+            layerDepth.Clear();
+            CalcDepth(rootButton, 0);
+            return button;
+        }
 
-            //    //If the right child is null and the left isn't
-            //    else if (root.LeftChild != null && root.RightChild == null)
-            //    {
-            //        //
-            //        root.RightChild = new Node(data, null, null);
-            //        return;
-            //    }
+        public Button Insert(string s, List<Button> parents, Player player, Texture2D texture)
+        {
+            Button button = new Button(parents, player, s, texture);
+            foreach(Button parent in parents)
+            {
+                parent.Children.Add(button);
+            }
+            layerDepth.Clear();
+            CalcDepth(rootButton, 0);
+            return button;
+        }
 
-            //    //If both are full, insert run the method again on the right child
-            //    else
-            //    {
-            //        Insert(data, root.RightChild);
-            //    }
-            //}
+        public void UpdateButtons(Rectangle mouse)
+        {
+            UpdateButtons(mouse, rootButton);
+        }
+
+        private void UpdateButtons(Rectangle mouse, Button button)
+        {
+            if (mouse.Intersects(button.PosRect))
+            {
+                button.Purchase();
+                return;
+            }
+
+            foreach (Button child in button.Children)
+            {
+                UpdateButtons(mouse, child);
+            }
+        }
+
+        public void DrawTree(SpriteBatch spriteBatch)
+        {
+            DrawButton(spriteBatch, rootButton, 0, 0);
+        }
+
+        private void DrawButton(SpriteBatch spriteBatch, Button button, int depth, int xOffset)
+        {
+            button.PosRect = new Rectangle(900 + xOffset, 900 - depth * (button.Texture.Height + 20), button.Texture.Width, button.Texture.Height);
+
+
+            if (button.isBought)
+            {
+                spriteBatch.Draw(button.Texture, button.PosRect, Color.Green);
+            }
+            else
+            {
+                spriteBatch.Draw(button.Texture, button.PosRect, Color.Red);
+            }          
+
+            foreach(Button child in button.Children)
+            {
+                DrawButton(spriteBatch, child, depth + 1, xOffset);
+                xOffset += button.Texture.Width + 20;
+            }
+        }
+
+        private void CalcDepth(Button button, int depth)
+        {
+            if (layerDepth.ContainsKey(depth))
+            {
+                layerDepth[depth]++;
+            }
+            else
+            {
+                layerDepth[depth] = 1;
+            }
+                    
+
+            foreach (Button child in button.Children)
+            {
+                CalcDepth(child, depth + 1);
+            }
         }
     }
 }

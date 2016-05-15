@@ -312,10 +312,8 @@ namespace Once_A_Rogue
             }
             //End of file processing by Ian
 
-            Random random = new Random();
-
             //At this point an interactable layer file is chosen from the valid list
-            string roomPath = possibleRooms[random.Next(0, possibleRooms.Count)];
+            string roomPath = possibleRooms[rand.Next(0, possibleRooms.Count)];
 
             //Open the txt interactable layer
             StreamReader reader = new StreamReader(roomPath);

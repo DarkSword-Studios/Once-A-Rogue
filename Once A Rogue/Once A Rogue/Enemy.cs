@@ -56,6 +56,8 @@ namespace Once_A_Rogue
         public int relativeCamY;
         public Boolean justSpawned = false;
 
+        public int distanceSlowed;
+
         //Variables to keep track of the enemy's current x and y path speed (if the enemy patrols)
         public int pathSpeedX;
         public int pathSpeedY;
@@ -429,7 +431,8 @@ namespace Once_A_Rogue
         {
             if(pathDirection == Vector2.Zero || (PosX == path[pathIndex].y * 120 && PosY == path[pathIndex].x * 120))
             {
-                if(pathIndex < path.Count - 1)
+                
+                if (pathIndex < path.Count - 1)
                 {
                     pathIndex++;
                     pathDirection = new Vector2(path[pathIndex].y * 120 - PosX, path[pathIndex].x * 120 - PosY);
@@ -441,11 +444,21 @@ namespace Once_A_Rogue
                     pathDirection = Vector2.Zero;
                 }                
             }
+            if (slowed && pathDirection != Vector2.Zero)
+            {
+                distanceSlowed -= 1;
+            }
 
             PosX += (int) (pathDirection.X * MoveSpeed);
             PosY += (int) (pathDirection.Y * MoveSpeed);
 
-            if(pathDirection.X < 0)
+            if (distanceSlowed == 0)
+            {
+                slowed = false;
+                MoveSpeed = MoveSpeedTotal;
+            }
+
+            if (pathDirection.X < 0)
             {
                 eState = enemyState.WalkingLeft;
             }

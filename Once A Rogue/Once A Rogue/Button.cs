@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics; //Needed for drawing tiles
+using Microsoft.Xna.Framework;
 
 namespace Once_A_Rogue
 {
@@ -9,31 +11,63 @@ namespace Once_A_Rogue
     {
         //necessary attributes
         Player player;
-        bool isBought;
+        public bool isBought;
         string tag;
+        int mod;
 
-        //properties for parent and child buttons
-        private Button parent;
+        private Texture2D texture;
 
-        public Button Parent
+        public Texture2D Texture
         {
-            get { return parent; }
-            set { parent = value; }
+            get { return texture; }
+            set { texture = value; }
         }
 
-        private Button child;
+        //properties for parent and child buttons
+        private List<Button> children;
 
-        public Button Child
+        public List<Button> Children
         {
-            get { return child; }
-            set { child = value; }
+            get { return children; }
+            set { children = value; }
+        }
+
+        private List<Button> parents;
+
+        public List<Button> Parents
+        {
+            get { return parents; }
+            set { parents = value; }
         }
 
         //constructor sets the stuff 
-        public Button(Button p, Player pl, string s)
+        public Button(Button parent, Player pl, string s, Texture2D texture)
         {
             player = pl;
-            parent = p;
+            this.texture = texture;
+            children = new List<Button>();
+            parents = new List<Button>();
+            parents.Add(parent);
+            isBought = false;
+            tag = s;
+        }
+
+        public Button(List<Button> parents, Player pl, string s, Texture2D texture)
+        {
+            player = pl;
+            this.texture = texture;
+            children = new List<Button>();
+            this.parents = parents;
+            isBought = false;
+            tag = s;
+        }
+
+        public Button(Player pl, string s, Texture2D texture)
+        {
+            this.texture = texture;
+            player = pl;
+            children = new List<Button>();
+            parents = new List<Button>();
             isBought = false;
             tag = s;
         }
@@ -41,7 +75,15 @@ namespace Once_A_Rogue
         //modifies an ability
         public void Purchase(int skillList, int index, int mod)
         {
-            if (parent.isBought || parent == null)
+            Boolean allBought = true;
+            foreach(Button parent in parents)
+            {
+                if (!parent.isBought)
+                {
+                    allBought = false;
+                }
+            }
+            if (allBought || parents.Count == 0)
             {
                 if (tag == "damage")
                 {
@@ -63,6 +105,7 @@ namespace Once_A_Rogue
                             player.mageSkillList[index].Damage += mod;
                             break;
                     }
+                    isBought = true;
                 }
 
 
@@ -87,14 +130,23 @@ namespace Once_A_Rogue
                             player.mageSkillList[index].CooldownTotal -= mod;
                             break;
                     }
+                    isBought = true;
                 }
             }
         }
 
         //modifies player stats
-        public void Purchase(int mod)
+        public void Purchase()
         {
-            if (parent.isBought || parent == null)
+            Boolean allBought = true;
+            foreach (Button parent in parents)
+            {
+                if (!parent.isBought)
+                {
+                    allBought = false;
+                }
+            }
+            if (allBought || parents.Count == 0)
             {
                 if (tag == "health")
                 {
@@ -132,6 +184,7 @@ namespace Once_A_Rogue
                 {
                     player.mageSkillList.Add(new OilThrow(player));
                 }
+                isBought = true;
             }
         }
     }

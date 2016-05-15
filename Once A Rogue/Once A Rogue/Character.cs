@@ -30,6 +30,7 @@ namespace Once_A_Rogue
             set { level = value; }
         }
 
+        public Boolean slowed = false;
 
         //Health properties
         private float currHealth;
@@ -477,7 +478,7 @@ namespace Once_A_Rogue
                     elapsedTime = 0;
                     SnareDur -= 1000;
                 }
-                if (SnareDur == 0)
+                if (SnareDur == 0 && !slowed)
                 {
                     MoveSpeed = MoveSpeedTotal;
                 }
