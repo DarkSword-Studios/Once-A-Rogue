@@ -17,40 +17,78 @@ namespace Once_A_Rogue
     /// </summary>
     public class Game1 : Game
     {
+        //For visibility sake, all of these are too small to be grouped into their own region.
+        //Therefore, they're all grouped under one region, but still separated out based on function.
+        #region
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player player;
-
-        //Enums for game state
-        public enum GameState { MainMenu, Playing, GameOver, paused, howTo, Context }
-        static public GameState gameState;
-
-        //Enums for selector arrow
-        enum ArrowState { pos1, pos2, pos3, menu1, menu2 }
-        ArrowState arrowState;
-
-        //Enums for player weapon state
-        enum PlayWepState { Sword, Rogue, Mage, Ranger }
-        PlayWepState playWepState;
-
-        //Enums for context menu state
-        enum ContextState { Skills, Lore }
-        ContextState contextState;
-
-        //Enums for control menu state
-        enum ControlState { kb, gp }
-        ControlState controlState;
-
-        //Declare a grid to keep track of level space
-        string [,] gridSystem;       
-        const int ROWS = 9;
-        const int COLUMNS = 9;
+        int timer = 0;
 
         //These variables are used to determine the screensize
         const int SCREEN_WIDTH = 1920;
         const int SCREEN_HEIGHT = 1080;
 
-        //Stage locking /unlocking a room
+        //Lore tracking
+        Note note;
+        Boolean readingNote = false;
+        int loreIndex;
+        int buffer = 15;
+        int windowBuffer = 10;
+        int scrollLines = 0;
+        List<GameObject> loreEntries = new List<GameObject>();
+
+        //Needed for skill tree stuff
+        SkillTree skillTree;
+        Boolean released = true;
+
+        //The camera manages the viewport and location of drawn objects
+        Camera camera;
+
+        //Declare fonts here
+        SpriteFont alertText;
+
+        //HUD related elements
+        float manaBarWidth;
+        float healthBarWidth;
+
+        #endregion
+
+
+        //This region is for enums for different states.
+        #region
+
+        public enum GameState { MainMenu, Playing, GameOver, paused, howTo, Context }
+        static public GameState gameState;
+
+        enum ArrowState { pos1, pos2, pos3, menu1, menu2 }
+        ArrowState arrowState;
+
+        enum PlayWepState { Sword, Rogue, Mage, Ranger }
+        PlayWepState playWepState;
+
+        enum ContextState { Skills, Lore }
+        ContextState contextState;
+
+        enum ControlState { kb, gp }
+        ControlState controlState;
+
+        #endregion
+
+
+        //Room and level related code
+        #region
+
+        //Level builder to create and connect rooms
+        LevelBuilder builderAlpha;
+
+        //Declare a grid to keep track of level space
+        string[,] gridSystem;
+        const int ROWS = 9;
+        const int COLUMNS = 9;
+
+        //Stage locking / unlocking a room
         Boolean lockRoom = false;
         Boolean unlockRoom = false;
         Boolean transitionToGame = false;
@@ -58,19 +96,6 @@ namespace Once_A_Rogue
 
         //Declare a number of rooms for a level
         int numRooms;
-
-        SkillTree skillTree;
-        Boolean released = true;
-
-        //Lore tracking
-        int loreIndex;
-        int buffer = 15;
-        int windowBuffer = 10;
-        List<GameObject> loreEntries = new List<GameObject>();
-        Note note;
-        Boolean readingNote = false;
-        int scrollLines = 0;
-
         //Track room structure via the grid system
         Room[,] levelAnnex;
 
@@ -80,23 +105,26 @@ namespace Once_A_Rogue
         //This flag indicates that enemies have just been spawned (in the current room most likely)
         Boolean done = false;
 
-        //Track potential boss rooms
-        List<Room> possibleBossRooms;
-
-        //The camera manages the viewport and location of drawn objects
-        Camera camera;
-
-        //Declare fonts here
-        SpriteFont alertText;
-
         //Manage room activity to minimize impact on CPU
         bool shifting;
         int oldRow = -1;
         int oldCol = -1;
         string playerMove = "none";
 
+        //Track potential boss rooms
+        List<Room> possibleBossRooms;
+
         //Keep track of whether or not we need to generate a new level (cannot be done immediately upon assignment)
         private Boolean levelTrigger;
+
+        //Keeps track of whether or not the boss is spawned
+        bool bossSpawned;
+
+        #endregion
+
+
+        //Texture handling       
+        #region
 
         //Declare Room Textures
         Texture2D tilemap, playerTextures, projectileTextures;
@@ -104,6 +132,10 @@ namespace Once_A_Rogue
         //Declare Minimap Textures
         Texture2D leftuprightdown, down, up, left, right, leftup, leftright, leftdown, upright, updown, rightdown;
         Texture2D leftupright, leftupdown, leftrightdown, uprightdown, blackSlate, whiteSlate, unknown;
+
+        //Declare HUD Textures
+        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, sky, play, exitM, mana, health, container, controlsGP;
+        Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger, loreEntry;
 
         //Declare Notification Tool Textures
         Texture2D diagonalBar;
@@ -113,42 +145,46 @@ namespace Once_A_Rogue
         Texture2D koboldEnemy;
         Texture2D ghoulEnemy;
 
-        int timer = 0;
-
         //Handle Minimap Textures:
         Dictionary<string, Texture2D> mapTextures = new Dictionary<string, Texture2D>();
 
-        //Declare HUD Textures
-        Texture2D pause, exit, resume, select, control, controls, mage, ranger, sword, rogue, back, main, sky, play, exitM, mana, health, container, controlsGP;
-        Texture2D contextSkill, contextLore, skillSwitch, loreSwitch, skillMage, skillRogue, skillWarrior, skillRanger, loreEntry;
+        #endregion
 
-        //Keyboard states
+
+        //Input handling
+        #region
+
+        //Input device states
         KeyboardState previousKBS, kbs;
-
-        //GamePad States
         GamePadState prevGPadState, gPadState;
-
-        float deadZone;
-
-        Vector2 leftStickInput, prevLeftStickInput;
-
-        //Mouse states
         MouseState previousMS, mouseState;
 
-        //Level builder to create and connect rooms
-        LevelBuilder builderAlpha;
+        //Other needed things for handling input
+        Cursor cur;
+        float deadZone;
+        Vector2 leftStickInput, prevLeftStickInput;
+
+        #endregion
+
+
+        //Music related code
+        #region
 
         //Bool for music switch
         Boolean musicTransition = false;
         string oldSong = "";
-
-        Cursor cur;
 
         //Songs for music
         Song mainMusic, bossMusic, transientLoop, castleTheme, oasis, battleTheme;
 
         //Keep track of current song
         string currentSong;
+
+        #endregion
+
+
+        //Projectile related things.
+        #region
 
         //List to keep track of projectiles
         private static List<Projectile> currProjectiles;
@@ -173,16 +209,16 @@ namespace Once_A_Rogue
             set { addProj = value; }
         }
 
-        float manaBarWidth;
-        float healthBarWidth;
+        #endregion
 
-        bool bossSpawned;
 
+        //Constructor
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -203,10 +239,6 @@ namespace Once_A_Rogue
             Window.Position = new Point(0, 0);
             graphics.ApplyChanges();
 
-            currProjectiles = new List<Projectile>();
-
-            deadZone = .25f;
-
             //Initializing the gamestate
             gameState = GameState.MainMenu;
             arrowState = ArrowState.menu1;
@@ -222,23 +254,30 @@ namespace Once_A_Rogue
             //Rig environment port
             Atmosphere.Camera = camera;
 
+            //Setting up other things needed for the game to run
+            currProjectiles = new List<Projectile>();
+            deadZone = .25f;
             bossSpawned = false;
-
             Notes.GatherNotes();
 
             base.Initialize();
         }
 
+       
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
         protected override void LoadContent()
         {
+            // TODO: use this.Content to load your game content here
+
+            //For visibility sake, all of these are too small to be grouped into their own region.
+            //Therefore, they're all grouped under one region, but still separated out based on function.
+            #region
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
 
             //player.Texture = Content.Load<Texture2D>("Player");
 
@@ -257,6 +296,17 @@ namespace Once_A_Rogue
             playerTextures = Content.Load <Texture2D>("PlayerAnims.png");
             projectileTextures = Content.Load<Texture2D>("Projectile Spritesheet.png");
 
+            //Rig environment filter
+            whiteSlate = Content.Load<Texture2D>("whiteSlate.png");
+            mapTextures.Add("whiteSlate", whiteSlate);
+            Atmosphere.Filter = whiteSlate;
+
+            #endregion
+
+
+            //Texture initialization for the HUD and Minimap
+            #region
+
             //Initialize HUD textures
             pause = Content.Load<Texture2D>("HUDStuff/HUDpause.png");
             exit = Content.Load<Texture2D>("HUDStuff/HUDexitmain.png");
@@ -270,7 +320,6 @@ namespace Once_A_Rogue
             mage = Content.Load<Texture2D>("HUDStuff/HUDmage.png");
             ranger = Content.Load<Texture2D>("HUDStuff/HUDranger.png");
             back = Content.Load<Texture2D>("HUDStuff/HUDback.png");
-            //main = Content.Load<Texture2D>("HUDStuff/HUDMain.png");
             main = Content.Load<Texture2D>("HUDStuff/MainMenuBG.png");
             sky = Content.Load<Texture2D>("HUDStuff/Sky.png");
             play = Content.Load<Texture2D>("HUDStuff/HUDplay.png");
@@ -287,7 +336,6 @@ namespace Once_A_Rogue
             skillWarrior = Content.Load<Texture2D>("HUDStuff/HUDskillwarrior");
             skillRogue = Content.Load<Texture2D>("HUDStuff/HUDskillrogue");
             loreEntry = Content.Load<Texture2D>("HUDStuff/LoreEntry.png");
-
 
             //Initialize MiniMap textures and add them to the map texture dictionary
             mapTextures.Add("BlackSlate", blackSlate = Content.Load<Texture2D>("BlackSlate.png"));
@@ -313,15 +361,13 @@ namespace Once_A_Rogue
             koboldEnemy = Content.Load<Texture2D>("KoboldSpriteSheet.png");
             ghoulEnemy = Content.Load<Texture2D>("GhoulSpriteSheet.png");
 
+            #endregion
 
-            //Rig environment filter
-            whiteSlate = Content.Load<Texture2D>("whiteSlate.png");
-            mapTextures.Add("whiteSlate", whiteSlate);
-            Atmosphere.Filter = whiteSlate;
 
+            //Music handling
+            #region
+    
             //Loads and plays the music. Can't have it in update or it will keep attempting to play the same track over and over
-            //Song is Finding The Balance by Kevin Macleod
-            //mainMusic = Content.Load<Song>("Music/music.wav");
             mainMusic = Content.Load<Song>("Music/A Hero is Born.wav");
             bossMusic = Content.Load<Song>("Music/RogueRequiem.wav");
             transientLoop = Content.Load<Song>("Music/Transient Loop.wav");
@@ -331,8 +377,10 @@ namespace Once_A_Rogue
             MediaPlayer.Play(mainMusic);
             MediaPlayer.Volume = (float)(MediaPlayer.Volume * .40);
             MediaPlayer.IsRepeating = true;
-
             currentSong = "mainMusic";
+
+            #endregion
+
         }
 
         /// <summary>
@@ -344,6 +392,7 @@ namespace Once_A_Rogue
             // TODO: Unload any non ContentManager content here
         }
 
+        
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -351,36 +400,47 @@ namespace Once_A_Rogue
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            //For visibility sake, all of these are too small to be grouped into their own region.
+            //Therefore, they're all grouped under one region, but still separated out based on function.
+            #region
+
+            //Handles all the input
             previousKBS = kbs;
             kbs = Keyboard.GetState();
             prevGPadState = gPadState;
             gPadState = GamePad.GetState(PlayerIndex.One);
-
             leftStickInput = new Vector2(gPadState.ThumbSticks.Left.X, gPadState.ThumbSticks.Left.Y);
             prevLeftStickInput = new Vector2(prevGPadState.ThumbSticks.Left.X, prevGPadState.ThumbSticks.Left.Y);
             
-
+            //Upon pressing N, the game runs in windowed mode
             if(SingleKeyPress(Keys.N) && Window.IsBorderless)
             {
                 Window.IsBorderless = false;
             }
 
+            //If the game is not active, then music is paused
             if (this.IsActive == false)
             {
                 MediaPlayer.Pause();
             }
-
             else
             {
                 MediaPlayer.Resume();
             }
+            #endregion
 
+
+            //Code for the main menu
+            #region
+
+            //If the game is on the main menu
             if (gameState == GameState.MainMenu)
             {
+                //updates the timer and gets mouse input info
                 timer += gameTime.ElapsedGameTime.Milliseconds;
-                
                 mouseState = Mouse.GetState();
 
+                //Updates player info
                 if(player == null)
                 {
                     player = new Player(400, 750, 140, 140);
@@ -390,6 +450,8 @@ namespace Once_A_Rogue
                     player.UpdateFrame(gameTime);
                 }
 
+
+                //checks for user input via mouse or keyboard
                 if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))) || ((arrowState == ArrowState.menu1) && gPadState.IsButtonDown(Buttons.A)))
                 {
                     transitionToGame = true;
@@ -407,6 +469,8 @@ namespace Once_A_Rogue
                     arrowState = ArrowState.menu1;   
                 }
 
+
+                //music handling
                 if(currentSong == "mainMusic" && timer > 48000)
                 {
                     if (Atmosphere.Intensity < 0.3)
@@ -433,6 +497,8 @@ namespace Once_A_Rogue
                         MediaPlayer.IsRepeating = true;
                     }   
                 }
+
+                //Handles player animation during opening sequence
                 if (transitionToGame)
                 {
                     if (player.PosX < 1170)
@@ -485,8 +551,19 @@ namespace Once_A_Rogue
                 }       
             }
 
+            #endregion
+
+
+            //Code for while the game is active and playing
+            #region
+
             if(gameState == GameState.Playing && this.IsActive)
             {
+                //For visibility sake, all of these are too small to be grouped into their own region.
+                //Therefore, they're all grouped under one region, but still separated out based on function.
+                #region
+
+                //sets atmospheric intensities
                 if (Atmosphere.Intensity > 0)
                 {
                     Atmosphere.AnimateResetIntensities();
@@ -495,6 +572,9 @@ namespace Once_A_Rogue
                 {
                     transitionToGame = false;
                 }
+
+
+                //Music handling
                 if (!musicTransition & activeRoom != null)
                 {
                     if(activeRoom.enemyList.Count != 0 && !activeRoom.Boss)
@@ -510,54 +590,57 @@ namespace Once_A_Rogue
                 {
                     SongTransition();
                 }
-                
+       
 
                 //Extremely important call to update all active rooms
                 UpdateRooms(gameTime);
                 
+
                 //Update the player's animation
                 player.UpdateFrame(gameTime);
 
-                //Set W A S D keys to four different directions
-                if (kbs.IsKeyDown(Keys.A) || leftStickInput.X < -player.deadZone)
-                {
-                    playerMove = "left";
-                }
-                else if (kbs.IsKeyDown(Keys.D) || leftStickInput.X > player.deadZone)
-                {
-                    playerMove = "right";
-                }
-                if (kbs.IsKeyDown(Keys.S) || leftStickInput.Y > player.deadZone)
-                {
-                    playerMove = "down";
-                }
-                else if (kbs.IsKeyDown(Keys.W) || leftStickInput.Y  < -player.deadZone)
-                {
-                    playerMove = "up";
-                }
-
-                if(SingleKeyPress(Keys.P))
-                {
-                    debugMode = !debugMode;
-                }
-
-                //Death button
-                if(kbs.IsKeyDown(Keys.K) /*|| gPadState.IsButtonDown(Buttons.Back)*/)
-                {
-                    player.CurrHealth = 0;
-                }
 
                 //Update the camera if it is moving (transitions between rooms)
                 if (camera.isMoving)
                 {
                     camera.Update();
                 }
-
                 else
                 {
                     shifting = false;
                 }
 
+
+                //Updating the player position
+                player.Update(camera.screenWidth, camera.screenHeight, camera, gameTime);
+
+                manaBarWidth = 300f * player.PercentMP;
+                healthBarWidth = 300f * player.PercentHP;
+
+
+                //Make sure the notifications are getting updated properly
+                Notification.UpdateAlert();
+
+
+                //If a call has been made to build a new level
+                if (levelTrigger)
+                {
+                    //Call the new level generator
+                    NewLevelGen(false);
+
+                    //Set the new level trigger to be false to avoid further unintended calls
+                    levelTrigger = false;
+                }
+
+
+                //If the player loses all of their health, move them to the game over screen
+                if (player.CurrHealth <= 0)
+                {
+                    gameState = GameState.GameOver;
+                }
+
+
+                //Sets player weapon state
                 if (player.CurrWeapon == "Sword")
                 {
                     playWepState = PlayWepState.Sword;
@@ -574,13 +657,11 @@ namespace Once_A_Rogue
                 {
                     playWepState = PlayWepState.Mage;
                 }
+                #endregion
 
-                //Updating the player position
-                player.Update(camera.screenWidth, camera.screenHeight, camera, gameTime);
 
-                manaBarWidth = 300f * player.PercentMP;
-                healthBarWidth = 300f * player.PercentHP;
-
+                //Projectile handling
+                #region
                 //Handling projectiles
                 if (Game1.CurrProjectiles.Count > 0)
                 {
@@ -644,7 +725,39 @@ namespace Once_A_Rogue
                     addProj.Clear();
                 }
 
-                if(SingleKeyPress(Keys.Escape) || gPadState.IsButtonDown(Buttons.Start))
+                #endregion
+
+
+                //User input handling
+                #region
+
+                //Set W A S D keys to four different directions
+                if (kbs.IsKeyDown(Keys.A) || leftStickInput.X < -player.deadZone)
+                {
+                    playerMove = "left";
+                }
+                else if (kbs.IsKeyDown(Keys.D) || leftStickInput.X > player.deadZone)
+                {
+                    playerMove = "right";
+                }
+                if (kbs.IsKeyDown(Keys.S) || leftStickInput.Y > player.deadZone)
+                {
+                    playerMove = "down";
+                }
+                else if (kbs.IsKeyDown(Keys.W) || leftStickInput.Y < -player.deadZone)
+                {
+                    playerMove = "up";
+                }
+
+
+                //Death button
+                if (kbs.IsKeyDown(Keys.K) /*|| gPadState.IsButtonDown(Buttons.Back)*/)
+                {
+                    player.CurrHealth = 0;
+                }
+
+
+                if (SingleKeyPress(Keys.Escape) || gPadState.IsButtonDown(Buttons.Start))
                 {
                     gameState = GameState.paused;
                     arrowState = ArrowState.pos1;
@@ -656,17 +769,27 @@ namespace Once_A_Rogue
                     contextState = ContextState.Skills;
                 }
 
+
                 //If M is pressed, toggle the visibility of the minimap
                 if (SingleKeyPress(Keys.M) || SingleKeyPress(Buttons.Y))
                 {
                     Minimap.Visible = !Minimap.Visible;
                 }
 
+
                 //If R is pressed, build a new level on the spot
                 if (SingleKeyPress(Keys.R))
                 {
                     levelTrigger = true;
                 }
+
+
+                //Debug mode
+                if (SingleKeyPress(Keys.P))
+                {
+                    debugMode = !debugMode;
+                }
+
 
                 //---- FOR DEBUGGING USE ONLY (Remove) ----
                 //If L is pressed, initiate the room locking procedure
@@ -681,32 +804,14 @@ namespace Once_A_Rogue
                 }
                 //---- END OF DEBUG CODE!!!! ----
 
-                
-                //Make sure the notifications are getting updated properly
-                Notification.UpdateAlert();
-
-                //If a call has been made to build a new level
-                if (levelTrigger)
-                {
-                    //Call the new level generator
-                    NewLevelGen(false);
-
-                    //Set the new level trigger to be false to avoid further unintended calls
-                    levelTrigger = false;
-                }
-
-                //If the player loses all of their health, move them to the game over screen
-                if(player.CurrHealth <= 0)
-                {
-                    gameState = GameState.GameOver;
-                }
+                #endregion
             }
 
-            //if (gameState == GameState.Playing && !this.IsActive)
-            //{
-            //    gameState = GameState.paused;
-            //    arrowState = ArrowState.pos1;
-            //}
+            #endregion
+            
+
+            //Code for game over
+            #region
 
             //If you hit enter on the Game over screen it sends you to the main menu
             if (gameState == GameState.GameOver)
@@ -726,6 +831,12 @@ namespace Once_A_Rogue
                     MediaPlayer.Volume = (float)0.40;
                 }
             }
+
+            #endregion
+
+
+            //Code for the context menu
+            #region
 
             if (gameState == GameState.Context)
             {
@@ -819,6 +930,9 @@ namespace Once_A_Rogue
                 }
                 
             }
+
+            #endregion
+
 
             if (gameState == GameState.howTo)
             {
