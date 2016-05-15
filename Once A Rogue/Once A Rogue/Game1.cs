@@ -479,7 +479,8 @@ namespace Once_A_Rogue
                         currentSong = "CastleTheme";
                         oldSong = currentSong;
                         MediaPlayer.IsRepeating = false;
-                        NewLevelGen(true);     
+                        NewLevelGen(true);
+                        Notification.Alert("Press Tab to spend a skill point!", Color.Purple, 60, false);
                     }
                 }       
             }
@@ -1705,21 +1706,21 @@ namespace Once_A_Rogue
             skillTree = new SkillTree(root);
 
 
-            Button basicRogue = skillTree.Insert("Basic Rogue Abilities", "None", 0, root, player, whiteSlate);
-            Button speed1 = skillTree.Insert("Increase Speed 1", "move", 5, basicRogue, player, whiteSlate);
-            Button speed2 = skillTree.Insert("Increase Speed 2", "move", 5, speed1, player, whiteSlate);
-            Button speed3 = skillTree.Insert("Increase Speed 3", "move", 5, speed2, player, whiteSlate);
-            skillTree.Insert("Increase Speed 4", "move", 5, speed3, player, whiteSlate);
+            Button basicRogue = skillTree.Insert("Basic Rogue Abilities", "rogue", 0, root, player, whiteSlate);
+            Button speed1 = skillTree.Insert("Increase Speed 1", "move", 1, basicRogue, player, whiteSlate);
+            Button speed2 = skillTree.Insert("Increase Speed 2", "move", 1, speed1, player, whiteSlate);
+            Button speed3 = skillTree.Insert("Increase Speed 3", "move", 1, speed2, player, whiteSlate);
+            skillTree.Insert("Increase Speed 4", "move", 1, speed3, player, whiteSlate);
 
-            Button basicWarrior = skillTree.Insert("Basic Warrior Abilities", "None", 0, root, player, whiteSlate);
+            Button basicWarrior = skillTree.Insert("Basic Warrior Abilities", "warrior", 0, root, player, whiteSlate);
             Button healthRegen1 = skillTree.Insert("Health Regen 1", "healthRegen", 1, basicWarrior, player, whiteSlate);
             Button healthRegen2 = skillTree.Insert("Health Regen 2", "healthRegen", 1, healthRegen1, player, whiteSlate);
-            Button healthRegenRate1 = skillTree.Insert("Health Regen Rate 1", "healthRegenRate", 100, healthRegen1, player, whiteSlate);
-            Button healthRegenRate2 = skillTree.Insert("Health Regen Rate 2", "healthRegenRate", 100, healthRegenRate1, player, whiteSlate);
+            Button healthRegenRate1 = skillTree.Insert("Health Regen Rate 1", "healthRegenRate", 20, healthRegen1, player, whiteSlate);
+            Button healthRegenRate2 = skillTree.Insert("Health Regen Rate 2", "healthRegenRate", 40, healthRegenRate1, player, whiteSlate);
 
-            Button basicMage = skillTree.Insert("Basic Mage Abilities", "None", 0, root, player, whiteSlate);
+            Button basicMage = skillTree.Insert("Basic Mage Abilities", "mage", 0, root, player, whiteSlate);
 
-            Button basicRanger = skillTree.Insert("Basic Ranger Abilities", "None", 0, root, player, whiteSlate);
+            Button basicRanger = skillTree.Insert("Basic Ranger Abilities", "ranger", 0, root, player, whiteSlate);
         }
     }
 }

@@ -169,25 +169,27 @@ namespace Once_A_Rogue
                     player.MoveSpeed = player.MoveSpeedTotal;
                 }
 
-                if (tag == "fireball")
+                if (tag == "mage")
                 {
                     player.mageSkillList.Add(new Fireball(4, player));
+                    player.mageSkillList.Add(new OilThrow(player));
                 }
 
-                if (tag == "piercing")
+                if (tag == "ranger")
                 {
                     player.rangerSkillList.Add(new PiercingShot(6, player));
                 }
 
-                if (tag == "fan")
+                if (tag == "rogue")
                 {
                     player.rogueSkillList.Add(new FanOfKnives(6, player));
                 }
 
-                if (tag == "oil")
+                if (tag == "warrior")
                 {
-                    player.mageSkillList.Add(new OilThrow(player));
+                    player.warriorSkillList.Add(new Block(player));
                 }
+
                 isBought = true;
             }
         }

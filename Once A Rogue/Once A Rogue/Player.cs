@@ -242,7 +242,7 @@ namespace Once_A_Rogue
         {
             Level = 1;
             SoulsNeeded = 1000;
-            SkillPoints = 4;
+            SkillPoints = 1;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
@@ -254,13 +254,13 @@ namespace Once_A_Rogue
             warriorSkillList.Add(new MeleeAttack(this));
             mageSkillList.Add(new MeleeAttack(this));
             rogueSkillList.Add(new MeleeAttack(this));
-
-            warriorSkillList.Add(new Block(this));
             rangerSkillList.Add(new StandardShot(4, this));
-            rangerSkillList.Add(new PiercingShot(6, this));
-            rogueSkillList.Add(new FanOfKnives(6, this));
-            mageSkillList.Add(new Fireball(4, this));
-            mageSkillList.Add(new OilThrow(this));
+
+            //warriorSkillList.Add(new Block(this));
+            //rangerSkillList.Add(new PiercingShot(6, this));
+            //rogueSkillList.Add(new FanOfKnives(6, this));
+            //mageSkillList.Add(new Fireball(4, this));
+            //mageSkillList.Add(new OilThrow(this));
 
             //Initializing the weapon array
             weaponArray = new string[4];
@@ -985,7 +985,8 @@ namespace Once_A_Rogue
             CurrHealth = TotalHealth;
             TotalMana += 10;
             CurrMana = TotalMana;
-            SkillPoints += 2;
+            SkillPoints += 1;
+            Notification.Alert("Level Up!", Color.Purple, 60, false);
         }
     }
 }
