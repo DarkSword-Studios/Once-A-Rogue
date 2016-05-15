@@ -121,6 +121,33 @@ namespace Once_A_Rogue
             set { manaRegen = value; }
         }
 
+        //Health Regen Property
+        private int healthRegen;
+
+        public int HealthRegen
+        {
+            get { return healthRegen; }
+            set { healthRegen = value; }
+        }
+
+        //Health Regen Rate Property
+        private int healthRegenRate;
+
+        public int HealthRegenRate
+        {
+            get { return healthRegenRate; }
+            set { healthRegenRate = value; }
+        }
+
+        //Mana Regen Rate Property
+        private int manaRegenRate;
+
+        public int ManaRegenRate
+        {
+            get { return manaRegenRate; }
+            set { manaRegenRate = value; }
+        }
+
 
         //Percentage of HP remaining property
         private float percentHP;
@@ -143,7 +170,8 @@ namespace Once_A_Rogue
         public int framesElapsed;
         public int timeElapsed;
 
-        int timePassed;
+        int manaTimer;
+        int healthTimer;
 
         public enum PlayerState { IdleLeft, IdleRight, WalkingLeft, WalkingRight, AttackLeft, AttackRight };
 
@@ -254,9 +282,12 @@ namespace Once_A_Rogue
             TotalMana = 100;
             CurrMana = 100;
             CurrHealth = 100;
+            HealthRegen = 0;
             ManaRegen = 1;
             BlockAmount = 3;
-            timePassed = 0;
+            manaTimer = 0;
+            HealthRegenRate = 1200;
+            ManaRegenRate = 300;
             costTimer = 0;
             PosRect = new Rectangle(x, y, width, height);
             HitBox = new Rectangle(x + 20, y + 30, width - 60, height - 40);
@@ -759,14 +790,22 @@ namespace Once_A_Rogue
         {
             base.Update(gameTime);
 
-            timePassed += gameTime.ElapsedGameTime.Milliseconds;
+            manaTimer += gameTime.ElapsedGameTime.Milliseconds;
+            healthTimer += gameTime.ElapsedGameTime.Milliseconds;
             costTimer += gameTime.ElapsedGameTime.Milliseconds;
 
-            if (CurrMana < TotalMana && timePassed >= 300)
+            if (CurrMana < TotalMana && manaTimer >= ManaRegenRate)
             {
                 CurrMana += ManaRegen;
-                timePassed = 0;
+                manaTimer = 0;
             }
+
+            if (CurrHealth < TotalHealth && healthTimer >= HealthRegenRate)
+            {
+                CurrHealth += HealthRegen;
+                healthTimer = 0;
+            }
+
 
             if(IsBlocking && CurrMana < 3)
             {

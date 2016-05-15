@@ -137,6 +137,26 @@ namespace Once_A_Rogue
                     player.CurrHealth = player.TotalHealth;
                 }
 
+                if (tag == "healthRegen")
+                {
+                    player.HealthRegen += mod;
+                }
+
+                if (tag == "healthRegenRate")
+                {
+                    player.HealthRegenRate -= mod;
+                }
+
+                if (tag == "manaRegen")
+                {
+                    player.ManaRegen += mod;
+                }
+
+                if (tag == "manaRegenRate")
+                {
+                    player.ManaRegenRate -= mod;
+                }
+
                 if (tag == "mana")
                 {
                     player.TotalMana += mod;
