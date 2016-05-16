@@ -1212,7 +1212,7 @@ namespace Once_A_Rogue
 
                 //Extremely important call to draw all active rooms
                 DrawRooms();
-                
+
 
                 //Drawing the player
                 player.Draw(spriteBatch, playerTextures, 140, 140);
@@ -1247,7 +1247,7 @@ namespace Once_A_Rogue
                 //Draws HUD stuff
                 #region
 
-                //Draws HUD the weapon icon
+                //Makes this translucent if player is in the area
                 if (playWepState == PlayWepState.Sword)
                 {
                     spriteBatch.Draw(sword, new Vector2(1699, 868), Color.White);
@@ -1265,20 +1265,38 @@ namespace Once_A_Rogue
                     spriteBatch.Draw(ranger, new Vector2(1699, 868), Color.White);
                 }
 
-                
-                //Draw HUD health and mana bar
-                spriteBatch.Draw(container, new Vector2(0, 0), Color.White);
-                spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (int)(healthBarWidth), 31), Color.White);
-                spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (int)(manaBarWidth), 31), Color.White);
 
+                //Draw HUD health and mana bar
+                if (player.PosX < 606 && player.PosY < 270)
+                {
+                    //draws it translucent if player is in that area on the screen
+                    spriteBatch.Draw(container, new Vector2(0, 0), (Color.White) * 0.25f);
+                    spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (int)(healthBarWidth), 31), (Color.White) * 0.25f);
+                    spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (int)(manaBarWidth), 31), (Color.White) * 0.25f);
+                }
+                else
+                {
+                    spriteBatch.Draw(container, new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (int)(healthBarWidth), 31), Color.White);
+                    spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (int)(manaBarWidth), 31), Color.White);
+                }
 
                 //Drawn only if the gamestate is playing
                 if (gameState == GameState.Playing)
                 {
-                    //Allow the player to see their current equipped skill and current soul count
-                    spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
-                    spriteBatch.DrawString(alertText, "Level: " + player.Level, new Vector2(169, 180), Color.White);
-                    spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 220), Color.White);
+                    if (player.PosX < 606 && player.PosY < 270)
+                    {
+                        //Allow the player to see their current equipped skill and current soul count
+                        spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), (Color.White) * 0.25f);
+                        spriteBatch.DrawString(alertText, "Level: " + player.Level, new Vector2(169, 180), (Color.White) * 0.25f);
+                        spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 220), (Color.White) * 0.25f);
+                    }
+                    else
+                    {
+                        spriteBatch.DrawString(alertText, "Current Skill: " + player.CurrSkill.ToString(), new Vector2(169, 140), Color.White);
+                        spriteBatch.DrawString(alertText, "Level: " + player.Level, new Vector2(169, 180), Color.White);
+                        spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 220), Color.White);
+                    }
                 }
                 #endregion
 
