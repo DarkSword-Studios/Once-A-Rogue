@@ -17,6 +17,10 @@ namespace Once_A_Rogue
     /// </summary>
     public class Game1 : Game
     {
+        //Since there is no method here to minimize, a region
+        //was added to increase visibility
+        #region
+
         //For visibility sake, all of these are too small to be grouped into their own region.
         //Therefore, they're all grouped under one region, but still separated out based on function.
         #region
@@ -211,6 +215,8 @@ namespace Once_A_Rogue
 
         #endregion
 
+        #endregion
+
 
         //Constructor
         public Game1()
@@ -383,6 +389,7 @@ namespace Once_A_Rogue
 
         }
 
+
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -436,6 +443,10 @@ namespace Once_A_Rogue
             //If the game is on the main menu
             if (gameState == GameState.MainMenu)
             {
+                //For visibility sake, all of these are too small to be grouped into their own region.
+                //Therefore, they're all grouped under one region, but still separated out based on function.
+                #region
+
                 //updates the timer and gets mouse input info
                 timer += gameTime.ElapsedGameTime.Milliseconds;
                 mouseState = Mouse.GetState();
@@ -450,8 +461,12 @@ namespace Once_A_Rogue
                     player.UpdateFrame(gameTime);
                 }
 
+                #endregion
 
-                //checks for user input via mouse or keyboard
+
+                //checks for user input
+                #region
+
                 if (((arrowState == ArrowState.menu1) && SingleKeyPress(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 784 && mouseState.X <= 1117) && (mouseState.Y >= 522 && mouseState.Y <= 598))) || ((arrowState == ArrowState.menu1) && gPadState.IsButtonDown(Buttons.A)))
                 {
                     transitionToGame = true;
@@ -469,8 +484,12 @@ namespace Once_A_Rogue
                     arrowState = ArrowState.menu1;   
                 }
 
+                #endregion
+
 
                 //music handling
+                #region
+
                 if(currentSong == "mainMusic" && timer > 48000)
                 {
                     if (Atmosphere.Intensity < 0.3)
@@ -498,7 +517,12 @@ namespace Once_A_Rogue
                     }   
                 }
 
+                #endregion
+
+
                 //Handles player animation during opening sequence
+                #region
+
                 if (transitionToGame)
                 {
                     if (player.PosX < 1170)
@@ -548,7 +572,10 @@ namespace Once_A_Rogue
                         NewLevelGen(true);
                         Notification.Alert("Press Tab to spend a skill point!", Color.Purple, 60, false);
                     }
-                }       
+                }
+
+                #endregion
+
             }
 
             #endregion
@@ -840,13 +867,20 @@ namespace Once_A_Rogue
 
             if (gameState == GameState.Context)
             {
-                if(currentSong != "Oasis")
+                //For visibility sake, all of these are too small to be grouped into their own region.
+                //Therefore, they're all grouped under one region, but still separated out based on function.
+                #region
+
+                //Music handling
+                if (currentSong != "Oasis")
                 {
                     MediaPlayer.Play(oasis);
                     MediaPlayer.IsRepeating = true;
                     currentSong = "Oasis";
                 }
 
+
+                //Checks button input while in context menu
                 if(SingleKeyPress(Keys.Tab) || SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.Back) || SingleKeyPress(Buttons.B))
                 {
                     if (readingNote)
@@ -860,16 +894,26 @@ namespace Once_A_Rogue
                     }   
                 }
 
-                
+                #endregion
+
+
+                //Skill menu code
+                #region
+
+                //If the context menu is on the skills menu
                 if (contextState == ContextState.Skills)
                 {
+                    //retrieve the mouse state
                     mouseState = Mouse.GetState();
+
 
                     if(mouseState.LeftButton == ButtonState.Released)
                     {
                         released = true;
                     }
 
+
+                    //checks for clicking on the "lore" button
                     if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 478 && mouseState.Y <= 565) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y > deadZone))
                     {
                         contextState = ContextState.Lore;
@@ -880,14 +924,23 @@ namespace Once_A_Rogue
                         {
                             released = false;
                         }
-                        
                     }
                 }
 
+                #endregion
+
+
+                //Lore menu code
+                #region
+
+                //If the context menu is on the lore menu
                 if (contextState == ContextState.Lore)
                 {
+                    //retrieve the mouse state
                     mouseState = Mouse.GetState();
 
+
+                    //checks for clicking on the "skills" button
                     if (mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 313 && mouseState.X <= 568) && (mouseState.Y >= 350 && mouseState.Y <= 440) || (SingleGamePadMove(prevLeftStickInput, leftStickInput) && leftStickInput.Y < -deadZone))
                     {
                         contextState = ContextState.Skills;
@@ -902,17 +955,17 @@ namespace Once_A_Rogue
                             if(new Rectangle(mouseState.Position.X, mouseState.Position.Y, 1, 1).Intersects(entry.PosRect))
                             {
                                 int index = loreIndex + loreEntries.IndexOf(entry);
-
                                 note = Notes.gatheredNotes[index];
                                 note.read = true;
                                 Notes.gatheredNotes.RemoveAt(index);
                                 Notes.gatheredNotes.Add(note);
-
                                 readingNote = true;
                             }
                         }
                     }
 
+
+                    //handles scrolling on a piece of lore
                     if(SingleKeyPress(Keys.Up))
                     {
                         if(scrollLines < 10)
@@ -928,55 +981,96 @@ namespace Once_A_Rogue
                         }
                     }
                 }
-                
+
+                #endregion
+
+
             }
 
             #endregion
 
 
+            //Code for the controls menu
+            #region
+
             if (gameState == GameState.howTo)
             {
+                //retrieve mouse state
                 mouseState = Mouse.GetState();
 
+
+                //if the control menu shows keyboard controls
                 if (controlState == ControlState.kb)
                 {
+                    //exits to pause menu when escape is pressed
                     if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
                     {
                         gameState = GameState.paused;
                     }
 
+
+                    //detects clicking on a certain region to change controls from keyboard to gamepad
                     if ((mouseState.LeftButton == ButtonState.Pressed && previousMS.LeftButton == ButtonState.Released) && (mouseState.X >= 858 && mouseState.X <= 1025) && (mouseState.Y >= 619 && mouseState.Y <= 723))
                     {
                         controlState = ControlState.gp;
                     }
 
+
+                    //resets the old mouse state
                     previousMS = mouseState;
                 }
 
+
+                //if the control menu shows gamepad controls
                 if (controlState == ControlState.gp)
                 {
+                    //exits to pause menu when escape is pressed
                     if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
                     {
                         gameState = GameState.paused;
                     }
 
+
+                    //detects clicking on a certain region to change controls from gamepad to keyboard
                     if ((mouseState.LeftButton == ButtonState.Pressed && previousMS.LeftButton == ButtonState.Released) && (mouseState.X >= 885 && mouseState.X <= 1014) && (mouseState.Y >= 694 && mouseState.Y <= 765))
                     {
                         controlState = ControlState.kb;
                     }
 
+
+                    //resets the old mouse state
                     previousMS = mouseState;
                 }
             }
 
+            #endregion
+
+
+            //Code for the pause menu
+            #region
+
+            //if the game is paused
             if (gameState == GameState.paused)
             {
+                //For visibility sake, all of these are too small to be grouped into their own region.
+                //Therefore, they're all grouped under one region, but still separated out based on function.
+                #region
+
+                //retrieve mouse state
                 mouseState = Mouse.GetState();
 
+
+                //resumes game
                 if (SingleKeyPress(Keys.Escape) || SingleKeyPress(Buttons.B))
                 {
                     gameState = GameState.Playing;
                 }
+
+                #endregion
+
+
+                //handles user input in the menu
+                #region
 
                 if ((arrowState == ArrowState.pos1) && (kbs.IsKeyDown(Keys.Enter)) || ((mouseState.LeftButton == ButtonState.Pressed && (mouseState.X >= 100 && mouseState.X <= 283) && (mouseState.Y >= 351 && mouseState.Y <= 405))) || (arrowState == ArrowState.pos1) && (gPadState.IsButtonDown(Buttons.A)) || (arrowState == ArrowState.pos1) && (gPadState.IsButtonDown(Buttons.A)))
                 {
@@ -1031,10 +1125,17 @@ namespace Once_A_Rogue
                 {
                     arrowState = ArrowState.pos3;
                 }
+
+                #endregion
+
             }
+
+            #endregion
+
 
             base.Update(gameTime);
         }
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -1042,17 +1143,21 @@ namespace Once_A_Rogue
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            //clear and begin drawing
             GraphicsDevice.Clear(Color.Black);
-
-            // TODO: Add your drawing code here
-
             spriteBatch.Begin();
 
+            
             //This draws the main menu
+            #region
+
             if (gameState == GameState.MainMenu)
             {
+                //draw the sky
                 spriteBatch.Draw(sky, new Vector2(0, 0), Color.White);
 
+
+                //draw based on atmospheric intensity
                 if (Atmosphere.ThirdIntensity > 0)
                 {
                     Atmosphere.AmberDarkPurpleTransition(spriteBatch, 0, 0);
@@ -1066,10 +1171,14 @@ namespace Once_A_Rogue
                     Atmosphere.AmberTransition(spriteBatch, 0, 0);
                 }
 
+
+                //draw the menu buttons
                 spriteBatch.Draw(main, new Vector2(0, 0), Color.White);
                 spriteBatch.Draw(play, new Vector2(784, 522), Color.White);
                 spriteBatch.Draw(exitM, new Vector2(405, 652), Color.White);
 
+
+                //draw the selector arrwos
                 if(arrowState == ArrowState.menu1)
                 {
                     spriteBatch.Draw(select, new Vector2(707, 535), Color.White);
@@ -1079,6 +1188,8 @@ namespace Once_A_Rogue
                     spriteBatch.Draw(select, new Vector2(329, 667), Color.White);
                 }
 
+
+                //draw the player if it has not been drawn yet
                 if(player != null)
                 {
                     player.Draw(spriteBatch, playerTextures, 140, 140);
@@ -1087,15 +1198,25 @@ namespace Once_A_Rogue
                 Atmosphere.Darken(spriteBatch, 0, 0);
                 
             }
+            #endregion
 
-            //this is drawn no matter what so even when paused, the game is still "drawn", it will just be "idle"
+
+            //this is drawn as long as the game is not on the main menu and it is not over
+            #region
+
             if ((this.IsActive) && (gameState != GameState.MainMenu && gameState != GameState.GameOver))
             {
+                //For visibility sake, all of these are too small to be grouped into their own region.
+                //Therefore, they're all grouped under one region, but still separated out based on function.
+                #region
+
                 //Extremely important call to draw all active rooms
                 DrawRooms();
                 
+
                 //Drawing the player
                 player.Draw(spriteBatch, playerTextures, 140, 140);
+
 
                 //Drawing the projectiles on the screen
                 if (Game1.CurrProjectiles.Count > 0)
@@ -1106,7 +1227,27 @@ namespace Once_A_Rogue
                     }
                 }
 
-                //Draws HUD Elements
+
+                //If there is a notification to update
+                if (Notification.Updating)
+                {
+                    //Draw the notification on screen
+                    Notification.DrawAlert(spriteBatch);
+                }
+
+
+                //Opening animation
+                if (transitionToGame)
+                {
+                    Atmosphere.Darken(spriteBatch, 0, 0);
+                }
+                #endregion
+
+
+                //Draws HUD stuff
+                #region
+
+                //Draws HUD the weapon icon
                 if (playWepState == PlayWepState.Sword)
                 {
                     spriteBatch.Draw(sword, new Vector2(1699, 868), Color.White);
@@ -1124,10 +1265,14 @@ namespace Once_A_Rogue
                     spriteBatch.Draw(ranger, new Vector2(1699, 868), Color.White);
                 }
 
+                
+                //Draw HUD health and mana bar
                 spriteBatch.Draw(container, new Vector2(0, 0), Color.White);
                 spriteBatch.Draw(health, new Vector2(189, 56), new Rectangle(0, 0, (int)(healthBarWidth), 31), Color.White);
                 spriteBatch.Draw(mana, new Vector2(189, 109), new Rectangle(0, 0, (int)(manaBarWidth), 31), Color.White);
 
+
+                //Drawn only if the gamestate is playing
                 if (gameState == GameState.Playing)
                 {
                     //Allow the player to see their current equipped skill and current soul count
@@ -1135,6 +1280,11 @@ namespace Once_A_Rogue
                     spriteBatch.DrawString(alertText, "Level: " + player.Level, new Vector2(169, 180), Color.White);
                     spriteBatch.DrawString(alertText, "Souls: " + player.Souls + "/" + player.SoulsNeeded, new Vector2(169, 220), Color.White);
                 }
+                #endregion
+
+
+                //Draws the minimap
+                #region
 
                 //If the minimap should be visible and there isn't a notification onscreen
                 if (Minimap.Visible && !Notification.Updating)
@@ -1151,27 +1301,24 @@ namespace Once_A_Rogue
                         Minimap.Draw(camera, spriteBatch, mapTextures, levelAnnex, false);
                     }
                 }
-                //If there is a notification to update
-                if (Notification.Updating)
-                {
-                    //Draw the notification on screen
-                    Notification.DrawAlert(spriteBatch);
-                }
-
-                if(transitionToGame)
-                {
-                    Atmosphere.Darken(spriteBatch, 0, 0);
-                }
+                #endregion
             }
+            #endregion
+
 
             //draws the following if the game is paused
+            #region
+
             if(gameState == GameState.paused && this.IsActive)
             {
+                //draws the buttons
                 spriteBatch.Draw(pause, new Vector2(0, 0), Color.White);
                 spriteBatch.Draw(resume, new Vector2(100, 351), Color.White);
                 spriteBatch.Draw(control, new Vector2(100, 426), Color.White);
                 spriteBatch.Draw(exit, new Vector2(100, 501), Color.White);
 
+
+                //draws the selector arrow
                 if (arrowState == ArrowState.pos1)
                 {
                     spriteBatch.Draw(select, new Vector2(30, 354), Color.White);
@@ -1185,39 +1332,72 @@ namespace Once_A_Rogue
                     spriteBatch.Draw(select, new Vector2(30, 504), Color.White);
                 }
             }
+            #endregion
+
+
+            //draws if the game is on the controls page
+            #region
+
             if (gameState == GameState.howTo)
             {
+                //draws the keyboard controls
                 if (controlState == ControlState.kb)
                 {
                     spriteBatch.Draw(controls, new Vector2(0, 0), Color.White);
                 }
 
+
+                //draws the gamepad controls
                 if (controlState == ControlState.gp)
                 {
                     spriteBatch.Draw(controlsGP, new Vector2(0, 0), Color.White);
                 }
             }
+            #endregion
+
+
+            //draws if the game is over
+            #region
+
             if (gameState == GameState.GameOver)
             {
                 spriteBatch.DrawString(alertText, "Level(s) acheived: " + player.Level, new Vector2(740, 400), Color.White);
                 spriteBatch.DrawString(alertText, "Collected Souls: " + player.Souls, new Vector2(750, 500), Color.White);
                 spriteBatch.DrawString(alertText, "Press Enter/Start to Continue...", new Vector2(600, 600), Color.White);
             }
+            #endregion
+
+
+            //draws if the game is on the context menu
+            #region
 
             if (gameState == GameState.Context)
             {
+                //if the context menu is on the skill menu
+                #region
                 if(contextState == ContextState.Skills)
                 {
+                    //draw the skill tree and some buttons
                     spriteBatch.Draw(contextSkill, new Vector2(0, 0), Color.White);
                     spriteBatch.Draw(loreSwitch, new Vector2(313, 474), Color.White);
                     skillTree.DrawButtons(spriteBatch, alertText, 6, 600, 200);
                     spriteBatch.DrawString(alertText, "Skill Points To Spend: " + player.SkillPoints, new Vector2(600, 80), Color.White);
                 }
+                #endregion
+
+
+                //if the context menu is on the lore menu
+                #region
+
                 if(contextState == ContextState.Lore)
                 {
+                    //draw the lore menu and some buttons
                     spriteBatch.Draw(contextLore, new Vector2(0, 0), Color.White);
                     spriteBatch.Draw(skillSwitch, new Vector2(313, 350), Color.White);
 
+
+                    //if you are not reading any notes
+                    #region
                     if (!readingNote)
                     {
                         loreEntries.Clear();
@@ -1252,6 +1432,12 @@ namespace Once_A_Rogue
                             loreEntries.Add(entry);
                         }
                     }
+                    #endregion
+
+
+                    //if you are currently reading a note
+                    #region
+
                     else
                     {
                         int lineNumber = 0;
@@ -1330,16 +1516,22 @@ namespace Once_A_Rogue
                             }
                         }
                     }
-                    
+                    #endregion
                 }
-
+                #endregion
             }
 
+            #endregion
+
+
+            //stop drawing
             spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
 
+        
         //checks for a single key press
         public bool SingleKeyPress(Keys key)
         {
@@ -1356,6 +1548,8 @@ namespace Once_A_Rogue
             }
         }
 
+
+        //checks for a single button press on the gamepad
         public bool SingleKeyPress(Buttons button)
         {
             if ((prevGPadState.IsButtonUp(button) && (gPadState.IsButtonDown(button))))
@@ -1364,23 +1558,25 @@ namespace Once_A_Rogue
                 gPadState = GamePad.GetState(PlayerIndex.One);
                 return true;
             }
-
             else
             {
                 return false;
             }
         }
 
+
+        //checks for a single flick of the gamepad stick
         public bool SingleGamePadMove(Vector2 prevLeftStick, Vector2 currLeftStick)
         {
             if(prevLeftStickInput.Length() <= deadZone && leftStickInput.Length() > deadZone)
             {
                 return true;
             }
-
             return false;
         }
 
+
+        //Updates the rooms on gametime
         public void UpdateRooms(GameTime gameTime)
         {
             //Start at the beginning of the grid
@@ -1647,6 +1843,7 @@ namespace Once_A_Rogue
             }
         }
 
+
         //Method for drawing the rooms.
         public void DrawRooms()
         {
@@ -1755,6 +1952,9 @@ namespace Once_A_Rogue
                 SetupSkillTree();
             }
         }
+
+
+        //Method for ambient music
         public void UpdateSongPassive(GameTime gameTime)
         {
             timer += gameTime.ElapsedGameTime.Milliseconds;
@@ -1773,6 +1973,7 @@ namespace Once_A_Rogue
                 oldSong = "CastleTheme";
             }
 
+
             if(currentSong == "BattleTheme" || currentSong == "Oasis")
             {
                 if(oldSong == "CastleTheme")
@@ -1787,9 +1988,11 @@ namespace Once_A_Rogue
                     MediaPlayer.Play(transientLoop);
                     currentSong = "TransientLoop";
                 }
-                
             }
         }
+
+
+        //Method for battle music
         public void UpdateSongBattle()
         {
             if(currentSong != "BattleTheme")
@@ -1800,6 +2003,8 @@ namespace Once_A_Rogue
             }
         }
 
+
+        //Method for transitioning music
         public void SongTransition()
         {
             //if (MediaPlayer.Volume > 0)
@@ -1814,12 +2019,18 @@ namespace Once_A_Rogue
             musicTransition = false;
         }
 
+
+        //Method for setting up the skill tree
         public void SetupSkillTree()
         {
+            //sets up the needed stuff
             Button root = new Button(null, null, "NULL", "NULL", 0, null);
             root.isBought = true;
             skillTree = new SkillTree(root);
 
+
+            //Creates new buttons for the skill tree
+            #region
 
             Button basicRogue = skillTree.Insert("Basic Rogue Abilities", "rogue", 0, root, player, whiteSlate);
             Button speed1 = skillTree.Insert("Increase Speed 1", "move", 1, basicRogue, player, whiteSlate);
@@ -1840,6 +2051,11 @@ namespace Once_A_Rogue
             Button manaRegen2 = skillTree.Insert("Mana Regen 2", "manaRegen", 1, manaRegen1, player, whiteSlate);
 
             Button basicRanger = skillTree.Insert("Basic Ranger Abilities", "ranger", 0, root, player, whiteSlate);
+
+            #endregion
+
         }
+
+
     }
 }
