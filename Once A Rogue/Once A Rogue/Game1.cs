@@ -1967,6 +1967,12 @@ namespace Once_A_Rogue
                 //Initializing the player
                 player = new Player((SCREEN_WIDTH / 2) - 110, (SCREEN_HEIGHT / 2) - 110, 110, 110);
 
+                Notes.gatheredNotes.Clear();
+
+                Notes.entriesToDiscover.Clear();
+
+                Notes.GatherNotes();
+
                 SetupSkillTree();
             }
         }
