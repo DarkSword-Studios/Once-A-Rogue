@@ -1776,44 +1776,47 @@ namespace Once_A_Rogue
                                 {
                                     enemy.UpdateFrame(gameTime);
 
-                                    if (!enemy.IsHostile)
+                                    if(enemy is Ulmog == false)
                                     {
-                                        foreach (Interactable post in levelAnnex[columnIndex, rowIndex].posts)
+                                        if (!enemy.IsHostile)
                                         {
-                                            int x = post.RelativeLocation.X;
-                                            int y = post.RelativeLocation.Y;
-                                            x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
-                                            y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
-                                            if (enemy.PosX == x && enemy.PosY == y)
+                                            foreach (Interactable post in levelAnnex[columnIndex, rowIndex].posts)
                                             {
-                                                enemy.UpdatePathDirection(post.SubType);
+                                                int x = post.RelativeLocation.X;
+                                                int y = post.RelativeLocation.Y;
+                                                x = ((x %= camera.screenWidth) < 0) ? x + camera.screenWidth : x;
+                                                y = ((y %= camera.screenHeight) < 0) ? y + camera.screenHeight : y;
+                                                if (enemy.PosX == x && enemy.PosY == y)
+                                                {
+                                                    enemy.UpdatePathDirection(post.SubType);
+                                                }
+                                            }
+                                            enemy.UpdatePathPosition();
+                                        }
+                                        else if (enemy.path == null && !enemy.pathFinding)
+                                        {
+                                            if (enemy.PosX % 120 != 0 || enemy.PosY % 120 != 0)
+                                            {
+                                                enemy.UpdatePathPosition();
+                                            }
+
+                                            if (enemy.PosX % 120 == 0 && enemy.PosY % 120 == 0)
+                                            {
+                                                enemy.pathFinding = true;
+                                                enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
+                                                enemy.pathIndex = -1;
                                             }
                                         }
-                                        enemy.UpdatePathPosition();
-                                    }
-                                    else if(enemy.path == null && !enemy.pathFinding)
-                                    {
-                                        if (enemy.PosX % 120 != 0 || enemy.PosY % 120 != 0)
+                                        else if (enemy.path != null && enemy.path.Count > 0)
                                         {
-                                            enemy.UpdatePathPosition(); 
+                                            enemy.UpdatePathFindPosition();
                                         }
 
-                                        if (enemy.PosX % 120 == 0 && enemy.PosY % 120 == 0)
+                                        else if (enemy.path == null || enemy.path.Count == 0)
                                         {
-                                            enemy.pathFinding = true;
                                             enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
                                             enemy.pathIndex = -1;
                                         }
-                                    }
-                                    else if(enemy.path != null && enemy.path.Count > 0)
-                                    {
-                                        enemy.UpdatePathFindPosition();
-                                    }
-
-                                    else if(enemy.path == null || enemy.path.Count == 0)
-                                    {
-                                        enemy.path = PathFinder.FindPath(levelAnnex[columnIndex, rowIndex], camera, enemy, player);
-                                        enemy.pathIndex = -1;
                                     }
                                     
                                     enemy.Update(gameTime);
