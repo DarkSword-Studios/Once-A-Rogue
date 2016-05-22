@@ -21,6 +21,12 @@ namespace Once_A_Rogue
         public List<Skills> rangerSkillList;
         public List<Skills> warriorSkillList;
 
+        //Dictionaries for looking up skills
+        public List<Skills> mageSkillDict;
+        public List<Skills> rogueSkillDict;
+        public List<Skills> rangerSkillDict;
+        public List<Skills> warriorSkillDict;
+
         //String array of weapon choices
         string[] weaponArray;
 
@@ -242,7 +248,7 @@ namespace Once_A_Rogue
         {
             Level = 1;
             SoulsNeeded = 1000;
-            SkillPoints = 4;
+            SkillPoints = 1;
 
             //Initializing the skill collections
             warriorSkillList = new List<Skills>();
@@ -278,16 +284,16 @@ namespace Once_A_Rogue
             FireResist = 0;
             SnareResist = 0;
             PoisonResist = 0;
-            TotalHealth = 100;
+            TotalHealth = 75;
             TotalMana = 100;
             CurrMana = 100;
-            CurrHealth = 100;
+            CurrHealth = 75;
             HealthRegen = 0;
             ManaRegen = 1;
             BlockAmount = 3;
             manaTimer = 0;
-            HealthRegenRate = 1200;
-            ManaRegenRate = 300;
+            HealthRegenRate = 1000;
+            ManaRegenRate = 1000;
             costTimer = 0;
             PosRect = new Rectangle(x, y, width, height);
             HitBox = new Rectangle(x + 20, y + 30, width - 60, height - 40);
@@ -491,7 +497,7 @@ namespace Once_A_Rogue
             }
 
             //Weapon switching
-            if((msState.RightButton == ButtonState.Pressed && prevMS.RightButton == ButtonState.Released) || (gPadState.IsConnected && (gPadState.IsButtonDown(Buttons.RightShoulder) && prevGPadState.IsButtonUp(Buttons.RightShoulder))))
+            if((msState.RightButton == ButtonState.Pressed && prevMS.RightButton == ButtonState.Released) || (gPadState.IsButtonDown(Buttons.RightShoulder) && prevGPadState.IsButtonUp(Buttons.RightShoulder)))
             {
                 if(CurrWeapon == "Sword")
                 {
@@ -526,7 +532,7 @@ namespace Once_A_Rogue
                 }
             }
 
-            if(gPadState.IsConnected && (gPadState.IsButtonDown(Buttons.LeftShoulder) && prevGPadState.IsButtonUp(Buttons.LeftShoulder)))
+            if(gPadState.IsButtonDown(Buttons.LeftShoulder) && prevGPadState.IsButtonUp(Buttons.LeftShoulder))
             {
                 if(CurrWeapon == "Sword")
                 {

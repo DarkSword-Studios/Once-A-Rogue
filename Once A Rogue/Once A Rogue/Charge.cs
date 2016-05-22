@@ -36,16 +36,6 @@ namespace Once_A_Rogue
             {
                 Enemy enemy = (Enemy)Owner;
 
-                if (enemy.CurrHealth / enemy.TotalHealth <= .30)
-                {
-                    enemy.MoveSpeed = 10;
-                }
-
-                else
-                {
-                    enemy.MoveSpeed = 5;
-                }
-
                 enemy.IsCharging = true;
             }
         }

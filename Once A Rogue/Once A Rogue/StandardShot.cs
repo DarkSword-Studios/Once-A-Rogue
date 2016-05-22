@@ -119,7 +119,7 @@ namespace Once_A_Rogue
                     target.Normalize();
                 }
 
-                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2, 10, false));
+                Game1.CurrProjectiles.Add(new Projectile(Damage, null, Owner, target, 1, 7, 10, 10, enemy.PosX + enemy.PosRect.Width / 2, enemy.PosY + enemy.PosRect.Height / 2, 12, false));
             }
         }
     }

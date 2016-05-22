@@ -16,7 +16,7 @@ namespace Once_A_Rogue
             Owner = own;
             Cooldown = 0;
             CooldownTotal = 1000;
-            Cost = 10;
+            Cost = 5;
             Name = "Oil Cask";
         }
 
@@ -51,13 +51,13 @@ namespace Once_A_Rogue
                             if (stickInput.X < 0)
                             {
                                 player.PlayerStates = Player.PlayerState.AttackLeft;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 5, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 7, false));
                             }
 
                             if (stickInput.X > 0)
                             {
                                 player.PlayerStates = Player.PlayerState.AttackRight;
-                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, 5, false));
+                                Game1.CurrProjectiles.Add(new Projectile(Damage, "oil", Owner, stickInput, 0, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, 7, false));
                             }
 
                             return;
@@ -78,7 +78,7 @@ namespace Once_A_Rogue
                         }
 
                         //Add the projectile to the list
-                        Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 5, false));
+                        Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 10, 10, player.PosX - 10, player.PosY + player.PosRect.Height / 2, 7, false));
                     }
 
                     else
@@ -99,7 +99,7 @@ namespace Once_A_Rogue
                         vectorLength.X = (vectorLength.X * RangeX * 120) - 60;
                         vectorLength.Y = (vectorLength.Y * RangeY * 120) - 60;
 
-                        Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, 5, false));
+                        Game1.CurrProjectiles.Add(new Projectile(0, "oil", Owner, target, 0, 7, 10, 10, player.PosX + player.PosRect.Width + 10, player.PosY + player.PosRect.Height / 2, 7, false));
                     }
                 }
             }
@@ -125,7 +125,7 @@ namespace Once_A_Rogue
                         return;
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX - 10, enemy.PosY + enemy.PosRect.Height / 2, 5, true));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX - 10, enemy.PosY + enemy.PosRect.Height / 2, 7, true));
                 }
 
                 else
@@ -145,7 +145,7 @@ namespace Once_A_Rogue
                         return;
                     }
 
-                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX + enemy.PosRect.Width + 10, enemy.PosY + enemy.PosRect.Height / 2, 5, true));
+                    Game1.CurrProjectiles.Add(new Projectile(Damage, "fire", Owner, target, 0, 7, 10, 10, enemy.PosX + enemy.PosRect.Width + 10, enemy.PosY + enemy.PosRect.Height / 2, 7, true));
                 }
             }
         }

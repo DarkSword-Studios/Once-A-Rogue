@@ -178,7 +178,7 @@ namespace Once_A_Rogue
 
                 if (Tag == "mage")
                 {
-                    player.mageSkillList.Add(new Fireball(4, player));
+                    player.mageSkillList.Add(new Fireball(2, player));
                     player.mageSkillList.Add(new OilThrow(player));
                 }
 

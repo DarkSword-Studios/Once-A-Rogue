@@ -533,7 +533,7 @@ namespace Once_A_Rogue
                         }
                     }
 
-                    Cooldown += SkillList[ranSpell].CooldownTotal + 500;
+                    Cooldown += SkillList[ranSpell].CooldownTotal;
                 }
             }
 
@@ -579,7 +579,7 @@ namespace Once_A_Rogue
 
                         Vector2 updatedTarget = Vector2.Transform(whirlwind.target, Matrix.CreateRotationZ(angle * whirlwind.rotations));
 
-                        Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, 5, false));
+                        Game1.CurrProjectiles.Add(new Projectile(whirlwind.Damage, null, this, updatedTarget, 1, 7, 10, 10, PosX + PosRect.Width / 2, PosY + PosRect.Height / 2, 7, false));
 
                         if (whirlwind.rotations >= whirlwind.totalRotations)
                         {

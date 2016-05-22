@@ -570,7 +570,7 @@ namespace Once_A_Rogue
                         oldSong = currentSong;
                         MediaPlayer.IsRepeating = false;
                         NewLevelGen(true);
-                        Notification.Alert("Press Tab to spend a skill point!", Color.Purple, 60, false);
+                        Notification.Alert("Press Tab to spend a skill point!", Color.Purple, 120, false);
                     }
                 }
 

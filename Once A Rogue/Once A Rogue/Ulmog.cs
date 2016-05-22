@@ -28,7 +28,7 @@ namespace Once_A_Rogue
             MoveSpeed = 0;
             TotalHealth = 100 + Level * 10;
             CurrHealth = TotalHealth;
-            Cooldown = 0;
+            Cooldown = 500;
 
             SkillList = new List<Skills>();
 
